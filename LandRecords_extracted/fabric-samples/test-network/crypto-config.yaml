@@ -1,0 +1,71 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - "orderer.example.com"
+          - "100.66.92.10"
+          - "localhost"
+          - "127.0.0.1"
+      - Hostname: orderer2
+        SANS:
+          - "orderer2.example.com"
+          - "100.66.92.10"
+          - "localhost"
+          - "127.0.0.1"
+      - Hostname: orderer3
+        SANS:
+          - "orderer3.example.com"
+          - "100.66.92.10"
+          - "localhost"
+          - "127.0.0.1"
+
+PeerOrgs:
+  - Name: Org1
+    Domain: org1.example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        SANS:
+          - "peer0.org1.example.com"
+          - "100.66.92.10"
+          - "localhost"
+          - "127.0.0.1"
+    Users:
+      Count: 1
+  - Name: Org2
+    Domain: org2.example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        SANS:
+          - "peer0.org2.example.com"
+          - "100.66.92.10"
+          - "localhost"
+          - "127.0.0.1"
+      - Hostname: peer1
+        SANS:
+          - "peer1.org2.example.com"
+          - "100.67.66.22"
+          - "localhost"
+      - Hostname: peer2
+        SANS:
+          - "peer2.org2.example.com"
+          - "100.99.226.8"
+          - "localhost"
+    Users:
+      Count: 1
+  - Name: Org3
+    Domain: org3.example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: peer0
+        SANS:
+          - "peer0.org3.example.com"
+          - "100.66.92.10"
+          - "localhost"
+          - "127.0.0.1"
+    Users:
+      Count: 1

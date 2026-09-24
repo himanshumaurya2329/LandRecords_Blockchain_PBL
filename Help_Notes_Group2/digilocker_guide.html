@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DigiLocker Integration Guide - Land Record PBL</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060d1a;--bg2:#0d1829;--card:#131f33;--card2:#172338;
+  --bdr:rgba(56,189,248,.15);--sky:#38bdf8;--skyl:#7dd3fc;
+  --green:#10b981;--greenl:#34d399;--yellow:#fbbf24;--yellowl:#fcd34d;
+  --red:#f87171;--purple:#a78bfa;--purplel:#c4b5fd;--orange:#fb923c;
+  --text:#e2eaf4;--muted:#8899b0;
+}
+html{scroll-behavior:smooth}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;}
+.hero{background:linear-gradient(135deg,#060d1a 0%,#0a1628 40%,#0f2240 100%);border-bottom:1px solid var(--bdr);padding:60px 40px 50px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(56,189,248,.12) 0%,transparent 70%);pointer-events:none;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);color:var(--skyl);padding:6px 16px;border-radius:50px;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:20px;}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;background:linear-gradient(135deg,#fff 0%,var(--skyl) 60%,var(--sky) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:16px;}
+.hero p{color:var(--muted);font-size:16px;max-width:680px;margin:0 auto;}
+.toc{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:14px 40px;display:flex;gap:24px;flex-wrap:wrap;position:sticky;top:0;z-index:100;}
+.toc a{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s;}
+.toc a:hover{color:var(--sky);border-color:var(--sky);}
+.container{max-width:960px;margin:0 auto;padding:40px 24px;}
+section{margin-bottom:56px;}
+h2{font-size:24px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+h2 .ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+h3{font-size:17px;font-weight:600;color:var(--skyl);margin:24px 0 12px;}
+.answer-box{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(16,185,129,.04));border:1px solid rgba(16,185,129,.3);border-left:4px solid var(--green);border-radius:12px;padding:24px 28px;margin-bottom:28px;}
+.answer-box .title{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;color:var(--greenl);margin-bottom:12px;}
+.alert{border-radius:12px;padding:18px 22px;margin:20px 0;display:flex;gap:14px;align-items:flex-start;}
+.alert .icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.alert p,.alert ul{font-size:14px;line-height:1.7;}
+.alert.green{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);}
+.alert.green .icon,.alert.green strong{color:var(--greenl);}
+.alert.yellow{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);}
+.alert.yellow .icon,.alert.yellow strong{color:var(--yellowl);}
+.alert.sky{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.25);}
+.alert.sky .icon,.alert.sky strong{color:var(--skyl);}
+.alert.purple{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.25);}
+.alert.purple .icon,.alert.purple strong{color:var(--purplel);}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0;}
+.mini-card{background:var(--card2);border:1px solid var(--bdr);border-radius:12px;padding:20px;transition:transform .2s,border-color .2s;}
+.mini-card:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.4);}
+.mini-card .mc-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;}
+.mini-card p{font-size:13px;color:var(--muted);line-height:1.6;}
+.compare{width:100%;border-collapse:collapse;margin:20px 0;border-radius:12px;overflow:hidden;}
+.compare th{background:rgba(56,189,248,.12);color:var(--skyl);font-weight:600;padding:14px 18px;text-align:left;font-size:13px;}
+.compare td{padding:12px 18px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;vertical-align:top;}
+.compare tr:last-child td{border-bottom:none;}
+.compare tr:hover td{background:rgba(255,255,255,.02);}
+.yes{color:#34d399;}.no{color:#fca5a5;}
+.flow{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.flow-step{display:flex;gap:0;align-items:stretch;}
+.flow-left{display:flex;flex-direction:column;align-items:center;width:50px;flex-shrink:0;}
+.flow-dot{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;border:2px solid;}
+.flow-line{width:2px;background:var(--bdr);flex:1;margin:4px 0;}
+.flow-body{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:16px 20px;margin:0 0 12px 16px;flex:1;}
+.flow-body strong{color:#fff;font-size:15px;display:block;margin-bottom:6px;}
+.flow-body p{color:var(--muted);font-size:13px;}
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;margin-right:6px;margin-top:6px;}
+.filetree{background:#0a0f1d;border:1px solid var(--bdr);border-radius:12px;padding:20px 24px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;}
+.dir{color:var(--skyl);}.file{color:var(--green);}.comment{color:var(--muted);font-style:italic;}
+.code-block{background:#07101f;border:1px solid var(--bdr);border-radius:12px;overflow:hidden;margin:16px 0;}
+.cb-header{background:rgba(56,189,248,.06);border-bottom:1px solid var(--bdr);padding:10px 18px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--muted);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.code-block pre{padding:18px 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.8;color:#cdd6f4;}
+.kw{color:#c792ea;}.fn{color:#82aaff;}.str{color:#c3e88d;}.cmt{color:#546e7a;font-style:italic;}.type{color:#ffcb6b;}.prop{color:#89ddff;}
+.env-table{width:100%;border-collapse:collapse;margin:16px 0;}
+.env-table th{background:rgba(167,139,250,.1);color:var(--purplel);padding:12px 16px;text-align:left;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.env-table td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;}
+.ekey{font-family:'JetBrains Mono',monospace;color:#fcd34d;}
+.eval{font-family:'JetBrains Mono',monospace;color:#34d399;font-size:12px;}
+.edesc{color:var(--muted);}
+.steps{counter-reset:step;}
+.step{display:flex;gap:20px;margin-bottom:20px;}
+.step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#a78bfa);color:#000;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-body strong{color:#fff;display:block;font-size:15px;margin-bottom:6px;}
+.step-body p{color:var(--muted);font-size:13.5px;line-height:1.7;}
+.hinglish{background:linear-gradient(135deg,rgba(251,191,36,.06),rgba(251,191,36,.03));border:1px solid rgba(251,191,36,.2);border-left:4px solid #fbbf24;border-radius:12px;padding:18px 22px;margin:16px 0;}
+.hl{color:#fcd34d;font-weight:600;font-size:13px;margin-bottom:8px;}
+.hinglish p{font-size:14px;color:var(--text);line-height:1.8;}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 11px;border-radius:50px;font-size:11px;font-weight:700;}
+.pdone{background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3);}
+.ptodo{background:rgba(251,191,36,.12);color:#fcd34d;border:1px solid rgba(251,191,36,.3);}
+.footer{text-align:center;padding:40px 20px;border-top:1px solid var(--bdr);color:var(--muted);font-size:13px;}
+code{font-family:'JetBrains Mono',monospace;background:rgba(56,189,248,.08);color:var(--skyl);padding:2px 6px;border-radius:4px;font-size:12px;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">&#128218; Land Record PBL &mdash; Blockchain Project</div>
+  <h1>DigiLocker Integration<br/>Complete Guide</h1>
+  <p>Simple Hinglish explanation: DigiLocker kya hai, project mein already hai ya nahi, aur kaise setup karein</p>
+</div>
+
+<nav class="toc">
+  <a href="#s1">&#129300; Confusion Clear</a>
+  <a href="#s2">&#127470;&#127475; DigiLocker Kya Hai</a>
+  <a href="#s3">&#9989; Already Integrated?</a>
+  <a href="#s4">&#128260; Flow Diagram</a>
+  <a href="#s5">&#128193; Code Files</a>
+  <a href="#s6">&#9881;&#65039; Setup Steps</a>
+  <a href="#s7">&#129514; Test Karo</a>
+  <a href="#s8">&#128203; Summary</a>
+</nav>
+
+<div class="container">
+
+<section id="s1">
+  <h2><span class="ico" style="background:rgba(248,113,113,.15);color:#f87171;">&#129300;</span>Pehle Confusion Clear Karte Hain</h2>
+  <div class="answer-box">
+    <div class="title">&#9989; Short Answer: DigiLocker ALREADY integrated hai project mein!</div>
+    <p>Tumhare mentor ne kaha "digilocker banana aur integrate karna" &mdash; lekin tumhara kaam yeh hai ki <strong>real government DigiLocker nahi banana</strong>, balki ek <strong>local simulation (copy)</strong> use karna jo already project mein hai. Bas usse configure aur run karna hai.</p>
+  </div>
+  <div class="card-grid">
+    <div class="mini-card">
+      <div class="mc-title">&#10060; Jo tumhe NAHI karna</div>
+      <p>Government ke DigiLocker API (digilocker.gov.in) se connect karna. Uske liye government registration aur approval chahiye &mdash; students ke liye possible nahi.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title">&#9989; Jo tumhe KARNA hai</div>
+      <p>Project ke andar jo "Local DigiLocker System" already bana hua hai &mdash; use samajhna aur properly configure karke run karna. Yahi "integration" hai.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title">&#128161; Mentor ka actual matlab</div>
+      <p>"Government jaise ek document vault system banao jo blockchain se connected ho." Yeh already 25CSMR09 ke codebase mein exist karta hai!</p>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2><span class="ico" style="background:rgba(56,189,248,.12);color:#38bdf8;">&#127470;&#127475;</span>DigiLocker Kya Hota Hai?</h2>
+  <div class="hinglish">
+    <div class="hl">&#128483;&#65039; Simple Hinglish Mein Samjho</div>
+    <p>Socho jaise tumhare ghar mein ek <strong>almirah (locker)</strong> hai jahan tumhare sabhi important documents rakhe hain &mdash; Aadhaar card, land deed, certificate, etc.<br/><br/>
+    <strong>DigiLocker</strong> usi almirah ka <em>digital version</em> hai. Government ka digilocker.gov.in bhi yahi karta hai &mdash; documents digitally store karta hai.<br/><br/>
+    Hamare project mein hum <strong>apna khud ka ek chhota DigiLocker</strong> bana rahe hain &mdash; ek database jahan citizen ke documents (Aadhaar, Land deed) safely store hote hain, aur government officials usse <em>permission lekar</em> access kar sakte hain.</p>
+  </div>
+  <h3>Real DigiLocker vs Our Local DigiLocker</h3>
+  <table class="compare">
+    <thead><tr><th>Feature</th><th>Govt DigiLocker (Real)</th><th>Our Project DigiLocker (Local)</th></tr></thead>
+    <tbody>
+      <tr><td>Storage</td><td>Government servers</td><td class="yes">MongoDB (local DB) + IPFS</td></tr>
+      <tr><td>Authentication</td><td>Aadhaar OTP / real Govt API</td><td class="yes">Simulated Aadhaar number in DB</td></tr>
+      <tr><td>Document Access</td><td>Real Govt verification</td><td class="yes">Official requests &rarr; Citizen approves</td></tr>
+      <tr><td>Blockchain</td><td class="no">Not connected</td><td class="yes">IPFS hash anchored on Hyperledger Fabric &#9989;</td></tr>
+      <tr><td>Internet required?</td><td class="no">Yes (Govt servers)</td><td class="yes">Only for IPFS (Pinata) &mdash; rest is local</td></tr>
+      <tr><td>Setup</td><td class="no">Govt approval required</td><td class="yes">Just MongoDB + env vars configure karo</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="s3">
+  <h2><span class="ico" style="background:rgba(16,185,129,.12);color:#10b981;">&#9989;</span>Project Mein Already Kya Hai?</h2>
+  <div class="alert green">
+    <div class="icon">&#127881;</div>
+    <div><strong>Good News!</strong> DigiLocker ka poora system already coded hai. Tumhare groupmate (Charita Priya - Org2) ne yeh module implement kiya tha (M7_PRIVACY_SECURITY). Tumhe sirf configure aur run karna hai.</div>
+  </div>
+  <div class="card-grid">
+    <div class="mini-card">
+      <div class="mc-title" style="color:#34d399;">&#128230; DigiLockerVault (Database Model)</div>
+      <p>Citizen ke documents (Aadhaar card, Land deed) ko MongoDB mein store karta hai. Base64 PDF as file data, IPFS hash bhi store hota hai approval ke baad.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title" style="color:#c4b5fd;">&#128233; DigiLockerRequest (Request Model)</div>
+      <p>Jab koi official kisi citizen ka document maangta hai &mdash; yeh request yahan store hoti hai with status: pending / approved / rejected.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title" style="color:#fcd34d;">&#128279; API Routes (3 Routes)</div>
+      <p><code>/api/digilocker</code> (fetch requests), <code>/api/digilocker/request</code> (create), <code>/api/digilocker/respond</code> (citizen approve/reject).</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title" style="color:#7dd3fc;">&#127760; IPFS Upload (Pinata)</div>
+      <p>Jab citizen approve karta hai &mdash; document Pinata IPFS par upload hota hai, SHA-256 hash generate hota hai, aur blockchain par record hota hai.</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title" style="color:#fb923c;">&#9939;&#65039; Blockchain Record</div>
+      <p>IPFS hash + document integrity hash Hyperledger Fabric par permanently store hota hai &mdash; tamper-proof record!</p>
+    </div>
+    <div class="mini-card">
+      <div class="mc-title" style="color:#fca5a5;">&#128187; UI Pages</div>
+      <p><code>/digilocker</code> (citizen dashboard) aur <code>/digilocker-admin</code> (official dashboard) &mdash; dono pages already banae hue hain.</p>
+    </div>
+  </div>
+</section>
+
+<section id="s4">
+  <h2><span class="ico" style="background:rgba(167,139,250,.12);color:#a78bfa;">&#128260;</span>Poora Flow Kaise Kaam Karta Hai?</h2>
+  <div class="hinglish">
+    <div class="hl">&#128483;&#65039; Example se Samjho</div>
+    <p><strong>Ramesh</strong> (citizen) apni land registration ke liye apply karta hai.<br/>
+    <strong>Revenue Clerk</strong> (official) ko Ramesh ka Aadhaar verify karna hai.<br/><br/>
+    Clerk DigiLocker se Ramesh ka Aadhaar document maangta hai &rarr; Ramesh ko notification aata hai &rarr; Ramesh approve karta hai &rarr; Document IPFS par upload hota hai &rarr; Hash blockchain par store hota hai &rarr; Clerk document dekh sakta hai. Done! &#127881;</p>
+  </div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-left">
+        <div class="flow-dot" style="background:rgba(56,189,248,.1);border-color:#38bdf8;color:#7dd3fc;">1</div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-body">
+        <strong>&#127963;&#65039; Admin uploads document to DigiLocker Vault</strong>
+        <p>Government authority (admin) citizen ka Aadhaar card ya Land Deed DigiLocker Vault mein upload karta hai. MongoDB mein base64 format mein store hota hai.</p>
+        <span class="tag" style="background:rgba(56,189,248,.1);color:#7dd3fc;">POST /api/digilocker-vault</span>
+        <span class="tag" style="background:rgba(16,185,129,.1);color:#34d399;">MongoDB DigiLockerVault collection</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left">
+        <div class="flow-dot" style="background:rgba(251,191,36,.1);border-color:#fbbf24;color:#fcd34d;">2</div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-body">
+        <strong>&#128110; Official creates document access request</strong>
+        <p>Revenue Clerk citizen ka document access karna chahta hai. Woh ek request create karta hai linked to citizen username.</p>
+        <span class="tag" style="background:rgba(251,191,36,.1);color:#fcd34d;">POST /api/digilocker</span>
+        <span class="tag" style="background:rgba(16,185,129,.1);color:#34d399;">Status: pending</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left">
+        <div class="flow-dot" style="background:rgba(167,139,250,.1);border-color:#a78bfa;color:#c4b5fd;">3</div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-body">
+        <strong>&#128100; Citizen sees pending request</strong>
+        <p>Citizen apne DigiLocker dashboard (<code>/digilocker</code>) mein login karta hai. Pending requests dikhti hain. Approve ya Reject?</p>
+        <span class="tag" style="background:rgba(167,139,250,.1);color:#c4b5fd;">GET /api/digilocker</span>
+        <span class="tag" style="background:rgba(56,189,248,.1);color:#7dd3fc;">DigiLockerRequestPanel UI</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left">
+        <div class="flow-dot" style="background:rgba(16,185,129,.1);border-color:#10b981;color:#34d399;">4</div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-body">
+        <strong>&#9989; Citizen APPROVES &rarr; Auto Magic Happens!</strong>
+        <p>Server automatically: Vault se document nikalta hai &rarr; SHA-256 hash generate karta hai &rarr; Pinata IPFS par upload karta hai &rarr; Hash vault mein save karta hai.</p>
+        <span class="tag" style="background:rgba(16,185,129,.1);color:#34d399;">POST /api/digilocker/respond {action: approved}</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left">
+        <div class="flow-dot" style="background:rgba(251,146,60,.1);border-color:#fb923c;color:#fb923c;">5</div>
+        <div class="flow-line"></div>
+      </div>
+      <div class="flow-body">
+        <strong>&#9939;&#65039; Blockchain par permanently record hota hai</strong>
+        <p>IPFS hash aur SHA-256 hash Hyperledger Fabric blockchain par record hota hai &mdash; tamper-proof permanent record!</p>
+        <span class="tag" style="background:rgba(251,146,60,.1);color:#fb923c;">Fabric API recordDocumentIntegrity chaincode</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-left">
+        <div class="flow-dot" style="background:rgba(56,189,248,.1);border-color:#38bdf8;color:#7dd3fc;">6</div>
+      </div>
+      <div class="flow-body">
+        <strong>&#127963;&#65039; Official document access karta hai</strong>
+        <p>Official ko IPFS hash milta hai. IPFS gateway se actual document download kar sakta hai aur hash verify kar sakta hai ki document authentic hai.</p>
+        <span class="tag" style="background:rgba(56,189,248,.1);color:#7dd3fc;">https://ipfs.io/ipfs/{hash}</span>
+        <span class="tag" style="background:rgba(16,185,129,.1);color:#34d399;">Verification complete &#9989;</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <h2><span class="ico" style="background:rgba(251,191,36,.1);color:#fbbf24;">&#128193;</span>Kaunse Files Mein Yeh Code Hai?</h2>
+  <div class="filetree">
+    <span class="dir">25CSMR09/LandRecords_extracted/client/src/</span><br/>
+    &boxv;<br/>
+    &boxvr;&boxh;&boxh; <span class="dir">app/</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&boxvr;&boxh;&boxh; <span class="dir">digilocker/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">&#8592; Citizen ka DigiLocker page (UI)</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&boxvr;&boxh;&boxh; <span class="dir">digilocker-admin/</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">&#8592; Official/Admin ka DigiLocker page (UI)</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&boxur;&boxh;&boxh; <span class="dir">api/digilocker/</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&boxh;&boxh; <span class="file">route.ts</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">&#8592; GET fetch + POST create request</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&boxvr;&boxh;&boxh; <span class="dir">request/route.ts</span>&nbsp;&nbsp;&nbsp;<span class="comment">&#8592; Official creates request</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&boxur;&boxh;&boxh; <span class="dir">respond/route.ts</span>&nbsp;&nbsp;<span class="comment">&#8592; &#11088; MAIN: IPFS upload + blockchain</span><br/>
+    &boxv;<br/>
+    &boxvr;&boxh;&boxh; <span class="dir">lib/models/</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&boxvr;&boxh;&boxh; <span class="file">DigiLockerVault.ts</span>&nbsp;&nbsp;&nbsp;<span class="comment">&#8592; MongoDB schema for documents</span><br/>
+    &boxv;&nbsp;&nbsp;&nbsp;&boxur;&boxh;&boxh; <span class="file">DigiLockerRequest.ts</span>&nbsp;<span class="comment">&#8592; MongoDB schema for requests</span><br/>
+    &boxv;<br/>
+    &boxur;&boxh;&boxh; <span class="dir">components/</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&boxur;&boxh;&boxh; <span class="file">DigiLockerRequestPanel.tsx</span>&nbsp;<span class="comment">&#8592; Citizen UI panel</span>
+  </div>
+  <div class="alert sky" style="margin-top:20px;">
+    <div class="icon">&#11088;</div>
+    <div><strong>Sabse Important File:</strong> <code>api/digilocker/respond/route.ts</code> &mdash; Yahi woh file hai jo approval pe IPFS upload karta hai aur blockchain par record karta hai. Yahan SHA-256 hash bhi generate hota hai.</div>
+  </div>
+</section>
+
+<section id="s6">
+  <h2><span class="ico" style="background:rgba(16,185,129,.1);color:#10b981;">&#9881;&#65039;</span>Setup Kaise Karein? (Step-by-Step)</h2>
+  <div class="alert yellow">
+    <div class="icon">&#9888;&#65039;</div>
+    <div><strong>Pehle check karo:</strong> Docker Desktop + WSL2 Ubuntu + Node.js installed hone chahiye. Hyperledger Fabric network bhi running hona chahiye.</div>
+  </div>
+
+  <h3>Step 1: Pinata Account Banao (Free &mdash; IPFS ke liye)</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>pinata.cloud par jaao aur free account banao</strong>
+        <p>Browser mein <strong>https://pinata.cloud</strong> open karo &rarr; Sign Up karo. Free plan mein 1GB storage milta hai &mdash; project ke liye kaafi hai.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>API Keys generate karo</strong>
+        <p>Login ke baad: <strong>API Keys</strong> section &rarr; "New Key" click karo &rarr; API Key aur Secret Key copy karo &mdash; .env.local mein jayenge.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Step 2: MongoDB Install aur Start Karo</h3>
+  <div class="code-block">
+    <div class="cb-header">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+      <span>&#127823; Ubuntu WSL Terminal mein chalao</span>
+    </div>
+    <pre><span class="cmt"># MongoDB install karo (agar nahi hai)</span>
+<span class="fn">sudo</span> apt-get update && <span class="fn">sudo</span> apt-get install -y mongodb
+
+<span class="cmt"># MongoDB service start karo</span>
+<span class="fn">sudo</span> service mongodb start
+
+<span class="cmt"># Status check karo (running dikhna chahiye)</span>
+<span class="fn">sudo</span> service mongodb status
+
+<span class="cmt"># Ya Docker se MongoDB chala sakte ho (easier!)</span>
+<span class="fn">docker</span> run -d --name mongodb -p 27017:27017 mongo:latest</pre>
+  </div>
+
+  <h3>Step 3: .env.local File Configure Karo</h3>
+  <div class="hinglish">
+    <div class="hl">&#128221; File location: client/.env.local (agar nahi hai to naya banao)</div>
+    <p>Yeh file project ka secret configuration file hai. Isme API keys aur database URL store hoti hai. Kabhi bhi GitHub par push mat karo!</p>
+  </div>
+  <div class="code-block">
+    <div class="cb-header">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+      <span>&#128196; client/.env.local &mdash; copy-paste karo, apni values daalo</span>
+    </div>
+    <pre><span class="cmt"># ============================================
+# MongoDB (DigiLocker Vault + Request storage)
+# ============================================</span>
+<span class="prop">MONGODB_URI</span>=<span class="str">mongodb://localhost:27017/landrecords</span>
+<span class="cmt"># Agar MongoDB Atlas use kar rahe ho:
+# MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/landrecords</span>
+
+<span class="cmt"># ============================================
+# Pinata IPFS (document file upload)
+# ============================================</span>
+<span class="prop">PINATA_API_KEY</span>=<span class="str">tumhara_pinata_api_key_yahan</span>
+<span class="prop">PINATA_SECRET_KEY</span>=<span class="str">tumhara_pinata_secret_key_yahan</span>
+
+<span class="cmt"># ============================================
+# Hyperledger Fabric API
+# ============================================</span>
+<span class="prop">NEXT_PUBLIC_FABRIC_API_URL</span>=<span class="str">http://localhost:3001</span>
+
+<span class="cmt"># ============================================
+# Session Security
+# ============================================</span>
+<span class="prop">NEXTAUTH_SECRET</span>=<span class="str">any_random_secret_string_here_2024</span>
+<span class="prop">NEXTAUTH_URL</span>=<span class="str">http://localhost:3000</span></pre>
+  </div>
+
+  <table class="env-table">
+    <thead><tr><th>Variable</th><th>Value</th><th>Kahan se milega?</th></tr></thead>
+    <tbody>
+      <tr><td class="ekey">MONGODB_URI</td><td class="eval">mongodb://localhost:27017/landrecords</td><td class="edesc">Local install ya Atlas free tier</td></tr>
+      <tr><td class="ekey">PINATA_API_KEY</td><td class="eval">abc123xyz...</td><td class="edesc">pinata.cloud &rarr; API Keys</td></tr>
+      <tr><td class="ekey">PINATA_SECRET_KEY</td><td class="eval">secret789...</td><td class="edesc">pinata.cloud &rarr; API Keys</td></tr>
+      <tr><td class="ekey">NEXT_PUBLIC_FABRIC_API_URL</td><td class="eval">http://localhost:3001</td><td class="edesc">fabric-api server ka port</td></tr>
+      <tr><td class="ekey">NEXTAUTH_SECRET</td><td class="eval">any_random_string</td><td class="edesc">Kuch bhi random likho</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Step 4: Project Start Karo</h3>
+  <div class="code-block">
+    <div class="cb-header">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+      <span>&#127823; Ubuntu WSL Terminal</span>
+    </div>
+    <pre><span class="cmt"># Client folder mein jao</span>
+<span class="fn">cd</span> /path/to/25CSMR09/LandRecords_extracted/client
+
+<span class="cmt"># Dependencies install karo (pehli baar)</span>
+<span class="fn">npm</span> install
+
+<span class="cmt"># Development server start karo</span>
+<span class="fn">npm</span> run dev
+
+<span class="cmt"># Browser mein open karo:</span>
+<span class="cmt"># http://localhost:3000/digilocker        (citizen page)</span>
+<span class="cmt"># http://localhost:3000/digilocker-admin  (admin/official page)</span></pre>
+  </div>
+</section>
+
+<section id="s7">
+  <h2><span class="ico" style="background:rgba(56,189,248,.12);color:#38bdf8;">&#129514;</span>Test Karo &mdash; Kaise Check Karein?</h2>
+  <h3>MongoDB Mein Data Verify Karo</h3>
+  <div class="code-block">
+    <div class="cb-header">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+      <span>&#127823; Ubuntu WSL &mdash; MongoDB shell</span>
+    </div>
+    <pre><span class="fn">mongo</span>
+<span class="kw">use</span> landrecords
+<span class="cmt"># Documents check karo</span>
+db.digilockervaults.<span class="fn">find</span>().<span class="fn">pretty</span>()
+<span class="cmt"># Requests check karo</span>
+db.digilockerrequests.<span class="fn">find</span>().<span class="fn">pretty</span>()
+<span class="cmt"># Approved requests (IPFS hash wali)</span>
+db.digilockerrequests.<span class="fn">find</span>({status: <span class="str">"approved"</span>}).<span class="fn">pretty</span>()</pre>
+  </div>
+
+  <h3>IPFS Document Verify Karo</h3>
+  <div class="code-block">
+    <div class="cb-header">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+      <span>&#127760; Browser mein check karo</span>
+    </div>
+    <pre><span class="cmt"># Approval ke baad jo ipfsHash milta hai use yahan dalo:</span>
+https://gateway.pinata.cloud/ipfs/<span class="str">QmXyz123abc...</span>
+<span class="cmt"># Ya public gateway:</span>
+https://ipfs.io/ipfs/<span class="str">QmXyz123abc...</span>
+<span class="cmt"># Document browser mein dikhna chahiye! &#9989;</span></pre>
+  </div>
+
+  <h3>Server Console Output (M7 Hash Proof)</h3>
+  <div class="code-block">
+    <div class="cb-header">
+      <div class="dot" style="background:#ff5f57;"></div>
+      <div class="dot" style="background:#febc2e;"></div>
+      <div class="dot" style="background:#28c840;"></div>
+      <span>&#128223; npm run dev console &mdash; citizen approve kare tab yeh dikhega</span>
+    </div>
+    <pre><span class="cmt">==========================================</span>
+<span class="type">M7 SECURITY GATEWAY: HASH GENERATED</span>
+<span class="prop">SHA-256:</span> <span class="str">a3f2bc4d8e9f1234567890abcdef...</span>
+<span class="prop">IPFS Address:</span> <span class="str">QmXyz123abc...</span>
+<span class="cmt">==========================================</span>
+<span class="cmt"># Yeh dikhna = DigiLocker integration kaam kar raha hai! &#127881;</span></pre>
+  </div>
+  <div class="alert purple">
+    <div class="icon">&#128269;</div>
+    <div><strong>Presentation Tip:</strong> Demo ke time yeh SHA-256 hash aur IPFS link dikhana &mdash; examiner ko impress karta hai! Blockchain par hash existence prove karta hai ki document tamper-proof hai.</div>
+  </div>
+</section>
+
+<section id="s8">
+  <h2><span class="ico" style="background:rgba(251,146,60,.12);color:#fb923c;">&#128203;</span>Final Summary &mdash; Ek Nazar Mein Sab Kuch</h2>
+  <table class="compare">
+    <thead><tr><th>Question</th><th>Answer</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>DigiLocker banana hai kya?</td><td>Nahi! Already bana hua hai project mein</td><td><span class="pill pdone">&#9989; DONE</span></td></tr>
+      <tr><td>Real Govt API use karna hai?</td><td>Nahi, yeh local simulation hai</td><td><span class="pill pdone">&#9989; DONE</span></td></tr>
+      <tr><td>MongoDB setup karna hai?</td><td>Haan, local ya Atlas free tier</td><td><span class="pill ptodo">&#9881; SETUP</span></td></tr>
+      <tr><td>Pinata account banana hai?</td><td>Haan, pinata.cloud par free account</td><td><span class="pill ptodo">&#9881; SETUP</span></td></tr>
+      <tr><td>.env.local configure karna hai?</td><td>Haan, keys daalni hain</td><td><span class="pill ptodo">&#9881; SETUP</span></td></tr>
+      <tr><td>IPFS upload hota hai?</td><td>Haan, citizen approval pe auto-upload</td><td><span class="pill pdone">&#9989; CODED</span></td></tr>
+      <tr><td>Blockchain par hash record?</td><td>Haan, Hyperledger Fabric par anchor</td><td><span class="pill pdone">&#9989; CODED</span></td></tr>
+      <tr><td>UI pages hain?</td><td>Haan: /digilocker + /digilocker-admin</td><td><span class="pill pdone">&#9989; DONE</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="answer-box" style="margin-top:32px;">
+    <div class="title">&#127919; Tumhara Actual Kaam Sirf Itna Hai!</div>
+    <p>
+      <strong>1.</strong> &#127760; pinata.cloud par free account banao &rarr; API keys lo<br/>
+      <strong>2.</strong> &#128452; MongoDB start karo (local ya Docker)<br/>
+      <strong>3.</strong> &#128221; <code>client/.env.local</code> mein PINATA_API_KEY + PINATA_SECRET_KEY + MONGODB_URI daalo<br/>
+      <strong>4.</strong> &#128640; <code>npm run dev</code> se project run karo &rarr; DigiLocker flow test karo<br/><br/>
+      <strong>&#9989; Code changes ki zaroorat bilkul nahi!</strong> Poora DigiLocker system pehle se ready hai &mdash; sirf environment configure karna hai.
+    </p>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  <p>Land Record Blockchain Project &mdash; DigiLocker Integration Guide</p>
+  <p style="margin-top:6px;">25CSMR09 | Hyperledger Fabric + IPFS (Pinata) + MongoDB | Antigravity AI</p>
+</div>
+
+</body>
+</html>

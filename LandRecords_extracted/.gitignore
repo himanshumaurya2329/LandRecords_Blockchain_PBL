@@ -1,0 +1,57 @@
+# ==========================================
+# Dependencies & Build Artefacts
+# ==========================================
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+build/
+dist/
+out/
+
+# ==========================================
+# Environment & Secret Files (NEVER COMMIT)
+# ==========================================
+.env*
+!.env.example
+**/.env*
+!**/.env.example
+
+# ==========================================
+# Hyperledger Fabric Wallets, Crypto & Blocks
+# ==========================================
+wallet/
+wallets/
+**/wallet/
+**/wallets/
+fabric-api/wallets/
+fabric-api/src/wallets/
+fabric-samples/test-network/organizations/peerOrganizations/
+fabric-samples/test-network/organizations/ordererOrganizations/
+fabric-samples/test-network/channel-artifacts/
+fabric-samples/bin/
+fabric-samples/config/
+*.block
+*.pb
+*.tx
+*.tar.gz
+*.zip
+*.pkg
+
+# ==========================================
+# Logs & Temporary Files
+# ==========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+setup_debug.log
+temp_ca.crt
+${config_path}
+
+# ==========================================
+# OS & Editor
+# ==========================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

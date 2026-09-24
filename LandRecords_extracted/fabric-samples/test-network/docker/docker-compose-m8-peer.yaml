@@ -1,0 +1,63 @@
+version: "3.8"
+
+networks:
+  test:
+    name: fabric_test
+
+services:
+  peer1.org2.example.com:
+    container_name: peer1.org2.example.com
+    image: hyperledger/fabric-peer:latest
+    labels:
+      service: hyperledger-fabric
+    environment:
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_LOGGING_SPEC=INFO
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+      - CORE_PEER_ID=peer1.org2.example.com
+      - CORE_PEER_ADDRESS=peer1.org2.example.com:9061
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:9061
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org2.example.com:9062
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9062
+      - CORE_PEER_GOSSIP_BOOTSTRAP=100.66.92.10:9051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=100.67.66.22:9061
+      - CORE_PEER_GOSSIP_USELEADERELECTION=false
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+      - CORE_PEER_LOCALMSPID=Org2MSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9465
+      - CORE_METRICS_PROVIDER=prometheus
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=fabric_test
+      - CORE_CHAINCODE_EXECUTETIMEOUT=600s
+      - CORE_CHAINCODE_STARTUPTIMEOUT=600s
+      - CORE_PEER_ADDRESSAUTODETECT=false
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ../organizations/peerOrganizations/org2.example.com/peers/peer1.org2.example.com:/etc/hyperledger/fabric
+      - peer1.org2.example.com:/var/hyperledger/production
+      - ./peercfg:/etc/hyperledger/peercfg
+    working_dir: /root
+    command: peer node start
+    ports:
+      - "9061:9061"
+      - "9062:9062"
+      - "9465:9465"
+    extra_hosts:
+      - "orderer.example.com:100.66.92.10"
+      - "orderer2.example.com:100.66.92.10"
+      - "orderer3.example.com:100.66.92.10"
+      - "peer0.org2.example.com:100.66.92.10"
+      - "peer0.org1.example.com:100.66.92.10"
+      - "peer0.org3.example.com:100.66.92.10"
+      - "peer1.org2.example.com:100.67.66.22"
+    networks:
+      - test
+    restart: unless-stopped
+
+volumes:
+  peer1.org2.example.com:

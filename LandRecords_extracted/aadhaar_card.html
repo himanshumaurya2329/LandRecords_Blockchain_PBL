@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Aadhaar Card - Harika Devi</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .aadhaar-card {
+            width: 500px;
+            height: 300px;
+            background: white;
+            border: 2px solid #000;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid orange;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .header img {
+            height: 40px;
+        }
+
+        .content {
+            display: flex;
+            gap: 20px;
+        }
+
+        .photo {
+            width: 100px;
+            height: 120px;
+            background: #ddd;
+            border: 1px solid #999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .details {
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .number {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            border-top: 2px solid green;
+            padding-top: 10px;
+        }
+
+        .logo-text {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aadhaar-card">
+        <div class="header">
+            <div class="logo-text">Government of India</div>
+            <div class="logo-text">Unique Identification Authority of India</div>
+        </div>
+
+        <div class="content">
+            <div class="photo">SAMPLE PHOTO</div>
+            <div class="details">
+                <div class="name">Harika Devi</div>
+                <div>DOB: 12/05/1995</div>
+                <div>Gender: Female</div>
+                <div style="margin-top: 10px; font-size: 12px; color: #444;">
+                    Address: H.No 4-12/A, Madhapur,<br>
+                    Hyderabad, Telangana - 500081
+                </div>
+            </div>
+        </div>
+
+        <div class="number">1234 5678 9122</div>
+    </div>
+</body>
+
+</html>

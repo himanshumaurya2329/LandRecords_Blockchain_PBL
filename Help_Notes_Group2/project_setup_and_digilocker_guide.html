@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LandRecord PBL - Windows WSL2 Setup & DigiLocker Integration Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0f1a;--bg2:#111827;--bg3:#1a2236;--bdr:rgba(99,102,241,.22);--bdrl:rgba(99,102,241,.12);--ind:#6366f1;--il:#818cf8;--em:#10b981;--el:#34d399;--am:#f59e0b;--al:#fbbf24;--ro:#f43f5e;--rl2:#fb7185;--sk:#0ea5e9;--sl:#38bdf8;--vi:#8b5cf6;--vl:#a78bfa;--tx:#e2e8f0;--tm:#94a3b8;--td:#64748b;--r:12px;--r2:20px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--ind);border-radius:3px}
+code{background:rgba(99,102,241,.15);color:var(--il);padding:.12rem .5rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.84em;border:1px solid rgba(99,102,241,.2)}
+a{color:var(--il);text-decoration:none}a:hover{text-decoration:underline}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,15,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdrl);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:.95rem}
+.nav-dot{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--em),var(--sk));display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:1.1rem;list-style:none}
+.nav-links a{color:var(--tm);font-size:.8rem;font-weight:500;transition:color .2s}.nav-links a:hover{color:var(--el)}
+.hero{padding:120px 2rem 4rem;text-align:center;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,.18),transparent 65%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(16,185,129,.1),transparent 60%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);background-size:55px 55px}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);padding:.35rem 1rem;border-radius:99px;font-size:.73rem;font-weight:700;color:var(--il);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.5rem}
+h1{font-size:clamp(2rem,4.2vw,3.4rem);font-weight:800;line-height:1.15;background:linear-gradient(135deg,#fff 30%,var(--il) 70%,var(--el) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem}
+.hero-sub{font-size:1.02rem;color:var(--tm);max-width:720px;margin:0 auto 2.2rem}
+.hero-stats{display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap}
+.sp{background:var(--bg3);border:1px solid var(--bdrl);border-radius:12px;padding:.65rem 1.25rem;text-align:center}
+.sp .n{font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--el),var(--sl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp .l{font-size:.7rem;color:var(--tm);font-weight:500}
+.container{max-width:1140px;margin:0 auto;padding:0 2rem}
+.section{padding:3.5rem 0}
+.sl{font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--el);margin-bottom:.4rem}
+.st{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;line-height:1.2;margin-bottom:.8rem}
+.sb{color:var(--tm);max-width:750px;font-size:.9rem}
+hr.d{border:none;border-top:1px solid var(--bdrl)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:768px){.two{grid-template-columns:1fr}}
+.alert{border-radius:var(--r);padding:1rem 1.2rem;display:flex;gap:.75rem;align-items:flex-start;margin-top:1.25rem}
+.alert.info{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25)}
+.alert.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25)}
+.alert.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25)}
+.alert.sky{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.25)}
+.a-ico{font-size:1.2rem;flex-shrink:0;margin-top:.05rem}
+.a-t{font-weight:700;font-size:.9rem;margin-bottom:.25rem}
+.alert.info .a-t{color:var(--il)}.alert.ok .a-t{color:var(--el)}.alert.warn .a-t{color:var(--al)}.alert.sky .a-t{color:var(--sl)}
+.a-x{font-size:.84rem;color:var(--tm);line-height:1.7}
+
+/* CONSOLE BADGES & STEPS */
+.console-badge{font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:6px;font-family:'JetBrains Mono',monospace;display:inline-flex;align-items:center;gap:.35rem;text-transform:uppercase;letter-spacing:.05em}
+.console-ps{background:rgba(14,165,233,.18);color:var(--sl);border:1px solid rgba(14,165,233,.35)}
+.console-wsl{background:rgba(245,158,11,.18);color:var(--al);border:1px solid rgba(245,158,11,.35)}
+.console-browser{background:rgba(16,185,129,.18);color:var(--el);border:1px solid rgba(16,185,129,.35)}
+
+.steps{display:flex;flex-direction:column;gap:1.5rem;margin-top:2rem}
+.step-card{background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r2);padding:1.5rem;position:relative}
+.step-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem}
+.step-title{font-size:1.05rem;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:.6rem}
+.step-num{width:28px;height:28px;border-radius:8px;background:var(--ind);color:#fff;font-size:.8rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+.step-desc{font-size:.87rem;color:var(--tm);margin-bottom:.9rem}
+
+/* CODE BLOCK */
+.cb{background:#0d1117;border:1px solid var(--bdrl);border-radius:var(--r);padding:1.1rem 1.3rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.8;color:#c9d1d9;margin-top:.6rem}
+.cb .cm{color:#8b949e}.cb .kw{color:#ff7b72}.cb .fn{color:#d2a8ff}.cb .str{color:#a5d6ff}.cb .num{color:#f8c555}.cb .cmd{color:#79c0ff}
+
+/* TABLE */
+.lt{width:100%;border-collapse:separate;border-spacing:0;margin-top:1.25rem;font-size:.83rem}
+.lt th{background:var(--bg3);color:var(--tm);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.75rem 1rem;text-align:left}
+.lt th:first-child{border-radius:9px 0 0 9px}.lt th:last-child{border-radius:0 9px 9px 0}
+.lt td{padding:.85rem 1rem;border-bottom:1px solid var(--bdrl);vertical-align:top}
+.lt tr:last-child td{border-bottom:none}.lt tr:hover td{background:rgba(99,102,241,.03)}
+
+/* DIAGRAM */
+.flow{background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r2);padding:2rem;margin-top:1.75rem;overflow-x:auto}
+.flow-title{text-align:center;font-size:.82rem;font-weight:700;color:var(--tm);margin-bottom:1.75rem;letter-spacing:.06em;text-transform:uppercase}
+.flow-grid{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:nowrap;min-width:820px}
+.fb{text-align:center;flex-shrink:0}
+.fbox{padding:.65rem 1rem;border-radius:10px;font-size:.72rem;font-weight:700;min-width:110px;max-width:130px;line-height:1.3}
+.fb1 .fbox{background:rgba(99,102,241,.15);border:2px solid rgba(99,102,241,.4);color:var(--il)}
+.fb2 .fbox{background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);color:var(--el)}
+.fb3 .fbox{background:rgba(245,158,11,.15);border:2px solid rgba(245,158,11,.4);color:var(--al)}
+.fb4 .fbox{background:rgba(14,165,233,.15);border:2px solid rgba(14,165,233,.4);color:var(--sl)}
+.fb5 .fbox{background:rgba(139,92,246,.15);border:2px solid rgba(139,92,246,.4);color:var(--vl)}
+.fb-sub{font-size:.62rem;color:var(--td);margin-top:.3rem}
+.farr{color:var(--td);font-size:1.3rem;flex-shrink:0}
+
+footer{background:var(--bg2);border-top:1px solid var(--bdrl);padding:2rem 0;text-align:center;margin-top:4rem}
+footer p{font-size:.78rem;color:var(--td)}
+</style>
+</head>
+<body>
+<nav>
+<div class="nav-brand"><div class="nav-dot">&#128640;</div> LandRecord PBL &mdash; System Setup & DigiLocker Guide</div>
+<ul class="nav-links">
+<li><a href="#compatibility">System Check</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#setup">Step-by-Step Setup</a></li>
+<li><a href="#digilocker">DigiLocker Integration</a></li>
+</ul>
+</nav>
+
+<header class="hero">
+<div class="badge">&#9881; Windows 11 / 10 + Docker Desktop + WSL2 Ubuntu</div>
+<h1>Can You Run This Project on Your System?<br><span style="color:var(--el);">YES! 100% Compatible</span></h1>
+<p class="hero-sub">Complete step-by-step guide to executing the entire Hyperledger Fabric land registration network locally using Docker Desktop & WSL2 Ubuntu in <code>25CSMR09/LandRecords_extracted</code>.</p>
+<div class="hero-stats">
+<div class="sp"><div class="n">WSL2 Ubuntu</div><div class="l">Execution Env</div></div>
+<div class="sp"><div class="n">Docker Desktop</div><div class="l">Peer Containers</div></div>
+<div class="sp"><div class="n">15 GB</div><div class="l">Disk Space Needed</div></div>
+<div class="sp"><div class="n">8 - 16 GB</div><div class="l">Recommended RAM</div></div>
+</div>
+</header>
+<hr class="d"/>
+
+<!-- SYSTEM CHECK -->
+<section class="section" id="compatibility">
+<div class="container">
+<div class="sl">System Compatibility</div>
+<h2 class="st">Can You Run This Directly on Your Windows Machine?</h2>
+<p class="sb"><strong>Yes, absolutely!</strong> Hyperledger Fabric networks are designed to run inside Linux containers. Since you already have <strong>Docker Desktop</strong> and <strong>WSL2 (Ubuntu)</strong> installed on Windows, your system has everything required to run this project smoothly.</p>
+
+<div class="two" style="margin-top:1.5rem;">
+<div class="alert ok"><span class="a-ico">&#9989;</span><div>
+<div class="a-t">Why WSL2 + Docker Desktop Is Ideal</div>
+<div class="a-x">
+• WSL2 gives you a native Ubuntu Linux environment to execute shell scripts (<code>.sh</code>).<br>
+• Docker Desktop automatically manages all Hyperledger Fabric peers, orderers, CAs, and CouchDB containers.<br>
+• You only need the <code>25CSMR09/LandRecords_extracted</code> folder &mdash; all chaincode, fabric scripts, API, and Next.js client are inside it!
+</div>
+</div></div>
+
+<div class="alert info"><span class="a-ico">&#128161;</span><div>
+<div class="a-t">Key Rule for Windows + WSL Setup</div>
+<div class="a-x">
+• <strong>DO NOT</strong> run network setup scripts directly inside Windows PowerShell.<br>
+• <strong>DO</strong> open your <strong>WSL Ubuntu terminal</strong> to execute the <code>./setup-network.sh</code> shell script.<br>
+• You can access the Next.js Web UI right from your Windows browser at <code>http://localhost:3000</code>.
+</div>
+</div></div>
+</div>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- REQUIREMENTS -->
+<section class="section" id="requirements">
+<div class="container">
+<div class="sl">Prerequisites & Specs</div>
+<h2 class="st">System Requirements & Configuration</h2>
+
+<table class="lt">
+<thead>
+<tr><th>Requirement</th><th>Minimum Spec</th><th>Recommended Spec</th><th>Purpose in Project</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RAM</strong></td>
+<td>8 GB</td>
+<td>16 GB</td>
+<td>Running 3 Peer containers, 1 Orderer, 3 CouchDBs, Fabric API server, and Next.js frontend concurrently.</td>
+</tr>
+<tr>
+<td><strong>Disk Space</strong></td>
+<td>12 GB free space</td>
+<td>20 GB free space</td>
+<td>Storing Docker images (Fabric peer, orderer, ca, couchdb), <code>node_modules</code>, and CouchDB data blocks.</td>
+</tr>
+<tr>
+<td><strong>CPU</strong></td>
+<td>4 Cores / 4 Threads</td>
+<td>6+ Cores</td>
+<td>Cryptographic transaction signing and consensus block generation across 3 organizations.</td>
+</tr>
+<tr>
+<td><strong>WSL Distro</strong></td>
+<td>Ubuntu 20.04 LTS</td>
+<td>Ubuntu 22.04 LTS</td>
+<td>Executing Linux bash scripts (<code>setup-network.sh</code>, <code>start-network.sh</code>).</td>
+</tr>
+<tr>
+<td><strong>Docker Desktop</strong></td>
+<td>v4.15+ (WSL2 mode)</td>
+<td>Latest Version</td>
+<td>Hosting all Fabric container infrastructure. Ensure <em>"Use the WSL 2 based engine"</em> is turned ON.</td>
+</tr>
+<tr>
+<td><strong>Node.js & npm</strong></td>
+<td>Node v18.x LTS</td>
+<td>Node v20.x LTS</td>
+<td>Running the <code>fabric-api</code> Express server (Port 3001) and <code>client</code> Next.js frontend (Port 3000).</td>
+</tr>
+</tbody>
+</table>
+
+<div class="alert warn" style="margin-top:1.5rem;"><span class="a-ico">&#9888;&#65039;</span><div>
+<div class="a-t">CRITICAL DOCKER DESKTOP SETTING (Check this before starting!)</div>
+<div class="a-x">
+Open <strong>Docker Desktop Settings &rarr; Resources &rarr; WSL Integration</strong>:<br>
+1. Ensure <strong>"Enable integration with my default WSL distro"</strong> is checked.<br>
+2. Turn ON the toggle switch for <strong>Ubuntu</strong>.<br>
+3. Click <strong>Apply & Restart</strong>.
+</div>
+</div></div>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- STEP BY STEP SETUP -->
+<section class="section" id="setup">
+<div class="container">
+<div class="sl">Execution Manual</div>
+<h2 class="st">Step-by-Step Commands & Console Instructions</h2>
+<p class="sb">Follow these exact commands in order. Pay attention to the console badge above each step indicating whether to use <strong>PowerShell</strong> or <strong>WSL Ubuntu Terminal</strong>.</p>
+
+<div class="steps">
+
+<!-- STEP 1 -->
+<div class="step-card">
+<div class="step-header">
+<div class="step-title"><div class="step-num">1</div> Check Docker & Install WSL Dependencies</div>
+<span class="console-badge console-wsl">&#128187; WSL Ubuntu Terminal</span>
+</div>
+<div class="step-desc">Open your <strong>Ubuntu terminal</strong> (or run <code>wsl</code> in PowerShell) and verify Docker + install required tools.</div>
+<div class="cb">
+<span class="cm"># 1. Update package list and install git, curl, jq, make, gcc</span>
+<span class="cmd">sudo apt update && sudo apt install -y git curl jq make gcc g++ build-essential</span>
+
+<span class="cm"># 2. Check Docker is connected inside WSL</span>
+<span class="cmd">docker --version</span>
+<span class="cmd">docker ps</span>
+<span class="cm"># Output should show docker version and empty container list without errors</span>
+</div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step-card">
+<div class="step-header">
+<div class="step-title"><div class="step-num">2</div> Navigate to Project Directory & Set Execution Permissions</div>
+<span class="console-badge console-wsl">&#128187; WSL Ubuntu Terminal</span>
+</div>
+<div class="step-desc">Navigate directly to the extracted project directory inside WSL.</div>
+<div class="cb">
+<span class="cm"># Navigate to your Windows Desktop path inside WSL</span>
+<span class="cmd">cd /mnt/c/Users/hmury/Desktop/LandRecord_PBL/25CSMR09/LandRecords_extracted</span>
+
+<span class="cm"># Give execution permissions to all setup scripts</span>
+<span class="cmd">chmod +x *.sh</span>
+<span class="cmd">chmod +x fabric-samples/test-network/*.sh</span>
+
+<span class="cm"># Convert any Windows line endings (CRLF) to Linux format (LF) if needed</span>
+<span class="cmd">sed -i -e 's/$//' *.sh</span>
+</div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step-card">
+<div class="step-header">
+<div class="step-title"><div class="step-num">3</div> Launch the Complete Blockchain Network</div>
+<span class="console-badge console-wsl">&#128187; WSL Ubuntu Terminal</span>
+</div>
+<div class="step-desc">Run the automated network setup script. This script boots all 3 Orgs (Registration, Revenue, Collectorate), creates <code>mychannel</code>, deploys chaincode, and registers admins.</div>
+<div class="cb">
+<span class="cmd">./setup-network.sh</span>
+
+<span class="cm"># Output will show:</span>
+<span class="cm"># [✓] Crypto materials generated</span>
+<span class="cm"># [✓] Network started with Org1, Org2, Org3 & CouchDB</span>
+<span class="cm"># [✓] Channel 'mychannel' created and joined</span>
+<span class="cm"># [✓] Chaincode 'land-registration' committed successfully</span>
+</div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step-card">
+<div class="step-header">
+<div class="step-title"><div class="step-num">4</div> Start the Express Backend REST API Server</div>
+<span class="console-badge console-wsl">&#128187; WSL Ubuntu Terminal (New Tab)</span>
+</div>
+<div class="step-desc">Open a second WSL tab, navigate to `fabric-api`, install dependencies, and start the API server on Port 3001.</div>
+<div class="cb">
+<span class="cmd">cd /mnt/c/Users/hmury/Desktop/LandRecord_PBL/25CSMR09/LandRecords_extracted/fabric-api</span>
+
+<span class="cm"># Install backend Node dependencies</span>
+<span class="cmd">npm install</span>
+
+<span class="cm"># Start backend API server</span>
+<span class="cmd">npm start</span>
+<span class="cm"># API Server running on port 3001!</span>
+</div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step-card">
+<div class="step-header">
+<div class="step-title"><div class="step-num">5</div> Start Next.js Frontend Client Application</div>
+<span class="console-badge console-wsl">&#128187; WSL Ubuntu Terminal (3rd Tab)</span>
+</div>
+<div class="step-desc">Open a third WSL tab, navigate to `client`, install dependencies, and launch the dev server.</div>
+<div class="cb">
+<span class="cmd">cd /mnt/c/Users/hmury/Desktop/LandRecord_PBL/25CSMR09/LandRecords_extracted/client</span>
+
+<span class="cm"># Install frontend Node dependencies</span>
+<span class="cmd">npm install</span>
+
+<span class="cm"># Start Next.js frontend</span>
+<span class="cmd">npm run dev</span>
+<span class="cm"># Ready on http://localhost:3000</span>
+</div>
+</div>
+
+<!-- STEP 6 -->
+<div class="step-card">
+<div class="step-header">
+<div class="step-title"><div class="step-num">6</div> Open the Web Application in Your Windows Browser</div>
+<span class="console-badge console-browser">&#127760; Windows Web Browser</span>
+</div>
+<div class="step-desc">Open Chrome, Edge, or Firefox on Windows and navigate to the application UI:</div>
+<div class="cb">
+<span class="str">http://localhost:3000</span>                <span class="cm"># Main Citizen & Official Land Portal</span>
+<span class="str">http://localhost:3000/digilocker</span>      <span class="cm"># Citizen DigiLocker Vault</span>
+<span class="str">http://localhost:3000/digilocker-admin</span><span class="cm"># Official DigiLocker Access Request Dashboard</span>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- DIGILOCKER INTEGRATION -->
+<section class="section" id="digilocker">
+<div class="container">
+<div class="sl">Document Verification Engine</div>
+<h2 class="st">How DigiLocker Is Used & How to Integrate It</h2>
+<p class="sb">DigiLocker acts as the government-trusted identity and document verification bridge in this project. It ensures that uploaded property deeds and Aadhaar cards are authentic and tamper-evident before being anchored on the blockchain.</p>
+
+<!-- FLOW DIAGRAM -->
+<div class="flow">
+<div class="flow-title">&#9654; DIGILOCKER DOCUMENT VERIFICATION ARCHITECTURE</div>
+<div class="flow-grid">
+<div class="fb fb1"><div class="fbox">1. Official Requests Document</div><div class="fb-sub">Org2 Clerk requests Aadhaar / Deed via Admin Panel</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb2"><div class="fbox">2. Notification to Citizen</div><div class="fb-sub">Citizen gets alert in DigiLocker Vault UI</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb3"><div class="fbox">3. Citizen Grants Access</div><div class="fb-sub">Citizen approves request with 1-click</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb4"><div class="fbox">4. SHA-256 + IPFS Upload</div><div class="fb-sub">Document pinned to IPFS, SHA-256 hash computed</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb5"><div class="fbox">5. Blockchain Anchoring</div><div class="fb-sub">IPFS hash + SHA-256 saved immutably on Fabric</div></div>
+</div>
+</div>
+
+<div class="two" style="margin-top:2rem;">
+<div>
+<h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.8rem;color:var(--el);">1. Current Implementation in the Project</h3>
+<p style="font-size:.87rem;color:var(--tm);line-height:1.8;">
+In <code>25CSMR09/LandRecords_extracted</code>, DigiLocker is implemented using a <strong>Local Government Vault Simulation + Pinata IPFS Gateway</strong>:<br><br>
+• <code>DigiLockerVault.ts</code>: Stores citizen verified identity documents locally in MongoDB.<br>
+• <code>DigiLockerRequest.ts</code>: Tracks official document requests (Pending, Approved, Rejected).<br>
+• <code>api/digilocker/respond/route.ts</code>: When citizen clicks "Approve", the server computes a <strong>SHA-256 cryptographic hash</strong>, uploads the document to <strong>IPFS (Pinata)</strong>, and writes the immutable IPFS address + hash directly onto the Hyperledger Fabric blockchain ledger!
+</p>
+</div>
+
+<div>
+<h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.8rem;color:var(--il);">2. How to Configure / Integrate It Locally</h3>
+<p style="font-size:.87rem;color:var(--tm);line-height:1.8;">
+To run DigiLocker features locally, set these environment variables in <code>client/.env.local</code>:
+</p>
+<div class="cb">
+<span class="cm"># client/.env.local</span>
+<span class="cmd">MONGODB_URI</span>=<span class="str">"mongodb://localhost:27017/land_records"</span>
+<span class="cmd">NEXT_PUBLIC_FABRIC_API_URL</span>=<span class="str">"http://localhost:3001"</span>
+
+<span class="cm"># IPFS Pinata Keys (Optional - uses local hash fallback if omitted)</span>
+<span class="cmd">PINATA_API_KEY</span>=<span class="str">"your_pinata_api_key"</span>
+<span class="cmd">PINATA_SECRET_KEY</span>=<span class="str">"your_pinata_secret_key"</span>
+</div>
+</div>
+</div>
+
+<div class="alert sky" style="margin-top:2rem;"><span class="a-ico">&#9881;</span><div>
+<div class="a-t">How to Test the DigiLocker Flow Step-by-Step</div>
+<div class="a-x">
+1. Log in as an Official (e.g. Org2 Revenue Officer) at <code>http://localhost:3000/official-dashboard</code>.<br>
+2. Open any submitted land application and click <strong>"Request DigiLocker Document"</strong>.<br>
+3. Log in as Citizen at <code>http://localhost:3000/digilocker</code> &rarr; You will see the pending request.<br>
+4. Click <strong>"Approve Access"</strong> &rarr; Watch the terminal output as the SHA-256 hash is computed and recorded on the blockchain!
+</div>
+</div></div>
+
+</div>
+</section>
+
+<footer>
+<p>Land Registration System PBL &middot; System Setup & DigiLocker Guide &middot; Generated by Antigravity IDE</p>
+</footer>
+</body>
+</html>

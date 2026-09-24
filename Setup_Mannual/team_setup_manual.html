@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>E-Land Records PBL - Team Project Setup Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --bg-main: #0a0e17;
+  --bg-card: #111827;
+  --bg-card-hover: #162032;
+  --bg-inset: #0d1322;
+  --border: rgba(99, 102, 241, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --emerald: #10b981;
+  --emerald-light: #34d399;
+  --amber: #f59e0b;
+  --amber-light: #fbbf24;
+  --rose: #f43f5e;
+  --sky: #0ea5e9;
+  --sky-light: #38bdf8;
+  --purple: #8b5cf6;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, sans-serif;
+  line-height: 1.7;
+  font-size: 15px;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+  background-attachment: fixed;
+}
+
+/* Nav */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 14, 23, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.9rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #fff;
+  text-decoration: none;
+}
+.brand-badge {
+  background: linear-gradient(135deg, var(--emerald), var(--sky));
+  color: #000;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  text-transform: uppercase;
+}
+.nav-links {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--emerald-light); }
+
+/* Container */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 6rem;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem 4rem;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: var(--primary-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 1rem;
+  border-radius: 99px;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+h1 {
+  font-size: clamp(2.1rem, 4.5vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #ffffff 40%, var(--emerald-light) 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.2rem;
+}
+.hero-p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 760px;
+  margin: 0 auto 2rem;
+}
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.stat-pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+.stat-val {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--emerald-light);
+}
+.stat-lbl {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Section styling */
+.section {
+  padding: 3.5rem 0 1rem;
+}
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin-bottom: 0.6rem;
+  color: #fff;
+}
+.section-num {
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.section-desc {
+  color: var(--text-muted);
+  margin-bottom: 1.8rem;
+  font-size: 0.95rem;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Grid */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Callout Alerts */
+.alert {
+  padding: 1.1rem 1.3rem;
+  border-radius: var(--radius-md);
+  margin: 1.25rem 0;
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  font-size: 0.9rem;
+}
+.alert-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+.alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fde68a;
+}
+.alert-danger {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #fecdd3;
+}
+.alert-info {
+  background: rgba(14, 165, 233, 0.1);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  color: #bae6fd;
+}
+.alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #a7f3d0;
+}
+
+/* Code Snippet Box */
+.code-box {
+  background: #0b0f19;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  margin: 0.9rem 0 1.25rem;
+  overflow: hidden;
+  position: relative;
+}
+.code-header {
+  background: #141b2b;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.terminal-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.tag-wsl { background: rgba(245, 158, 11, 0.2); color: var(--amber-light); }
+.tag-pwsh { background: rgba(14, 165, 233, 0.2); color: var(--sky-light); }
+.tag-node { background: rgba(16, 185, 129, 0.2); color: var(--emerald-light); }
+
+pre {
+  padding: 1.1rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+.copy-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+.copy-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Steps list */
+.step-list {
+  list-style: none;
+  counter-reset: custom-counter;
+}
+.step-item {
+  counter-increment: custom-counter;
+  position: relative;
+  padding-left: 3rem;
+  margin-bottom: 2rem;
+}
+.step-item::before {
+  content: counter(custom-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--emerald);
+  color: var(--emerald-light);
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-head {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+.step-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin: 1.25rem 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+th {
+  background: #141d30;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+td {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: #cbd5e1;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255, 255, 255, 0.02); }
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.badge-role { background: rgba(99, 102, 241, 0.2); color: var(--primary-light); }
+.badge-pass { background: rgba(16, 185, 129, 0.2); color: var(--emerald-light); }
+.badge-dept { background: rgba(245, 158, 11, 0.2); color: var(--amber-light); }
+
+/* Quick Link Cards */
+.link-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.link-box:hover {
+  transform: translateY(-3px);
+  border-color: var(--emerald);
+}
+.link-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.link-title { font-weight: 700; color: #fff; font-size: 0.95rem; }
+.link-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+footer {
+  text-align: center;
+  padding: 3rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="brand">
+    <span>🏛️ LandRecords PBL</span>
+    <span class="brand-badge">Setup Guide</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#prereq">Prerequisites</a></li>
+    <li><a href="#env-setup">Secret Keys (.env)</a></li>
+    <li><a href="#onetime">First Time Setup</a></li>
+    <li><a href="#daily-run">Run Project</a></li>
+    <li><a href="#credentials">Login List</a></li>
+    <li><a href="#stop-network">Stop Network</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-tag">🚀 Team Collaboration Manual</div>
+    <h1>E-Land Records PBL<br/>Complete Setup & Run Guide</h1>
+    <p class="hero-p">
+      Ye guide hamare team ke dosto ke liye hai taaki repo clone karne ke baad bina kisi doubt ke poora project 
+      (Blockchain, Backend API & Next.js Frontend) aasani se setup aur run kar sakein.
+    </p>
+
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <div class="stat-val">3</div>
+        <div class="stat-lbl">Services Running</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-val">3000</div>
+        <div class="stat-lbl">Client Port</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-val">3001</div>
+        <div class="stat-lbl">Fabric API Port</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-val">3 Orgs</div>
+        <div class="stat-lbl">Hyperledger Fabric</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PREREQUISITES -->
+  <section class="section" id="prereq">
+    <div class="section-title">
+      <div class="section-num">1</div>
+      <h2>Prerequisites (Ye Software Install Hone Chahiye)</h2>
+    </div>
+    <p class="section-desc">Project start karne se pehle ensure karo ki aapke computer me ye 4 tools properly installed hain:</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🟢 1. Node.js & NPM</div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          Recommended: <strong>Node.js v18 LTS</strong> ya <strong>v20 LTS</strong>.
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>node -v
+npm -v</code></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🐳 2. Docker Desktop (Windows)</div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          Docker Desktop running hona chahiye with <strong>WSL 2 backend enabled</strong>.
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>PowerShell / WSL</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>docker --version
+docker ps</code></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🐧 3. WSL 2 (Ubuntu) ya Git Bash</div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          Hyperledger Fabric ke bash scripts (<code>.sh</code>) run karne ke liye Linux terminal zaroori hai.
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>PowerShell (Install WSL if missing)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>wsl --install</code></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🍃 4. MongoDB Database</div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          Ya to <strong>MongoDB Atlas (Cloud URI)</strong> use karo ya Local MongoDB service (port 27017).
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>Atlas Connection URI Format</span>
+          </div>
+          <pre><code>mongodb+srv://&lt;user&gt;:&lt;pass&gt;@cluster0.xxx.mongodb.net/elandrecords?retryWrites=true&w=majority</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: CLONE & FOLDER OVERVIEW -->
+  <section class="section" id="folders">
+    <div class="section-title">
+      <div class="section-num">2</div>
+      <h2>Clone Repo & Folder Structure</h2>
+    </div>
+    <p class="section-desc">Repo clone karne ke baad project ka internal structure samajhna zaroori hai:</p>
+
+    <div class="code-box">
+      <div class="code-header">
+        <span class="terminal-tag tag-pwsh">PowerShell / Git Bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code>git clone &lt;YOUR_GITHUB_REPO_URL&gt;
+cd LandRecords_extracted</code></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📁 Project Structure Overview</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.9;color:#94a3b8;margin-top:0.75rem;">
+        ├── <strong style="color:var(--emerald-light)">client/</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Next.js 14 Web Frontend + Auth APIs (Port 3000)<br/>
+        ├── <strong style="color:var(--sky-light)">fabric-api/</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Express.js Backend Bridge connecting to Blockchain (Port 3001)<br/>
+        ├── <strong style="color:var(--amber-light)">fabric-samples/test-network/</strong> → Hyperledger Fabric Network (Docker Containers)<br/>
+        ├── <strong style="color:var(--purple)">chaincode/</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Smart Contracts (land-registration-contract.js)<br/>
+        ├── <strong style="color:#fff">start-only.sh</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Roz network + API chalane ke liye script<br/>
+        ├── <strong style="color:#fff">stop-network.ps1 / .sh</strong> → Network aur containers safely band karne ke liye script<br/>
+        └── <strong style="color:#fff">setup-network.sh</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ One-time initial blockchain generator script
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3: ENVIRONMENT VARIABLES -->
+  <section class="section" id="env-setup">
+    <div class="section-title">
+      <div class="section-num">3</div>
+      <h2>Secret Keys (.env) Setup (Important ⚠️)</h2>
+    </div>
+    <p class="section-desc">
+      Security ke liye <code>.env.local</code> Git me commit nahi hota. Repo me <code>client/.env.example</code> di gayi hai.
+      Aapko isko copy karke apni <code>.env.local</code> banani hai:
+    </p>
+
+    <div class="alert alert-danger">
+      <span class="alert-icon">🚫</span>
+      <div>
+        <strong>WARNING: Kabhi bhi <code>.env.local</code> ko GitHub par push mat karna!</strong><br/>
+        Isme aapka MongoDB password, Pinata API key aur Gmail App password hota hai. Ye hamesha local PC par hi rahega.
+      </div>
+    </div>
+
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-head">Command: Copy Template to .env.local</div>
+        <div class="step-sub">Client folder me jaakar example file ko copy karein:</div>
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-pwsh">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>cd client
+cp .env.example .env.local</code></pre>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-head">Kon-Kon si Keys Setup Karni Hain?</div>
+        <div class="step-sub">Ab <code>client/.env.local</code> file ko kholo aur ye keys enter karo:</div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Variable Name</th>
+                <th>Kya Value Daalni Hai?</th>
+                <th>Kahan Se Milega?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>MONGODB_URI</code></td>
+                <td>Aapka MongoDB connection string (DB name: <code>elandrecords</code>)</td>
+                <td>MongoDB Atlas dashboard se Cluster Connect string lein.</td>
+              </tr>
+              <tr>
+                <td><code>NEXT_PUBLIC_FABRIC_API_URL</code></td>
+                <td><code>http://localhost:3001</code></td>
+                <td>Same rehne dein (Hyperledger REST API bridge).</td>
+              </tr>
+              <tr>
+                <td><code>NEXT_PUBLIC_BASE_URL</code></td>
+                <td><code>http://localhost:3000</code></td>
+                <td>Same rehne dein (Next.js frontend).</td>
+              </tr>
+              <tr>
+                <td><code>PINATA_API_KEY</code><br/><code>PINATA_SECRET_KEY</code><br/><code>PINATA_JWT</code></td>
+                <td>Pinata Cloud IPFS Keys (Property documents store karne ke liye)</td>
+                <td><a href="https://pinata.cloud" target="_blank" style="color:var(--emerald-light);">pinata.cloud</a> par free account banayein aur API keys generate karein. (Agar blank chodenge to mock hashes use honge).</td>
+              </tr>
+              <tr>
+                <td><code>SMTP_USER</code><br/><code>SMTP_PASSWORD</code></td>
+                <td>Gmail ID & 16-character App Password (OTP email ke liye)</td>
+                <td>Google Account → Security → 2-Step Verification ON → App Passwords generate karein. (Development me OTP console me bhi print hota hai).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4: INSTALL DEPENDENCIES -->
+  <section class="section" id="install">
+    <div class="section-title">
+      <div class="section-num">4</div>
+      <h2>Dependencies Install Karein (NPM Install)</h2>
+    </div>
+    <p class="section-desc">Client aur Fabric API dono ke packages install karne honge:</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1. Client Dependencies</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">Next.js, React, Tailwind, Mongoose, JWT packages:</p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>cd client
+npm install</code></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2. Fabric API Dependencies</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">Express, fabric-network, fabric-ca-client SDKs:</p>
+        <div class="code-box">
+          <div class="code-header">
+            <span>Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>cd ../fabric-api
+npm install</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 5: ONE-TIME RUNNABLE FILES -->
+  <section class="section" id="onetime">
+    <div class="section-title">
+      <div class="section-num">5</div>
+      <h2>One-Time (First Time Only) Setup Files</h2>
+    </div>
+    <p class="section-desc">
+      Ye files <strong>sirf ek baar (pehle din)</strong> run karni hain taaki database me Admin aur Officials create ho jayein aur Blockchain network initialise ho jaye:
+    </p>
+
+    <div class="card">
+      <div class="card-title">🌱 Step A: Database me Users & Officials Seed Karna</div>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin:0.5rem 0;">
+        In scripts ko run karne se MongoDB ke andar default Super Admin aur government officials (Clerk, MRO, Surveyor, Collector) insert ho jayenge:
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span class="terminal-tag tag-node">Client Folder me Terminal</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>cd client
+
+# 1. Super Admin banayein (admin@elandrecords.gov / admin123)
+node create-admin.js
+
+# 2. Saare Officials banayein (Clerk, Surveyor, MRO, Collector)
+node create-officials.js</code></pre>
+      </div>
+      <div class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <div>
+          Dono script complete hone par <code>"Connected to MongoDB"</code> aur <code>"Done!"</code> ka message dikhega.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⛓️ Step B: Hyperledger Fabric Network Initialize Karna</div>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin:0.5rem 0;">
+        Ye script Docker containers banayegi, <code>mychannel</code> create karegi, 3 organizations ko join karegi aur Smart Contract deploy karegi:
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span class="terminal-tag tag-wsl">WSL 2 (Ubuntu) / Git Bash - Root Folder</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code># Project root folder me jayein
+cd /c/Users/hmury/Desktop/LandRecords_PBL/LandRecords_extracted
+
+# Setup network script ko executable permission dein
+chmod +x setup-network.sh *.sh
+
+# Network setup run karein (Takes 2-4 minutes)
+./setup-network.sh</code></pre>
+      </div>
+
+      <div class="alert alert-info">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+          <strong>Note:</strong> <code>./setup-network.sh</code> sirf <strong>pehli baar</strong> chalana hai. Roz roz isko run nahi karna hai!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 6: DAILY RUNNING COMMANDS -->
+  <section class="section" id="daily-run">
+    <div class="section-title">
+      <div class="section-num">6</div>
+      <h2>Roz Project Kaise Start Karein (Daily Running)</h2>
+    </div>
+    <p class="section-desc">
+      Project ke total <strong>3 components</strong> run hote hain: 
+      <strong>1. Hyperledger Docker Network</strong>, 
+      <strong>2. Fabric API (Port 3001)</strong>, aur 
+      <strong>3. Next.js Client Frontend (Port 3000)</strong>.
+    </p>
+
+    <!-- METHOD 1: 3 TERMINALS (RECOMMENDED FOR DEVELOPMENT) -->
+    <div class="card" style="border:1px solid rgba(99, 102, 241, 0.4);margin-bottom:2rem;">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🌟 Method 1: 3-Terminal Setup (Recommended for Development & Debugging)</span>
+        </div>
+        <span class="badge" style="background:rgba(99,102,241,0.25);color:var(--primary-light);">Best for Developers</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.25rem;">
+        Is method me <code>fabric-api</code> apne alag terminal me chalti hai jisse aap live API calls, JSON responses, errors aur smart contract execution logs direct screen par dekh sakte hain:
+      </p>
+
+      <div class="grid-3">
+        <!-- Terminal 1 -->
+        <div style="background:var(--bg-inset);padding:1.2rem;border-radius:12px;border-top:3px solid var(--emerald);">
+          <strong style="color:#fff;font-size:0.95rem;">🟢 Terminal 1: Fabric Network</strong>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
+            Docker containers ko resume/start karta hai:
+          </p>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-wsl">WSL 2 / Root Dir</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>./start-network.sh</code></pre>
+          </div>
+          <span style="font-size:0.75rem;color:var(--emerald-light);">Peers, Orderer & CouchDB live ho jayenge.</span>
+        </div>
+
+        <!-- Terminal 2 -->
+        <div style="background:var(--bg-inset);padding:1.2rem;border-radius:12px;border-top:3px solid var(--sky);">
+          <strong style="color:#fff;font-size:0.95rem;">🔵 Terminal 2: Fabric REST API</strong>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
+            Blockchain REST bridge on Port 3001:
+          </p>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-node">fabric-api/ folder</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd fabric-api
+npm start</code></pre>
+          </div>
+          <span style="font-size:0.75rem;color:var(--sky-light);">Live server running at http://localhost:3001</span>
+        </div>
+
+        <!-- Terminal 3 -->
+        <div style="background:var(--bg-inset);padding:1.2rem;border-radius:12px;border-top:3px solid var(--purple);">
+          <strong style="color:#fff;font-size:0.95rem;">🟣 Terminal 3: Client Frontend</strong>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
+            Next.js web portal on Port 3000:
+          </p>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-pwsh">client/ folder</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd client
+npm run dev</code></pre>
+          </div>
+          <span style="font-size:0.75rem;color:var(--purple);">Browser: http://localhost:3000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- METHOD 2: 2 TERMINALS (AUTOMATED SHORTCUT) -->
+    <div class="card" style="border:1px solid rgba(16, 185, 129, 0.35);">
+      <div class="card-header">
+        <div class="card-title">
+          <span>⚡ Method 2: 2-Terminal Quick Shortcut (Automated Background)</span>
+        </div>
+        <span class="badge" style="background:rgba(16,185,129,0.25);color:var(--emerald-light);">Quick Demo Mode</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1rem;">
+        Agar aapko fast demo dena hai to <code>./start-only.sh</code> script Hyperledger Docker network ke sath-sath <strong>fabric-api ko automatically background me start</strong> kar deti hai (<code>node index.js &</code>):
+      </p>
+
+      <div class="grid-2">
+        <div class="card" style="margin-bottom:0;background:var(--bg-inset);">
+          <div class="card-title" style="font-size:0.95rem;">🟢 Terminal 1: Network + API (Automated)</div>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-wsl">WSL 2 / Root Dir</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>./start-only.sh</code></pre>
+          </div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">
+            👉 Ye script containers ko start karegi aur backend me <code>node index.js</code> ko port 3001 par launch kar degi.
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:0;background:var(--bg-inset);">
+          <div class="card-title" style="font-size:0.95rem;">🟣 Terminal 2: Next.js Client Frontend</div>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-pwsh">client/ folder</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd client
+npm run dev</code></pre>
+          </div>
+          <div style="font-size:0.8rem;color:var(--text-muted);">
+            👉 Next.js frontend start hoga port 3000 par: <a href="http://localhost:3000" target="_blank" style="color:var(--emerald-light);">http://localhost:3000</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- URLs -->
+    <div class="grid-3" style="margin-top:1.5rem;">
+      <a href="http://localhost:3000" target="_blank" class="link-box">
+        <div class="link-icon">🌐</div>
+        <div class="link-title">Citizen Portal</div>
+        <div class="link-desc">localhost:3000</div>
+      </a>
+      <a href="http://localhost:3000/officiallogin" target="_blank" class="link-box">
+        <div class="link-icon">👔</div>
+        <div class="link-title">Official Portal</div>
+        <div class="link-desc">localhost:3000/officiallogin</div>
+      </a>
+      <a href="http://localhost:3000/adminlogin" target="_blank" class="link-box">
+        <div class="link-icon">🛡️</div>
+        <div class="link-title">Super Admin Portal</div>
+        <div class="link-desc">localhost:3000/adminlogin</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- STEP 7: CREDENTIALS CHEAT SHEET -->
+  <section class="section" id="credentials">
+    <div class="section-title">
+      <div class="section-num">7</div>
+      <h2>Pre-Seeded Login Credentials Cheat Sheet</h2>
+    </div>
+    <p class="section-desc">Testing karne ke liye in login credentials ka use karein:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Department / Org</th>
+            <th>Portal URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-role">Super Admin</span></td>
+            <td><code>admin@elandrecords.gov</code></td>
+            <td><span class="badge badge-pass">admin123</span></td>
+            <td>Full System Admin</td>
+            <td><code>/adminlogin</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-role">Clerk</span></td>
+            <td><code>clerk1@gov.in</code></td>
+            <td><span class="badge badge-pass">clerk123</span></td>
+            <td>Registration Dept (Org1)</td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-role">Surveyor</span></td>
+            <td><code>survey1@gov.in</code></td>
+            <td><span class="badge badge-pass">survey123</span></td>
+            <td>Revenue Dept (Org2)</td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-role">MRO</span></td>
+            <td><code>mro1@gov.in</code></td>
+            <td><span class="badge badge-pass">mro123</span></td>
+            <td>Revenue Dept (Org2)</td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-role">Superintendent</span></td>
+            <td><code>super1@gov.in</code></td>
+            <td><span class="badge badge-pass">super123</span></td>
+            <td>Registration Dept (Org1)</td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-role">District Collector</span></td>
+            <td><code>col1@gov.in</code></td>
+            <td><span class="badge badge-pass">collector123</span></td>
+            <td>Collectorate (Org3)</td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-role">Citizen (User)</span></td>
+            <td colspan="4" style="color:var(--text-muted);">
+              Aap homepage (<code>/userregistration</code>) se direct koi bhi naya citizen account register kar sakte hain.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STEP 8: STOP NETWORK -->
+  <section class="section" id="stop-network">
+    <div class="section-title">
+      <div class="section-num">8</div>
+      <h2>Project & Network Ko Stop Kaise Karein</h2>
+    </div>
+    <p class="section-desc">Kaam khatam hone ke baad RAM aur CPU free karne ke liye 2 options hain:</p>
+
+    <div class="grid-2">
+      <div class="card" style="border:1px solid rgba(16, 185, 129, 0.4);">
+        <div class="card-title">🟢 Option 1: Clean Stop (Data Safe / Recommended)</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0;">
+          Isse ledger aur MongoDB data safe rehta hai, sirf containers aur servers pause ho jaate hain:
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-pwsh">PowerShell me</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>.\stop-network.ps1</code></pre>
+        </div>
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-wsl">WSL / Git Bash me</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>./stop-network.sh</code></pre>
+        </div>
+      </div>
+
+      <div class="card" style="border:1px solid rgba(244, 63, 94, 0.4);">
+        <div class="card-title">🔴 Option 2: Full Network Reset (Wipe)</div>
+        <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0;">
+          ⚠️ <strong>Warning:</strong> Is command se saara blockchain data, crypto certificates aur channel destroy ho jayega:
+        </p>
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-wsl">WSL / Git Bash me</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>cd fabric-samples/test-network
+./network.sh down</code></pre>
+        </div>
+        <div style="font-size:0.8rem;color:var(--rose);">
+          Sirf tab use karein jab scratch se naya network shuru karna ho!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 9: GIT COLLABORATION -->
+  <section class="section" id="git-workflow">
+    <div class="section-title">
+      <div class="section-num">9</div>
+      <h2>Team Git Branching Rules (No Conflict Guarantee)</h2>
+    </div>
+    <p class="section-desc">Kyunki hamare 3 members 3 alag alag folders me kaam kar rahe hain:</p>
+
+    <div class="card">
+      <div class="grid-3" style="margin-bottom:1.25rem;">
+        <div style="background:var(--bg-inset);padding:1rem;border-radius:10px;border-left:3px solid var(--purple);">
+          <strong style="color:#fff;">Member 1: Chaincode</strong><br/>
+          <span style="font-size:0.8rem;color:var(--text-muted);">Folder: <code>chaincode/</code></span><br/>
+          <span class="badge" style="background:rgba(139,92,246,0.2);color:var(--purple);margin-top:0.4rem;">feature/chaincode</span>
+        </div>
+        <div style="background:var(--bg-inset);padding:1rem;border-radius:10px;border-left:3px solid var(--sky);">
+          <strong style="color:#fff;">Member 2: Backend API</strong><br/>
+          <span style="font-size:0.8rem;color:var(--text-muted);">Folder: <code>fabric-api/</code></span><br/>
+          <span class="badge" style="background:rgba(14,165,233,0.2);color:var(--sky-light);margin-top:0.4rem;">feature/backend-api</span>
+        </div>
+        <div style="background:var(--bg-inset);padding:1rem;border-radius:10px;border-left:3px solid var(--emerald);">
+          <strong style="color:#fff;">Member 3: Frontend UI</strong><br/>
+          <span style="font-size:0.8rem;color:var(--text-muted);">Folder: <code>client/</code></span><br/>
+          <span class="badge" style="background:rgba(16,185,129,0.2);color:var(--emerald-light);margin-top:0.4rem;">feature/frontend-ui</span>
+        </div>
+      </div>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>Git Branch Workflow Commands</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code># 1. Apni branch banayein
+git checkout -b feature/your-feature-name
+
+# 2. Kaam karne ke baad commit karein
+git add .
+git commit -m "feat: add joint ownership logic"
+
+# 3. GitHub par apni branch push karein
+git push origin feature/your-feature-name
+
+# 4. GitHub par jaakar Pull Request (PR) open karein</code></pre>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>🏛️ Land Records PBL Collaboration Portal &bull; Generated for Project Team</p>
+</footer>
+
+<script>
+function copyCode(btn) {
+  const codeBox = btn.closest('.code-box');
+  const code = codeBox.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = 'Copied! ✓';
+    btn.style.background = '#10b981';
+    btn.style.borderColor = '#10b981';
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.background = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

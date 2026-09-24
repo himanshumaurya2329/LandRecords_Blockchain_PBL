@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Land Records PBL - System Requirements & Environment Configuration Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#090d16;
+  --bg2:#0f172a;
+  --bg3:#1e293b;
+  --bg-card:rgba(15,23,42,0.85);
+  --bdr:rgba(99,102,241,0.22);
+  --bdr-light:rgba(148,163,184,0.12);
+  --ind:#6366f1;
+  --ind-l:#818cf8;
+  --em:#10b981;
+  --em-l:#34d399;
+  --am:#f59e0b;
+  --am-l:#fbbf24;
+  --ro:#f43f5e;
+  --sk:#0ea5e9;
+  --sk-l:#38bdf8;
+  --vi:#8b5cf6;
+  --vi-l:#a78bfa;
+  --tx:#f1f5f9;
+  --tm:#94a3b8;
+  --td:#64748b;
+  --r:12px;
+  --r2:18px;
+  --sh:0 10px 30px -10px rgba(0,0,0,0.5);
+  --sh-glow:0 0 25px rgba(99,102,241,0.25);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--tx);
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  line-height:1.7;
+  overflow-x:hidden;
+  padding-bottom:5rem;
+}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--ind);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--ind-l)}
+
+code{
+  background:rgba(99,102,241,0.15);
+  color:var(--ind-l);
+  padding:0.15rem 0.5rem;
+  border-radius:5px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.86em;
+  border:1px solid rgba(99,102,241,0.25);
+}
+a{color:var(--sk-l);text-decoration:none;transition:color .2s}
+a:hover{color:#fff;text-decoration:underline}
+
+/* NAVBAR */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(9,13,22,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--bdr-light);
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.nav-brand{display:flex;align-items:center;gap:0.75rem;font-weight:700;font-size:0.98rem}
+.nav-dot{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,var(--em),var(--sk));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;box-shadow:0 0 12px rgba(16,185,129,0.35);
+}
+.nav-links{display:flex;gap:1.2rem;list-style:none}
+.nav-links a{color:var(--tm);font-size:0.83rem;font-weight:500}
+.nav-links a:hover{color:var(--em-l);text-decoration:none}
+@media(max-width:850px){.nav-links{display:none}}
+
+/* HERO */
+.hero{
+  padding:125px 2rem 3.5rem;
+  text-align:center;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(99,102,241,0.22),transparent 65%),
+             radial-gradient(ellipse 50% 40% at 85% 80%,rgba(16,185,129,0.12),transparent 60%);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(99,102,241,0.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,102,241,0.05) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:rgba(99,102,241,0.12);
+  border:1px solid rgba(99,102,241,0.35);
+  padding:0.35rem 1.1rem;border-radius:99px;
+  font-size:0.76rem;font-weight:700;color:var(--ind-l);
+  letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1.4rem;
+}
+h1{
+  font-size:clamp(2.1rem,4.5vw,3.6rem);
+  font-weight:800;line-height:1.15;
+  background:linear-gradient(135deg,#ffffff 20%,var(--ind-l) 65%,var(--em-l) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:1.1rem;
+}
+.hero-sub{font-size:1.05rem;color:var(--tm);max-width:760px;margin:0 auto 2.2rem}
+
+/* QUICK STATS */
+.hero-stats{display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap;max-width:980px;margin:0 auto}
+.sp{
+  background:var(--bg-card);border:1px solid var(--bdr);
+  border-radius:14px;padding:0.85rem 1.5rem;text-align:center;
+  box-shadow:var(--sh);backdrop-filter:blur(10px);min-width:140px;
+}
+.sp .n{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--em-l),var(--sk-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp .l{font-size:0.75rem;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+
+/* CONTAINER & SECTIONS */
+.container{max-width:1140px;margin:0 auto;padding:0 2rem}
+.section{padding:3.5rem 0}
+.sl{font-size:0.74rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--em-l);margin-bottom:0.4rem;display:flex;align-items:center;gap:0.4rem}
+.st{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;line-height:1.25;margin-bottom:0.8rem}
+.sb{color:var(--tm);max-width:820px;font-size:0.95rem;margin-bottom:1.5rem}
+hr.d{border:none;border-top:1px solid var(--bdr-light);margin:2.5rem 0}
+
+/* GRIDS & CARDS */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+@media(max-width:850px){.two{grid-template-columns:1fr}}
+
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--bdr-light);
+  border-radius:var(--r2);
+  padding:1.6rem;
+  backdrop-filter:blur(10px);
+  position:relative;
+  transition:transform .2s, border-color .2s;
+}
+.card:hover{
+  border-color:var(--bdr);
+  transform:translateY(-2px);
+}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.card-title{font-size:1.1rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:0.6rem}
+.card-icon{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;
+}
+.card-desc{font-size:0.88rem;color:var(--tm);margin-bottom:1.2rem;line-height:1.6}
+
+/* PILLS & BADGES */
+.tag{
+  font-size:0.7rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:6px;
+  text-transform:uppercase;letter-spacing:0.04em;display:inline-flex;align-items:center;gap:0.3rem;
+}
+.tag-req{background:rgba(244,63,94,0.18);color:#fb7185;border:1px solid rgba(244,63,94,0.35)}
+.tag-opt{background:rgba(14,165,233,0.18);color:var(--sk-l);border:1px solid rgba(14,165,233,0.35)}
+.tag-core{background:rgba(16,185,129,0.18);color:var(--em-l);border:1px solid rgba(16,185,129,0.35)}
+.tag-mock{background:rgba(245,158,11,0.18);color:var(--am-l);border:1px solid rgba(245,158,11,0.35)}
+
+/* CODE BLOCKS */
+.cb-wrap{position:relative;margin:1rem 0}
+.cb-header{
+  background:#131b2e;
+  border:1px solid var(--bdr);
+  border-bottom:none;
+  border-radius:var(--r) var(--r) 0 0;
+  padding:0.6rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.78rem;color:var(--tm);
+}
+.cb{
+  background:#090d16;
+  border:1px solid var(--bdr);
+  border-radius:0 0 var(--r) var(--r);
+  padding:1.2rem;
+  overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.82rem;
+  line-height:1.8;
+  color:#cbd5e1;
+}
+.cb-full-round{border-radius:var(--r)}
+.cb .c-cmt{color:#64748b}
+.cb .c-key{color:#93c5fd;font-weight:600}
+.cb .c-val{color:#86efac}
+.cb .c-eq{color:#f43f5e}
+.cb .c-cmd{color:#38bdf8;font-weight:600}
+
+.btn-copy{
+  background:rgba(99,102,241,0.2);
+  border:1px solid rgba(99,102,241,0.4);
+  color:#fff;
+  border-radius:6px;
+  padding:0.25rem 0.7rem;
+  font-size:0.75rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  display:inline-flex;align-items:center;gap:0.4rem;
+}
+.btn-copy:hover{
+  background:var(--ind);
+  box-shadow:0 0 10px rgba(99,102,241,0.5);
+}
+
+/* ALERTS */
+.alert{
+  border-radius:var(--r);padding:1.1rem 1.3rem;display:flex;gap:0.9rem;
+  align-items:flex-start;margin:1.4rem 0;
+}
+.alert.info{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.3)}
+.alert.ok{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3)}
+.alert.warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3)}
+.alert.danger{background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.3)}
+.a-ico{font-size:1.3rem;flex-shrink:0;margin-top:0.1rem}
+.a-t{font-weight:700;font-size:0.92rem;margin-bottom:0.25rem}
+.alert.info .a-t{color:var(--ind-l)}
+.alert.ok .a-t{color:var(--em-l)}
+.alert.warn .a-t{color:var(--am-l)}
+.alert.danger .a-t{color:#fb7185}
+.a-x{font-size:0.86rem;color:var(--tm);line-height:1.7}
+
+/* FILE TREE */
+.ft{
+  background:var(--bg2);
+  border:1px solid var(--bdr-light);
+  border-radius:var(--r);
+  padding:1.2rem 1.5rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.83rem;
+  color:#cbd5e1;
+  line-height:1.9;
+}
+.ft-fld{color:#facc15;font-weight:600}
+.ft-env{color:#34d399;font-weight:700;background:rgba(52,211,153,0.12);padding:0.1rem 0.4rem;border-radius:4px}
+.ft-sub{color:var(--tm)}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin:1.5rem 0}
+.dt{width:100%;border-collapse:separate;border-spacing:0;font-size:0.85rem}
+.dt th{
+  background:var(--bg3);color:var(--tm);font-size:0.72rem;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;padding:0.85rem 1rem;text-align:left;
+}
+.dt th:first-child{border-radius:8px 0 0 8px}
+.dt th:last-child{border-radius:0 8px 8px 0}
+.dt td{padding:0.95rem 1rem;border-bottom:1px solid var(--bdr-light);vertical-align:middle}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:rgba(99,102,241,0.04)}
+
+/* STEPPER */
+.stepper{display:flex;flex-direction:column;gap:1.6rem;margin-top:2rem}
+.step-item{
+  display:flex;gap:1.4rem;position:relative;
+}
+.step-item:not(:last-child)::before{
+  content:'';position:absolute;left:20px;top:44px;bottom:-20px;width:2px;
+  background:linear-gradient(to bottom,var(--ind),rgba(99,102,241,0.1));
+}
+.step-idx{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--ind),var(--vi));
+  color:#fff;font-weight:800;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;box-shadow:0 0 15px rgba(99,102,241,0.4);
+}
+.step-body{flex:1;background:var(--bg-card);border:1px solid var(--bdr-light);border-radius:var(--r2);padding:1.4rem}
+.step-h{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:0.4rem;display:flex;align-items:center;gap:0.7rem;flex-wrap:wrap}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:25px;right:25px;z-index:999;
+  background:var(--em);color:#000;font-weight:700;font-size:0.85rem;
+  padding:0.8rem 1.4rem;border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,0.5);
+  opacity:0;transform:translateY(20px);transition:all .3s ease;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-dot">📜</div>
+    <span>LandRecords PBL &mdash; Environment & API Guide</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#summary">Executive Summary</a></li>
+    <li><a href="#files">Where to Place Files</a></li>
+    <li><a href="#env-client">Client .env.local</a></li>
+    <li><a href="#env-fabric">Fabric-API .env</a></li>
+    <li><a href="#how-to-get">How to Get APIs</a></li>
+    <li><a href="#startup-flow">Run Sequence</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="badge">🚀 Deployment & Execution Blueprint</div>
+  <h1>Required APIs, URIs & Environment Setup</h1>
+  <p class="hero-sub">
+    Everything you need to configure and execute the Land Records Hyperledger Fabric, Express Bridge, and Next.js Frontend application without missing keys or failing connections.
+  </p>
+
+  <div class="hero-stats">
+    <div class="sp">
+      <div class="n">2</div>
+      <div class="l">Config Files</div>
+    </div>
+    <div class="sp">
+      <div class="n">1</div>
+      <div class="l">MongoDB URI</div>
+    </div>
+    <div class="sp">
+      <div class="n">3</div>
+      <div class="l">Pinata IPFS Keys</div>
+    </div>
+    <div class="sp">
+      <div class="n">1</div>
+      <div class="l">Fabric API URL</div>
+    </div>
+    <div class="sp">
+      <div class="n">100%</div>
+      <div class="l">Offline Fallback Ready</div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- SECTION 1: QUICK SUMMARY TABLE -->
+  <section class="section" id="summary">
+    <div class="sl"><span>⚡</span> Quick Overview</div>
+    <h2 class="st">What Does This Project Require?</h2>
+    <p class="sb">
+      The project consists of 3 tiers: <strong>Blockchain (Hyperledger Fabric v2.4/v2.5)</strong>, <strong>Middleware API (Express)</strong>, and <strong>Client Web App (Next.js 16 + React 19)</strong>. Below is the complete manifest of every URI, key, and port.
+    </p>
+
+    <div class="table-wrap">
+      <table class="dt">
+        <thead>
+          <tr>
+            <th>Item / Variable Name</th>
+            <th>Required?</th>
+            <th>Target File & Directory</th>
+            <th>Default / Example Value</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>MONGODB_URI</code></td>
+            <td><span class="tag tag-req">Mandatory</span></td>
+            <td><code>client/.env.local</code></td>
+            <td><code>mongodb://localhost:27017/elandrecords</code></td>
+            <td>Stores users, official roles, citizen KYC, applications, audit logs.</td>
+          </tr>
+          <tr>
+            <td><code>NEXT_PUBLIC_FABRIC_API_URL</code></td>
+            <td><span class="tag tag-core">Core</span></td>
+            <td><code>client/.env.local</code></td>
+            <td><code>http://localhost:3001</code></td>
+            <td>Connects the Next.js UI to the Fabric Node.js Express Gateway.</td>
+          </tr>
+          <tr>
+            <td><code>NEXT_PUBLIC_BASE_URL</code></td>
+            <td><span class="tag tag-core">Core</span></td>
+            <td><code>client/.env.local</code></td>
+            <td><code>http://localhost:3000</code></td>
+            <td>Base URL for generated deed verification QR codes and internal calls.</td>
+          </tr>
+          <tr>
+            <td><code>PINATA_API_KEY</code><br><code>PINATA_SECRET_KEY</code><br><code>PINATA_JWT</code></td>
+            <td><span class="tag tag-opt">Recommended</span><br><span class="tag tag-mock">Mock Fallback</span></td>
+            <td><code>client/.env.local</code></td>
+            <td>Get free from <a href="https://pinata.cloud" target="_blank">pinata.cloud</a></td>
+            <td>Decentralized IPFS storage for deeds, survey PDFs, and DigiLocker documents.</td>
+          </tr>
+          <tr>
+            <td><code>SMTP_HOST</code><br><code>SMTP_USER</code><br><code>SMTP_PASSWORD</code> / <code>SMTP_PASS</code></td>
+            <td><span class="tag tag-opt">Optional</span><br><span class="tag tag-mock">Console Fallback</span></td>
+            <td><code>client/.env.local</code></td>
+            <td><code>smtp.gmail.com</code> (Port 587) or Mailtrap</td>
+            <td>Citizen registration email OTPs. (If omitted, logs stub OTP to terminal).</td>
+          </tr>
+          <tr>
+            <td><code>PORT</code> (Fabric API)</td>
+            <td><span class="tag tag-core">Core</span></td>
+            <td><code>fabric-api/.env</code></td>
+            <td><code>3001</code></td>
+            <td>Port on which the Hyperledger Fabric Express API listens.</td>
+          </tr>
+          <tr>
+            <td><code>JWT_SECRET</code></td>
+            <td><span class="tag tag-core">Core</span></td>
+            <td><code>fabric-api/.env</code></td>
+            <td><code>land-registration-jwt-secret</code></td>
+            <td>Signing session tokens for officials on the blockchain gateway.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert info">
+      <div class="a-ico">💡</div>
+      <div>
+        <div class="a-t">Database Name Consistency Warning</div>
+        <div class="a-x">
+          In <code>client/src/lib/db/connect.ts</code>, the default fallback is <code>eland-records</code> (with a hyphen), while in <code>create-officials.js</code> and <code>fix-credentials.js</code>, the script connects to <code>elandrecords</code> (no hyphen). To ensure your seeded admin and officials appear in the frontend, define <strong><code>MONGODB_URI=mongodb://localhost:27017/elandrecords</code></strong> in <code>client/.env.local</code>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- SECTION 2: FILE LOCATIONS -->
+  <section class="section" id="files">
+    <div class="sl"><span>📂</span> Project Layout</div>
+    <h2 class="st">Where to Place These Files</h2>
+    <p class="sb">
+      You need to create two environment configuration files in your repository. Follow the directory tree below:
+    </p>
+
+    <div class="two">
+      <div>
+        <div class="ft">
+📁 LandRecords_PBL/<br>
+└── 📁 25CSMR09/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── 📁 LandRecords_extracted/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 📁 <span class="ft-fld">client/</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-sub">← Next.js Web App</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="ft-env">.env.local</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#10b981;font-weight:700">★ CREATE THIS FILE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── package.json<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── create-admin.js<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── fix-credentials.js<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 📁 <span class="ft-fld">fabric-api/</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-sub">← Express Fabric Gateway</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── <span class="ft-env">.env</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#10b981;font-weight:700">★ CREATE THIS FILE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;├── .env.example<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── index.js<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 📁 fabric-samples/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 setup-network.sh<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📄 start-network.sh
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-icon">1️⃣</div>
+              <div>
+                <div>File #1: <code>client/.env.local</code></div>
+                <small style="color:var(--tm);font-weight:400">Next.js Frontend & API Routes</small>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">
+            <strong>Exact Full Path:</strong><br>
+            <code>c:\Users\hmury\Desktop\LandRecords_PBL\25CSMR09\LandRecords_extracted\client\.env.local</code>
+          </p>
+          <p class="card-desc">
+            Next.js automatically loads <code>.env.local</code> on startup. This contains the MongoDB connection URI, Pinata IPFS keys, Fabric API endpoint, and SMTP email settings.
+          </p>
+        </div>
+
+        <div class="card" style="margin-top:1.2rem">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-icon">2️⃣</div>
+              <div>
+                <div>File #2: <code>fabric-api/.env</code></div>
+                <small style="color:var(--tm);font-weight:400">Express Blockchain Gateway</small>
+              </div>
+            </div>
+          </div>
+          <p class="card-desc">
+            <strong>Exact Full Path:</strong><br>
+            <code>c:\Users\hmury\Desktop\LandRecords_PBL\25CSMR09\LandRecords_extracted\fabric-api\.env</code>
+          </p>
+          <p class="card-desc">
+            Used by <code>dotenv</code> in <code>fabric-api/index.js</code>. Configures the server listening port (3001) and security JWT secret.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- SECTION 3: EXACT CONTENTS FOR CLIENT .ENV.LOCAL -->
+  <section class="section" id="env-client">
+    <div class="sl"><span>📝</span> Copy-Paste Configuration #1</div>
+    <h2 class="st">Content for <code>client/.env.local</code></h2>
+    <p class="sb">
+      Create a new file named <strong><code>.env.local</code></strong> inside the <strong><code>client/</code></strong> folder and paste the following content:
+    </p>
+
+    <div class="cb-wrap">
+      <div class="cb-header">
+        <span>client/.env.local</span>
+        <button class="btn-copy" onclick="copyClientEnv()">📋 Copy client/.env.local</button>
+      </div>
+      <pre class="cb" id="code-client"><span class="c-cmt"># ==============================================================================</span>
+<span class="c-cmt"># 1. DATABASE CONFIGURATION (MANDATORY)</span>
+<span class="c-cmt"># Use local MongoDB (port 27017) or replace with MongoDB Atlas cloud URI</span>
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-key">MONGODB_URI</span><span class="c-eq">=</span><span class="c-val">mongodb://localhost:27017/elandrecords</span>
+
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-cmt"># 2. INTERNAL API AND BLOCKCHAIN BRIDGE</span>
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-key">NEXT_PUBLIC_FABRIC_API_URL</span><span class="c-eq">=</span><span class="c-val">http://localhost:3001</span>
+<span class="c-key">NEXT_PUBLIC_BASE_URL</span><span class="c-eq">=</span><span class="c-val">http://localhost:3000</span>
+
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-cmt"># 3. IPFS STORAGE (PINATA CLOUD)</span>
+<span class="c-cmt"># Free tier at https://pinata.cloud (If omitted, system generates mock Qm... hash)</span>
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-key">PINATA_API_KEY</span><span class="c-eq">=</span><span class="c-val">your_pinata_api_key_here</span>
+<span class="c-key">PINATA_SECRET_KEY</span><span class="c-eq">=</span><span class="c-val">your_pinata_secret_key_here</span>
+<span class="c-key">PINATA_JWT</span><span class="c-eq">=</span><span class="c-val">your_pinata_jwt_token_here</span>
+
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-cmt"># 4. EMAIL / SMTP NOTIFICATIONS (OTP VERIFICATION)</span>
+<span class="c-cmt"># In development (NODE_ENV=development), OTP is returned in API & logged to console.</span>
+<span class="c-cmt"># For live emails, provide Gmail or Mailtrap SMTP credentials below.</span>
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-key">SMTP_HOST</span><span class="c-eq">=</span><span class="c-val">smtp.gmail.com</span>
+<span class="c-key">SMTP_PORT</span><span class="c-eq">=</span><span class="c-val">587</span>
+<span class="c-key">SMTP_SECURE</span><span class="c-eq">=</span><span class="c-val">false</span>
+<span class="c-key">SMTP_USER</span><span class="c-eq">=</span><span class="c-val">your_email@gmail.com</span>
+<span class="c-key">SMTP_PASSWORD</span><span class="c-eq">=</span><span class="c-val">your_16_digit_app_password</span>
+<span class="c-key">SMTP_PASS</span><span class="c-eq">=</span><span class="c-val">your_16_digit_app_password</span>
+<span class="c-key">SMTP_FROM</span><span class="c-eq">=</span><span class="c-val">"E-Land Records" &lt;noreply@elandrecords.local&gt;</span>
+
+<span class="c-cmt"># Environment</span>
+<span class="c-key">NODE_ENV</span><span class="c-eq">=</span><span class="c-val">development</span></pre>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- SECTION 4: EXACT CONTENTS FOR FABRIC-API .ENV -->
+  <section class="section" id="env-fabric">
+    <div class="sl"><span>📝</span> Copy-Paste Configuration #2</div>
+    <h2 class="st">Content for <code>fabric-api/.env</code></h2>
+    <p class="sb">
+      Create a new file named <strong><code>.env</code></strong> inside the <strong><code>fabric-api/</code></strong> folder and paste the following content:
+    </p>
+
+    <div class="cb-wrap">
+      <div class="cb-header">
+        <span>fabric-api/.env</span>
+        <button class="btn-copy" onclick="copyFabricEnv()">📋 Copy fabric-api/.env</button>
+      </div>
+      <pre class="cb" id="code-fabric"><span class="c-cmt"># ==============================================================================</span>
+<span class="c-cmt"># HYPERLEDGER FABRIC EXPRESS REST API CONFIGURATION</span>
+<span class="c-cmt"># ==============================================================================</span>
+<span class="c-key">PORT</span><span class="c-eq">=</span><span class="c-val">3001</span>
+<span class="c-key">JWT_SECRET</span><span class="c-eq">=</span><span class="c-val">land-registration-jwt-secret</span>
+
+<span class="c-cmt"># Optional Dynamic Path Overrides</span>
+<span class="c-cmt"># If omitted, fabric-api automatically resolves paths using app-root-path</span>
+<span class="c-cmt"># PROJECT_ROOT=/path/to/LandRecords_extracted</span>
+<span class="c-cmt"># FABRIC_NETWORK_PATH=/path/to/fabric-samples/test-network</span>
+<span class="c-cmt"># FABRIC_SAMPLES_PATH=/path/to/fabric-samples</span></pre>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- SECTION 5: HOW TO OBTAIN KEYS & URIS -->
+  <section class="section" id="how-to-get">
+    <div class="sl"><span>🔑</span> Step-by-Step Acquisition</div>
+    <h2 class="st">How to Obtain Every URI & API Key</h2>
+    <p class="sb">
+      Here is the exact step-by-step procedure to generate or find each credential.
+    </p>
+
+    <div class="three">
+      <!-- MONGODB -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3);color:var(--em-l)">🍃</div>
+            <div>MongoDB URI</div>
+          </div>
+          <span class="tag tag-req">Essential</span>
+        </div>
+        <div class="card-desc">
+          <strong>Choice 1: Local MongoDB (Fastest)</strong>
+          <ul style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.84rem;color:var(--tm)">
+            <li>Download & install <a href="https://www.mongodb.com/try/download/community" target="_blank">MongoDB Community Server</a>.</li>
+            <li>Runs locally at <code>mongodb://localhost:27017/elandrecords</code>.</li>
+            <li>Or with Docker: <code>docker run -d -p 27017:27017 --name mongo-land mongo:latest</code></li>
+          </ul>
+          <strong>Choice 2: Free MongoDB Atlas Cloud</strong>
+          <ul style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.84rem;color:var(--tm)">
+            <li>Go to <a href="https://www.mongodb.com/atlas/database" target="_blank">mongodb.com/atlas</a> & register.</li>
+            <li>Create a free <strong>M0 Shared Cluster</strong> (Free tier).</li>
+            <li>Under <strong>Database Access</strong>, add a user (e.g. <code>dbuser</code> / <code>password123</code>).</li>
+            <li>Under <strong>Network Access</strong>, click <em>Add IP</em> & choose <strong>Allow Access from Anywhere (0.0.0.0/0)</strong>.</li>
+            <li>Click <strong>Connect</strong> &rarr; <strong>Drivers</strong> &rarr; Copy URI: <br>
+              <code>mongodb+srv://&lt;user&gt;:&lt;pass&gt;@cluster0.xxx.mongodb.net/elandrecords?retryWrites=true&w=majority</code>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PINATA IPFS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon" style="background:rgba(14,165,233,0.15);border-color:rgba(14,165,233,0.3);color:var(--sk-l)">📌</div>
+            <div>Pinata IPFS Cloud</div>
+          </div>
+          <span class="tag tag-opt">Free 1GB</span>
+        </div>
+        <div class="card-desc">
+          Pinata hosts land deed PDFs, survey reports, and DigiLocker documents on the decentralized IPFS network.
+          <ul style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.84rem;color:var(--tm)">
+            <li>Sign up for a free account at <a href="https://www.pinata.cloud" target="_blank">pinata.cloud</a>.</li>
+            <li>Log in and open the <strong>API Keys</strong> section from the left sidebar.</li>
+            <li>Click <strong>New Key</strong>.</li>
+            <li>Toggle <strong>Admin</strong> (or select <em>pinFileToIPFS</em> and <em>pinList</em>).</li>
+            <li>Give it a key name (e.g., <code>LandRecords-PBL</code>) and click <strong>Generate API Key</strong>.</li>
+            <li><strong>Important:</strong> A modal will display 3 values:
+              <br>&bull; <code>API Key</code> &rarr; <code>PINATA_API_KEY</code>
+              <br>&bull; <code>API Secret</code> &rarr; <code>PINATA_SECRET_KEY</code>
+              <br>&bull; <code>JWT</code> &rarr; <code>PINATA_JWT</code>
+              <br>Copy them immediately (they are shown only once!).
+            </li>
+          </ul>
+          <em>* If you test without Pinata, the app automatically generates mock hashes (Qm...).</em>
+        </div>
+      </div>
+
+      <!-- SMTP GMAIL / MAILTRAP -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon" style="background:rgba(245,158,11,0.15);border-color:rgba(245,158,11,0.3);color:var(--am-l)">✉️</div>
+            <div>SMTP Email & OTP</div>
+          </div>
+          <span class="tag tag-opt">Free</span>
+        </div>
+        <div class="card-desc">
+          Citizen registration sends 6-digit email OTPs.
+          <ul style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.84rem;color:var(--tm)">
+            <li><strong>Option A (Gmail App Password):</strong></li>
+            <li>Open your Google Account &rarr; <strong>Security</strong>.</li>
+            <li>Ensure <strong>2-Step Verification</strong> is ON.</li>
+            <li>Search for <strong>App passwords</strong>.</li>
+            <li>Create an app named <code>LandRecords</code> & copy the 16-character generated password.</li>
+            <li>Set <code>SMTP_USER=yourname@gmail.com</code> and <code>SMTP_PASSWORD=your_16_char_password</code>.</li>
+            <li><strong>Option B (Mailtrap Test Inbox):</strong></li>
+            <li>Go to <a href="https://mailtrap.io" target="_blank">mailtrap.io</a> (Free).</li>
+            <li>Create an inbox and copy the SMTP credentials directly.</li>
+          </ul>
+          <em>* Note: In development mode, the OTP is returned directly in the register API JSON response and logged to console!</em>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- SECTION 6: RUNNING SEQUENCE -->
+  <section class="section" id="startup-flow">
+    <div class="sl"><span>🚀</span> Execution Workflow</div>
+    <h2 class="st">Step-by-Step Sequence to Run the Project</h2>
+    <p class="sb">
+      Follow these steps in order to start all blockchain nodes, initialize the database, launch the API, and run the frontend.
+    </p>
+
+    <div class="stepper">
+      <!-- STEP 1 -->
+      <div class="step-item">
+        <div class="step-idx">1</div>
+        <div class="step-body">
+          <div class="step-h">
+            <span>Start MongoDB Service</span>
+            <span class="tag tag-core">Terminal #1</span>
+          </div>
+          <p style="font-size:0.88rem;color:var(--tm);margin-bottom:0.8rem">
+            Ensure your local MongoDB daemon is running on port 27017, or verify your MongoDB Atlas cluster is online.
+          </p>
+          <div class="cb cb-full-round">
+<span class="c-cmt"># If using Docker for MongoDB:</span>
+<span class="c-cmd">docker run -d -p 27017:27017 --name mongo-land mongo:latest</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-item">
+        <div class="step-idx">2</div>
+        <div class="step-body">
+          <div class="step-h">
+            <span>Seed Default Admin & Government Officials</span>
+            <span class="tag tag-core">Terminal #1</span>
+          </div>
+          <p style="font-size:0.88rem;color:var(--tm);margin-bottom:0.8rem">
+            Initialize the database with the Super Admin and official accounts (Clerk, MRO, Surveyor, Collector, etc.).
+          </p>
+          <div class="cb cb-full-round">
+<span class="c-cmd">cd c:\Users\hmury\Desktop\LandRecords_PBL\25CSMR09\LandRecords_extracted\client</span>
+<span class="c-cmd">node create-admin.js</span>
+<span class="c-cmd">node fix-credentials.js</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-item">
+        <div class="step-idx">3</div>
+        <div class="step-body">
+          <div class="step-h">
+            <span>Start Hyperledger Fabric 3-Org Network</span>
+            <span class="tag tag-core">WSL2 / Git Bash</span>
+          </div>
+          <p style="font-size:0.88rem;color:var(--tm);margin-bottom:0.8rem">
+            Since Hyperledger Fabric relies on Docker and Linux bash scripts, run this in <strong>WSL2 (Ubuntu)</strong> or Git Bash:
+          </p>
+          <div class="cb cb-full-round">
+<span class="c-cmt"># From LandRecords_extracted directory:</span>
+<span class="c-cmd">chmod +x *.sh</span>
+<span class="c-cmd">./start-network.sh</span>
+<span class="c-cmt"># (Or run ./setup-network.sh if initializing the network for the first time)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-item">
+        <div class="step-idx">4</div>
+        <div class="step-body">
+          <div class="step-h">
+            <span>Start Fabric REST API Gateway (Port 3001)</span>
+            <span class="tag tag-core">Terminal #2</span>
+          </div>
+          <p style="font-size:0.88rem;color:var(--tm);margin-bottom:0.8rem">
+            This starts the Express server that routes requests from the Next.js UI to the blockchain peers using the Fabric SDK.
+          </p>
+          <div class="cb cb-full-round">
+<span class="c-cmd">cd c:\Users\hmury\Desktop\LandRecords_PBL\25CSMR09\LandRecords_extracted\fabric-api</span>
+<span class="c-cmd">npm install</span>
+<span class="c-cmd">npm start</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--em-l);margin-top:0.5rem">
+            ✔ Will output: <code>Fabric API server running on port 3001</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-item">
+        <div class="step-idx">5</div>
+        <div class="step-body">
+          <div class="step-h">
+            <span>Start Next.js Client Web App (Port 3000)</span>
+            <span class="tag tag-core">Terminal #3</span>
+          </div>
+          <p style="font-size:0.88rem;color:var(--tm);margin-bottom:0.8rem">
+            Launch the user and official portal frontend:
+          </p>
+          <div class="cb cb-full-round">
+<span class="c-cmd">cd c:\Users\hmury\Desktop\LandRecords_PBL\25CSMR09\LandRecords_extracted\client</span>
+<span class="c-cmd">npm install</span>
+<span class="c-cmd">npm run dev</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--em-l);margin-top:0.5rem">
+            ✔ Open your browser at: <a href="http://localhost:3000" target="_blank" style="color:var(--sk-l)">http://localhost:3000</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- SECTION 7: DEFAULT LOGIN CREDENTIALS -->
+  <section class="section">
+    <div class="sl"><span>🔑</span> Seeded Credentials</div>
+    <h2 class="st">Pre-Configured Demo Accounts</h2>
+    <p class="sb">
+      Once you run <code>create-admin.js</code> and <code>fix-credentials.js</code>, use these credentials to log in:
+    </p>
+
+    <div class="table-wrap">
+      <table class="dt">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Department / Org</th>
+            <th>Login Username / Email</th>
+            <th>Password</th>
+            <th>Access URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Super Admin</strong></td>
+            <td>State Land Portal</td>
+            <td><code>admin@elandrecords.gov</code></td>
+            <td><code>admin123</code></td>
+            <td><code>/admin/login</code></td>
+          </tr>
+          <tr>
+            <td><strong>Clerk</strong></td>
+            <td>Registration (Org1)</td>
+            <td><code>clerk</code></td>
+            <td><code>clerk123</code></td>
+            <td><code>/login</code> (Official Tab)</td>
+          </tr>
+          <tr>
+            <td><strong>Superintendent</strong></td>
+            <td>Registration (Org1)</td>
+            <td><code>superintendent</code></td>
+            <td><code>superintendent123</code></td>
+            <td><code>/login</code> (Official Tab)</td>
+          </tr>
+          <tr>
+            <td><strong>MRO</strong></td>
+            <td>Revenue (Org2)</td>
+            <td><code>mro1</code></td>
+            <td><code>mro123</code></td>
+            <td><code>/login</code> (Official Tab)</td>
+          </tr>
+          <tr>
+            <td><strong>Surveyor</strong></td>
+            <td>Revenue (Org2)</td>
+            <td><code>surveyor1</code></td>
+            <td><code>surveyor123</code></td>
+            <td><code>/login</code> (Official Tab)</td>
+          </tr>
+          <tr>
+            <td><strong>District Collector</strong></td>
+            <td>Collectorate (Org3)</td>
+            <td><code>district_collector1</code></td>
+            <td><code>district_collector123</code></td>
+            <td><code>/login</code> (Official Tab)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast">Copied to clipboard!</div>
+
+<script>
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function copyClientEnv() {
+  const text = `# ==============================================================================
+# 1. DATABASE CONFIGURATION (MANDATORY)
+# ==============================================================================
+MONGODB_URI=mongodb://localhost:27017/elandrecords
+
+# ==============================================================================
+# 2. INTERNAL API AND BLOCKCHAIN BRIDGE
+# ==============================================================================
+NEXT_PUBLIC_FABRIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# ==============================================================================
+# 3. IPFS STORAGE (PINATA CLOUD)
+# ==============================================================================
+PINATA_API_KEY=your_pinata_api_key_here
+PINATA_SECRET_KEY=your_pinata_secret_key_here
+PINATA_JWT=your_pinata_jwt_token_here
+
+# ==============================================================================
+# 4. EMAIL / SMTP NOTIFICATIONS (OTP VERIFICATION)
+# ==============================================================================
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your_email@gmail.com
+SMTP_PASSWORD=your_16_digit_app_password
+SMTP_PASS=your_16_digit_app_password
+SMTP_FROM="E-Land Records" <noreply@elandrecords.local>
+
+# Environment
+NODE_ENV=development`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied client/.env.local content!'));
+}
+
+function copyFabricEnv() {
+  const text = `# ==============================================================================
+# HYPERLEDGER FABRIC EXPRESS REST API CONFIGURATION
+# ==============================================================================
+PORT=3001
+JWT_SECRET=land-registration-jwt-secret`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied fabric-api/.env content!'));
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>E-Land Records - Deep Doubts Guide (Hinglish)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07111e;--bg2:#0d1b2e;--bg3:#14253a;--b:#4f8ef7;--bl:#7ab0ff;--g:#10c9a0;--gl:#34f2c4;--a:#fbbf24;--al:#fde68a;--r:#f87171;--rl:#fca5a5;--v:#a78bfa;--vl:#c4b5fd;--c:#38bdf8;--cl:#7dd3fc;--tx:#e8f0fe;--tm:#8da6c5;--td:#4d6b8a;--bdr:rgba(79,142,247,.22);--bdrl:rgba(79,142,247,.1);--r12:12px;--r18:18px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;line-height:1.75;overflow-x:hidden;padding-bottom:5rem}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--b);border-radius:4px}
+code{background:rgba(79,142,247,.15);color:var(--bl);padding:.12rem .45rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.84em;border:1px solid rgba(79,142,247,.28)}
+ul,ol{padding-left:1.5rem}li{margin:.35rem 0}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,17,30,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--bdrl);height:60px;display:flex;align-items:center;padding:0 2rem;gap:2rem}
+.nb{font-weight:800;font-size:.95rem;background:linear-gradient(90deg,var(--bl),var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.nl{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none}
+.nl::-webkit-scrollbar{display:none}
+.nl a{font-size:.73rem;font-weight:600;padding:.3rem .75rem;border-radius:7px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);color:var(--bl);white-space:nowrap;text-decoration:none;transition:all .2s}
+.nl a:hover{background:rgba(79,142,247,.25)}
+.hero{padding:100px 2rem 2.5rem;text-align:center;background:radial-gradient(ellipse 80% 50% at 50% -5%,rgba(79,142,247,.18),transparent 60%)}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(16,201,160,.1);border:1px solid rgba(16,201,160,.3);padding:.3rem .9rem;border-radius:99px;font-size:.72rem;font-weight:700;color:var(--gl);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.2rem}
+.hh{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;background:linear-gradient(135deg,#fff 20%,var(--bl) 55%,var(--gl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:.75rem}
+.hs{color:var(--tm);max-width:700px;margin:0 auto 1.5rem;font-size:.95rem}
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.75rem;max-width:900px;margin:0 auto}
+.ta{display:flex;align-items:center;gap:.6rem;padding:.75rem 1rem;border-radius:var(--r12);background:var(--bg2);border:1px solid var(--bdrl);font-size:.82rem;font-weight:600;color:var(--tx);text-decoration:none;transition:all .2s}
+.ta:hover{border-color:var(--bdr);transform:translateY(-1px)}
+.tn{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0}
+.C{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.S{padding:3rem 0}
+.sl{font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gl);margin-bottom:.35rem}
+.st{font-size:clamp(1.3rem,2.8vw,1.9rem);font-weight:800;line-height:1.25;margin-bottom:.7rem}
+.sb{color:var(--tm);font-size:.92rem;max-width:800px;margin-bottom:1.2rem}
+hr.d{border:none;border-top:1px solid var(--bdrl);margin:3rem 0}
+.cd{background:rgba(13,27,46,.9);border:1px solid var(--bdrl);border-radius:var(--r18);padding:1.5rem;transition:all .2s}
+.cd:hover{border-color:var(--bdr)}
+.cdh{font-size:1rem;font-weight:700;margin-bottom:.7rem;display:flex;align-items:center;gap:.6rem}
+.tw{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.th{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem}
+@media(max-width:760px){.tw{grid-template-columns:1fr}}
+.al{border-radius:var(--r12);padding:1rem 1.2rem;display:flex;gap:.85rem;align-items:flex-start;margin:1.2rem 0}
+.al-g{background:rgba(16,201,160,.06);border:1px solid rgba(16,201,160,.3)}
+.al-a{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.3)}
+.al-b{background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.3)}
+.al-r{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.3)}
+.ai{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.at{font-weight:700;font-size:.88rem;margin-bottom:.2rem}
+.al-g .at{color:var(--gl)}.al-a .at{color:var(--al)}.al-b .at{color:var(--bl)}.al-r .at{color:var(--rl)}
+.ax{font-size:.84rem;color:var(--tm);line-height:1.7}
+.cbw{margin:1rem 0;border-radius:var(--r12);overflow:hidden;border:1px solid var(--bdr)}
+.cbh{background:#09172a;padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--tm);border-bottom:1px solid var(--bdr)}
+.cb{background:#060e1a;padding:1.1rem 1.2rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:2;color:#b8c9de}
+.kw{color:var(--bl);font-weight:600}.cmt{color:#3d5a78;font-style:italic}.cmd{color:var(--c);font-weight:600}.ok{color:var(--gl)}
+.tg{font-size:.68rem;font-weight:700;padding:.18rem .55rem;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;display:inline-flex;align-items:center;gap:.25rem;flex-shrink:0}
+.t-g{background:rgba(16,201,160,.12);color:var(--gl);border:1px solid rgba(16,201,160,.3)}
+.t-b{background:rgba(79,142,247,.12);color:var(--bl);border:1px solid rgba(79,142,247,.3)}
+.t-a{background:rgba(251,191,36,.12);color:var(--al);border:1px solid rgba(251,191,36,.3)}
+.t-r{background:rgba(248,113,113,.12);color:var(--rl);border:1px solid rgba(248,113,113,.3)}
+.t-v{background:rgba(167,139,250,.12);color:var(--vl);border:1px solid rgba(167,139,250,.3)}
+.df{border-radius:var(--r12);overflow:hidden;border:1px solid var(--bdr);margin:1rem 0}
+.dfh{background:#09172a;padding:.45rem 1rem;font-size:.72rem;font-family:'JetBrains Mono',monospace;color:var(--tm);border-bottom:1px solid var(--bdr)}
+.dfb{background:#060e1a;padding:.8rem 1.1rem;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:2}
+.da{color:#67e8a0;display:block}.dr{color:#f87171;display:block}.dc{color:#5a7a9a;display:block}
+.fl{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;padding:.9rem 1.1rem;background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r12);margin:1rem 0}
+.fn{padding:.35rem .8rem;border-radius:8px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.fb{background:rgba(79,142,247,.15);color:var(--bl);border:1px solid rgba(79,142,247,.3)}
+.fg{background:rgba(16,201,160,.15);color:var(--gl);border:1px solid rgba(16,201,160,.3)}
+.fa2{background:rgba(251,191,36,.15);color:var(--al);border:1px solid rgba(251,191,36,.3)}
+.fa{color:var(--gl);font-weight:800;font-size:1rem}
+.tbw{overflow-x:auto;margin:1rem 0}
+table.dt{width:100%;border-collapse:separate;border-spacing:0;font-size:.82rem}
+.dt th{background:var(--bg3);color:var(--tm);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.75rem 1rem;text-align:left}
+.dt th:first-child{border-radius:8px 0 0 8px}.dt th:last-child{border-radius:0 8px 8px 0}
+.dt td{padding:.85rem 1rem;border-bottom:1px solid var(--bdrl);vertical-align:top}
+.dt tr:last-child td{border-bottom:none}
+.chain{display:flex;flex-direction:column;gap:1rem}
+.blk{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r12);padding:1.1rem}
+.blkh{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gl);font-weight:700;margin-bottom:.5rem}
+.blkr{font-size:.75rem;color:var(--tm);font-family:'JetBrains Mono',monospace;line-height:1.9}
+.og{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.2rem 0}
+@media(max-width:700px){.og{grid-template-columns:1fr}}
+.org{border-radius:var(--r18);padding:1.3rem;border:1px solid}
+.o1{background:rgba(79,142,247,.07);border-color:rgba(79,142,247,.35)}
+.o2{background:rgba(16,201,160,.07);border-color:rgba(16,201,160,.35)}
+.o3{background:rgba(167,139,250,.07);border-color:rgba(167,139,250,.35)}
+.orgh{font-weight:800;font-size:.9rem;margin-bottom:.6rem}
+.o1 .orgh{color:var(--bl)}.o2 .orgh{color:var(--gl)}.o3 .orgh{color:var(--vl)}
+.org li{font-size:.82rem;color:var(--tm);padding:.2rem 0}
+.ps{background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r18);padding:1.3rem;margin-bottom:1rem}
+.psh{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.5rem}
+.pss{font-size:.8rem;color:var(--tm);margin-bottom:.7rem}
+.psb{font-size:.84rem;color:var(--tx);line-height:1.8}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.2rem 0}
+@media(max-width:700px){.sg{grid-template-columns:1fr}}
+.str{border-radius:var(--r18);padding:1.3rem;border:1px solid}
+.sm{background:rgba(22,163,74,.07);border-color:rgba(22,163,74,.35)}
+.sc{background:rgba(79,142,247,.07);border-color:rgba(79,142,247,.35)}
+.si{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.35)}
+.stic{font-size:1.8rem;margin-bottom:.5rem}
+.sth{font-weight:800;font-size:.92rem;margin-bottom:.4rem}
+.sm .sth{color:#4ade80}.sc .sth{color:var(--bl)}.si .sth{color:var(--al)}
+.stw{font-size:.78rem;color:var(--tm);line-height:1.7}
+.sps{display:flex;flex-direction:column;gap:.7rem}
+.sp{display:flex;gap:1rem;align-items:flex-start}
+.spn{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.88rem;color:#fff;flex-shrink:0}
+.nb2{background:linear-gradient(135deg,#2563eb,#60a5fa)}
+.ng{background:linear-gradient(135deg,#059669,#34d399)}
+.na{background:linear-gradient(135deg,#d97706,#fbbf24)}
+.nv{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.nc{background:linear-gradient(135deg,#0891b2,#38bdf8)}
+.spb{flex:1;background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r12);padding:1.1rem;margin-bottom:.4rem}
+.sph{font-weight:700;font-size:.95rem;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.spd{font-size:.84rem;color:var(--tm);line-height:1.75}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nb">⛓️ E-Land Deep Dive</div>
+  <div class="nl">
+    <a href="#d1">1. URI Fix</a>
+    <a href="#d2">2. Multiple Officials</a>
+    <a href="#d2b">Blockchain Deep</a>
+    <a href="#d3">3. Survey</a>
+    <a href="#d4">4. Storage</a>
+    <a href="#d5">5. DigiLocker</a>
+  </div>
+</nav>
+<div class="hero">
+  <div class="badge">✅ 3 Files Fixed + 5 Doubts Explained</div>
+  <h1 class="hh">Deep Doubts — Pura Technical Samjho</h1>
+  <p class="hs">Teene JS files fix kar di (hardcoded URI removed), aur terey 5 doubts ka full hinglish explanation — diagrams ke saath.</p>
+  <div class="toc">
+    <a class="ta" href="#d1"><div class="tn" style="background:rgba(248,113,113,.2);color:#fca5a5">🔧</div>Hardcoded URI Fix</a>
+    <a class="ta" href="#d2"><div class="tn" style="background:rgba(79,142,247,.2);color:#7ab0ff">👥</div>Multiple Officials</a>
+    <a class="ta" href="#d2b"><div class="tn" style="background:rgba(56,189,248,.2);color:#7dd3fc">⛓️</div>Blockchain Deep</a>
+    <a class="ta" href="#d3"><div class="tn" style="background:rgba(251,191,36,.2);color:#fde68a">🗺️</div>Survey Report</a>
+    <a class="ta" href="#d4"><div class="tn" style="background:rgba(16,201,160,.2);color:#34f2c4">💾</div>3 Storage</a>
+    <a class="ta" href="#d5"><div class="tn" style="background:rgba(167,139,250,.2);color:#c4b5fd">🔐</div>DigiLocker</a>
+  </div>
+</div>
+<div class="C">
+
+<div class="S" id="d1">
+  <div class="sl">DOUBT 1 — FIXED</div>
+  <h2 class="st">Hardcoded MongoDB URI — 3 Files Fix Ho Gayi</h2>
+  <p class="sb">Teen files mein badi problems thi. Teeno fix kar di. Ab tera .env.local ka MONGODB_URI automatically use hoga.</p>
+  <div class="al al-r">
+    <div class="ai">⚠️</div>
+    <div>
+      <div class="at">3 Problems Jo Thi</div>
+      <div class="ax">
+        <strong>check-user-data.js</strong> — Kisi aur student ka personal Atlas hardcoded: <code>rajeshbyreddy95:hB1LShLnluhQ4c2V@cluster0...</code> Wo banda password change kare → fail. Privacy issue bhi.<br><br>
+        <strong>create-admin.js</strong> — Tha: <code>localhost:27017/eland-records</code> (hyphen wala — WRONG DB NAME!). Admin galat database mein banta tha.<br><br>
+        <strong>fix-credentials.js</strong> — Tha: <code>localhost:27017/elandrecords</code> — Local connect. Tu Atlas pe hai! Officials galat jagah bante.
+      </div>
+    </div>
+  </div>
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:.8rem 0">Before vs After — Kya Badla</h3>
+  <div class="tw">
+    <div class="df">
+      <div class="dfh">create-admin.js</div>
+      <div class="dfb">
+        <span class="dr">- require('dotenv').config();</span>
+        <span class="da">+ require('dotenv').config({ path: '.env.local' });</span>
+        <span class="da">+ require('dotenv').config();</span>
+        <span class="dc">  ...</span>
+        <span class="dr">- || 'mongodb://localhost:27017/eland-records');</span>
+        <span class="da">+ const uri = process.env.MONGODB_URI</span>
+        <span class="da">+   || 'mongodb://localhost:27017/elandrecords';</span>
+        <span class="da">+ await mongoose.connect(uri);</span>
+      </div>
+    </div>
+    <div class="df">
+      <div class="dfh">check-user-data.js</div>
+      <div class="dfb">
+        <span class="da">+ require('dotenv').config({ path: '.env.local' });</span>
+        <span class="da">+ require('dotenv').config();</span>
+        <span class="dc">  </span>
+        <span class="dr">- const MONGODB_URI = 'mongodb+srv://</span>
+        <span class="dr">-   rajeshbyreddy95:hB1LShLnluhQ4c2V@...';</span>
+        <span class="da">+ const MONGODB_URI = process.env.MONGODB_URI</span>
+        <span class="da">+   || 'mongodb://localhost:27017/elandrecords';</span>
+      </div>
+    </div>
+  </div>
+  <div class="al al-g">
+    <div class="ai">✅</div>
+    <div>
+      <div class="at">Ab Kaise Chalao Scripts (client/ folder se)</div>
+      <div class="ax">Dotenv pehle .env.local read karta hai. Tera Atlas URI auto pick. Password logs mein hidden (****) rahega.</div>
+    </div>
+  </div>
+  <div class="cbw">
+    <div class="cbh">Terminal Commands</div>
+    <div class="cb">
+<span class="cmd">node create-admin.js</span>   <span class="cmt"># Output: "Connecting to: mongodb+srv://****@cluster0..."</span>
+<span class="cmd">node fix-credentials.js</span> <span class="cmt"># Saare officials Atlas pe banenge</span>
+<span class="cmd">node check-user-data.js</span> <span class="cmt"># Debug tool — users/applications check</span>
+    </div>
+  </div>
+</div>
+
+<hr class="d">
+
+<div class="S" id="d2">
+  <div class="sl">DOUBT 2 — MULTIPLE OFFICIALS</div>
+  <h2 class="st">Ek Post Pe Multiple Officials? Routing Kaise Hoti Hai?</h2>
+  <p class="sb"><strong style="color:var(--gl)">Technically haan</strong> — multiple officials ek designation pe ho sakte hain. Application specific person ke paas nahi, designation ke paas jaati hai.</p>
+  <div class="tw">
+    <div class="cd">
+      <div class="cdh" style="color:var(--al)">Application Routing Logic</div>
+      <p style="font-size:.85rem;color:var(--tm);margin-bottom:.8rem">Form submit: MongoDB mein <code>status: "submitted"</code>. Clerk login: Dashboard query designation = 'clerk' ki saari applications fetch karta hai.</p>
+      <div class="fl">
+        <div class="fn fb">User Submit</div><div class="fa">→</div><div class="fn fa2">status: submitted</div><div class="fa">→</div><div class="fn fg">Clerk Dashboard</div>
+      </div>
+      <p style="font-size:.82rem;color:var(--tm);margin-top:.8rem">Agar 2 clerks hain: dono ke dashboard mein same application dikhegi. Jo pehle action leta hai woh process karta hai.</p>
+    </div>
+    <div class="cd">
+      <div class="cdh" style="color:var(--bl)">Ek Post Pe Kitne?</div>
+      <div class="tbw">
+        <table class="dt">
+          <thead><tr><th>Post</th><th>Multiple?</th></tr></thead>
+          <tbody>
+            <tr><td>Clerk</td><td><span class="tg t-g">✅ Possible</span></td></tr>
+            <tr><td>Superintendent</td><td><span class="tg t-g">✅ Possible</span></td></tr>
+            <tr><td>Project Officer</td><td><span class="tg t-g">✅ Possible</span></td></tr>
+            <tr><td>MRO</td><td><span class="tg t-a">⚠️ 1/mandal</span></td></tr>
+            <tr><td>Surveyor</td><td><span class="tg t-g">✅ Multiple</span></td></tr>
+            <tr><td>Revenue Inspector</td><td><span class="tg t-g">✅ Possible</span></td></tr>
+            <tr><td>VRO</td><td><span class="tg t-a">⚠️ 1/village</span></td></tr>
+            <tr><td>Joint Collector</td><td><span class="tg t-r">❌ 1</span></td></tr>
+            <tr><td>District Collector</td><td><span class="tg t-r">❌ 1/district</span></td></tr>
+            <tr><td>Ministry Welfare</td><td><span class="tg t-r">❌ Final</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="S" id="d2b">
+  <div class="sl">DOUBT 2 — BLOCKCHAIN DEEP DIVE</div>
+  <h2 class="st">Hyperledger Fabric — End to End Kaise Kaam Karta Hai?</h2>
+
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin-bottom:.8rem">Part A: 3 Organizations (Orgs)</h3>
+  <div class="og">
+    <div class="org o1">
+      <div class="orgh">Org1 — Registration</div>
+      <ul><li>Clerk</li><li>Superintendent</li><li>Project Officer</li></ul>
+      <div style="margin-top:.7rem;font-size:.75rem;color:var(--td)">MSP: <code>Org1MSP</code></div>
+    </div>
+    <div class="org o2">
+      <div class="orgh">Org2 — Revenue</div>
+      <ul><li>MRO</li><li>Surveyor</li><li>Revenue Inspector</li><li>VRO</li><li>Revenue Dept Officer</li></ul>
+      <div style="margin-top:.7rem;font-size:.75rem;color:var(--td)">MSP: <code>Org2MSP</code></div>
+    </div>
+    <div class="org o3">
+      <div class="orgh">Org3 — Collectorate</div>
+      <ul><li>Joint Collector</li><li>District Collector</li><li>Ministry Welfare (Final)</li></ul>
+      <div style="margin-top:.7rem;font-size:.75rem;color:var(--td)">MSP: <code>Org3MSP</code></div>
+    </div>
+  </div>
+  <div class="al al-b">
+    <div class="ai">💡</div>
+    <div>
+      <div class="at">Org kya hoti hai?</div>
+      <div class="ax">Har Org ek alag government department hai — apna certificate, apne peers. Teeno milke ek shared Channel banate hain jisme common blockchain ledger hai. Ek org doosri ka data directly nahi dekh sakti.</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.5rem 0 .8rem">Part B: Smart Contract (Chaincode) — 6 Functions</h3>
+  <p style="font-size:.85rem;color:var(--tm);margin-bottom:.8rem">File: <code>chaincode/land-registration/lib/land-registration-contract.js</code> — Ye Blockchain ka Brain hai. Rules hardcoded — koi bypass nahi kar sakta.</p>
+  <div class="th">
+    <div class="cd"><div class="cdh" style="color:var(--bl)">createApplication()</div><div style="font-size:.83rem;color:var(--tm)">User form submit. Sirf applicant/admin role. Data AES-256 encrypt hota hai save se pehle. TxID + history bhi save.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--gl)">forwardApplication()</div><div style="font-size:.83rem;color:var(--tm)">Har Forward click pe. Hardcoded workflow: <code>submitted→clerk→with_superintendent→...</code>. Galat role → Error throw.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--al)">approveByCollector()</div><div style="font-size:.83rem;color:var(--tm)">Ministry Welfare → status: completed. Collector → status: approved (aage badhega). Rule chaincode mein — bypass impossible.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--v)">surveyReportUpdate()</div><div style="font-size:.83rem;color:var(--tm)">Sirf Org2MSP wala kar sakta hai. Code: <code>if (mspId !== 'Org2MSP') throw Error</code>. Org1/Org3 wale survey update nahi kar sakte.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--c)">getApplication()</div><div style="font-size:.83rem;color:var(--tm)">Blockchain se padh ke AES decrypt. Trust Score (0-100) calculate — jitne steps complete, utna zyada. Explorer mein dikhta hai.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--rl)">verifyByRevenue()</div><div style="font-size:.83rem;color:var(--tm)">Revenue verification. Role check: officer/admin. Verify ke baad history entry — TxID ke saath, immutable (kabhi delete nahi).</div></div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.5rem 0 .8rem">Part C: RAFT Consensus — Kya Hai?</h3>
+  <div class="tw">
+    <div class="cd">
+      <div class="cdh" style="color:var(--c)">RAFT Simple Explanation</div>
+      <div style="font-size:.84rem;color:var(--tm);line-height:1.8">
+        5 log committee mein hain. Decision ke liye <strong>majority (3+) agreement</strong> chahiye. RAFT bhi yahi karta hai.<br><br>
+        Nodes mein se ek <strong>"Leader"</strong> banta hai → transactions order karta hai → baaki "Followers" agree karte hain.<br><br>
+        <strong>Is project mein:</strong><br>
+        • 3 Orderer nodes (RAFT se)<br>
+        • 1 node down bhi ho → 2 majority se kaam chalega<br>
+        • Leader fail → automatic new leader election<br>
+        • Hyperledger ka most reliable consensus mechanism
+      </div>
+    </div>
+    <div class="cd">
+      <div class="cdh" style="color:var(--v)">Transaction ke 5 Steps</div>
+      <ol style="font-size:.83rem;color:var(--tm);line-height:2.2">
+        <li><strong style="color:#fff">Propose:</strong> fabric-api → Peer nodes ko proposal</li>
+        <li><strong style="color:#fff">Endorse:</strong> Peers chaincode run, valid ho to sign (Endorsement Policy)</li>
+        <li><strong style="color:#fff">Order:</strong> RAFT transactions ko order karta hai</li>
+        <li><strong style="color:#fff">Commit:</strong> Block saare peers ko distribute</li>
+        <li><strong style="color:var(--gl)">Done ✅:</strong> TxID wapas → MongoDB update → Email</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.5rem 0 .8rem">Part D: End-to-End Flow — Click Se Blockchain Tak</h3>
+  <div class="fl" style="flex-direction:column;align-items:flex-start;gap:.6rem">
+    <div style="font-size:.8rem;color:var(--tm)"><strong style="color:#fff">USER BROWSER</strong> → Clerk "Forward" click</div>
+    <div class="fa" style="margin-left:2rem">↓</div>
+    <div style="font-size:.8rem;color:var(--tm)"><strong style="color:#fff">NEXT.JS API</strong> (/api/dashboard/action) → Session validate, Official identity, MongoDB se receiptNumber fetch</div>
+    <div class="fa" style="margin-left:2rem">↓</div>
+    <div style="font-size:.8rem;color:var(--tm)"><strong style="color:#fff">FABRIC-API</strong> (localhost:3001) → JWT auth, Hyperledger Gateway connect (Admin cert), Transaction proposal banao</div>
+    <div class="fa" style="margin-left:2rem">↓</div>
+    <div style="font-size:.8rem;color:var(--tm)"><strong style="color:#fff">PEERS (Org1+Org2+Org3)</strong> → Smart Contract forwardApplication() run, Role check, Workflow validate, Sign karo</div>
+    <div class="fa" style="margin-left:2rem">↓</div>
+    <div style="font-size:.8rem;color:var(--tm)"><strong style="color:#fff">ORDERING SERVICE (RAFT)</strong> → Transactions order karo, Block banao, Saare peers ko bhejo</div>
+    <div class="fa" style="margin-left:2rem">↓</div>
+    <div style="font-size:.8rem;color:var(--tm)"><strong style="color:var(--gl)">COMMIT ✅</strong> → TxID wapas → MongoDB update (status + history) → User ko email</div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.5rem 0 .8rem">Part E: Blockchain Blocks Kaise Dikhte Hain</h3>
+  <div class="chain">
+    <div class="blk">
+      <div class="blkh">Block #1 — Application Created</div>
+      <div class="blkr">prevHash: 0000000000 (genesis)<br>txId: TXN-1700001-a1b2c3d4<br>action: <span class="ok">createApplication</span><br>data: [AES-256 ENCRYPTED — user data secure hai]<br>timestamp: 1700000001</div>
+    </div>
+    <div style="text-align:center;color:var(--td);font-size:.74rem;padding:.3rem 0">⛓️ sha256(Block#1) = Block#2 ka prevHash — isi se chain banti hai</div>
+    <div class="blk">
+      <div class="blkh">Block #2 — Clerk Forward</div>
+      <div class="blkr">prevHash: sha256(Block#1)<br>txId: TXN-1700050-b5c6d7e8<br>action: <span class="ok">forwardApplication</span><br>performer: clerk (Org1MSP)<br>newStatus: with_superintendent</div>
+    </div>
+    <div style="text-align:center;color:var(--td);font-size:.74rem;padding:.3rem 0">⛓️ ... same chain continues through all officials ...</div>
+    <div class="blk" style="border-color:rgba(16,201,160,.4)">
+      <div class="blkh" style="color:var(--gl)">Block #N — FINAL APPROVAL (Ministry Welfare)</div>
+      <div class="blkr">prevHash: sha256(Block#N-1)<br>txId: TXN-1700999-z9y8x7w6<br>action: <span class="ok">approveByCollector</span><br>performer: ministry_welfare1 (Org3MSP)<br>status: <span class="ok">COMPLETED</span><br>pattaHash: QmXYZ123... (IPFS link)</div>
+    </div>
+  </div>
+  <div class="al al-g" style="margin-top:1rem">
+    <div class="ai">🔒</div>
+    <div>
+      <div class="at">Kyun Tamper Nahi Ho Sakta?</div>
+      <div class="ax">Koi Block#3 ka data change kare → Block#3 ka hash badal → Block#4 ka prevHash match nahi karega → poori chain invalid. Plus 3 alag Orgs same ledger rakhti hain — teeno ki agreement chahiye valid transaction ke liye.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="d">
+
+<div class="S" id="d3">
+  <div class="sl">DOUBT 3 — SURVEY REPORT</div>
+  <h2 class="st">Survey Report Kahan Se? Automatic Ya Manual?</h2>
+  <p class="sb"><strong style="color:var(--rl)">100% Manual hai.</strong> Surveyor physically zameen pe jaata hai, data collect karta hai, dashboard form fill karta hai. Submit ke baad automatic processes hain.</p>
+  <div class="tw">
+    <div class="cd">
+      <div class="cdh" style="color:var(--al)">Surveyor Ka Real Process</div>
+      <div class="sps">
+        <div class="sp"><div class="spn nb2">1</div><div class="spb"><div class="sph">Physical Visit — Zameen Pe Jana</div><div class="spd">GPS device, measuring tape, camera lekar actually us plot pe jaana padta hai. Koi app se automatic nahi hota.</div></div></div>
+        <div class="sp"><div class="spn na">2</div><div class="spb"><div class="sph">Data Collect (Manual)</div><div class="spd"><strong style="color:#fff">4 GPS Points</strong> (A, B, C, D corners)<br><strong style="color:#fff">Area:</strong> GPS ya tape se<br><strong style="color:#fff">Photos:</strong> Field ki actual photos<br><strong style="color:#fff">Boundary Map:</strong> Sketch ya photo</div></div></div>
+        <div class="sp"><div class="spn nv">3</div><div class="spb"><div class="sph">Dashboard Mein Enter Karo (Manual)</div><div class="spd">Official Dashboard → Application select → Survey form fill → GPS enter → Boundary map PDF upload → Photos upload → Submit</div></div></div>
+        <div class="sp"><div class="spn ng">4</div><div class="spb"><div class="sph"><span class="tg t-g">Automatic</span> Submit ke Baad</div><div class="spd">Map → Pinata IPFS (hash mila). Photos → IPFS (hashes). GPS + area → Blockchain surveyReportUpdate(). MongoDB surveyData update.</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="cd" style="margin-bottom:1rem">
+        <div class="cdh" style="color:var(--gl)">Survey Form Fields</div>
+        <div class="cbw" style="margin-top:.5rem">
+          <div class="cbh">API fields — kya kya bharna hai</div>
+          <div class="cb">
+<span class="cmt">// 4 GPS Corner Points:</span>
+<span class="kw">pointALat, pointALong</span>  <span class="cmt">// North-West</span>
+<span class="kw">pointBLat, pointBLong</span>  <span class="cmt">// North-East</span>
+<span class="kw">pointCLat, pointCLong</span>  <span class="cmt">// South-East</span>
+<span class="kw">pointDLat, pointDLong</span>  <span class="cmt">// South-West</span>
+<span class="kw">measuredArea</span>    <span class="cmt">// "1.5 acres"</span>
+<span class="kw">surveyRemarks</span>   <span class="cmt">// Observations</span>
+<span class="kw">boundaryMap</span>     <span class="cmt">// PDF/Image file</span>
+<span class="kw">fieldPhotos[]</span>   <span class="cmt">// Multiple photos</span>
+          </div>
+        </div>
+      </div>
+      <div class="al al-b" style="margin-top:0">
+        <div class="ai">🔒</div>
+        <div>
+          <div class="at">Blockchain Security</div>
+          <div class="ax">Chaincode: <code>if (mspId !== 'Org2MSP') throw Error</code>. Koi aur org survey tamper nahi kar sakta.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="d">
+
+<div class="S" id="d4">
+  <div class="sl">DOUBT 4 — 3 STORAGE SYSTEMS</div>
+  <h2 class="st">MongoDB + Blockchain + IPFS — Kaun Sa Data Kahan Aur Kyun?</h2>
+  <p class="sb">Teeno ka alag kaam hai — ek bhi hatao to system toot jaata. Ye intentional architectural decision hai.</p>
+  <div class="sg">
+    <div class="str sm">
+      <div class="stic">🍃</div>
+      <div class="sth">MongoDB Atlas</div>
+      <div class="stw">
+        <strong>Kya:</strong> User profiles, Form data, Status tracking, Action history, Sessions, DigiLocker vault, Officials, Admin accounts<br><br>
+        <strong>Kyun:</strong> Fast queries. Status baar baar change hota hai. Flexible schema. UI ko quickly data chahiye.
+      </div>
+    </div>
+    <div class="str sc">
+      <div class="stic">⛓️</div>
+      <div class="sth">Hyperledger Fabric</div>
+      <div class="stw">
+        <strong>Kya:</strong> Application creation txn, Har official action (TxID+timestamp), Survey data, Encrypted user data, Final approval record<br><br>
+        <strong>Kyun:</strong> Tamper-proof, immutable. 3 orgs validate. Legal proof — koi record delete/change nahi ho sakta.
+      </div>
+    </div>
+    <div class="str si">
+      <div class="stic">📌</div>
+      <div class="sth">IPFS (Pinata Cloud)</div>
+      <div class="stw">
+        <strong>Kya:</strong> Land document PDF, Survey boundary map, Field photos, Patta certificate PDF, DigiLocker documents<br><br>
+        <strong>Kyun:</strong> Large files blockchain pe store nahi hoti. IPFS se unique hash (CID) milta hai jo blockchain pe store hota hai — integrity proof.
+      </div>
+    </div>
+  </div>
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.5rem 0 .8rem">Kya Kahan Jaata Hai — Full Table</h3>
+  <div class="tbw">
+    <table class="dt">
+      <thead><tr><th>Action</th><th style="color:var(--gl)">🍃 MongoDB</th><th style="color:var(--bl)">⛓️ Blockchain</th><th style="color:var(--al)">📌 IPFS</th></tr></thead>
+      <tbody>
+        <tr><td><strong>User Registration</strong></td><td style="color:var(--gl)">✅ Full profile</td><td style="color:var(--td)">❌</td><td style="color:var(--td)">❌</td></tr>
+        <tr><td><strong>Land Form Submit</strong></td><td style="color:var(--gl)">✅ Form + status</td><td style="color:var(--bl)">✅ Encrypted + TxID</td><td style="color:var(--al)">✅ Document PDF</td></tr>
+        <tr><td><strong>Clerk Forward</strong></td><td style="color:var(--gl)">✅ Status update</td><td style="color:var(--bl)">✅ Forward txn</td><td style="color:var(--td)">❌</td></tr>
+        <tr><td><strong>Survey Report</strong></td><td style="color:var(--gl)">✅ GPS + remarks</td><td style="color:var(--bl)">✅ Survey txn</td><td style="color:var(--al)">✅ Map + photos</td></tr>
+        <tr><td><strong>Final Approval</strong></td><td style="color:var(--gl)">✅ status: completed</td><td style="color:var(--bl)">✅ Permanent record</td><td style="color:var(--al)">✅ Patta PDF</td></tr>
+        <tr><td><strong>DigiLocker Approve</strong></td><td style="color:var(--gl)">✅ Hash + status</td><td style="color:var(--bl)">✅ Access grant</td><td style="color:var(--al)">✅ Document file</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="al al-b">
+    <div class="ai">🧠</div>
+    <div>
+      <div class="at">Ek Line Summary</div>
+      <div class="ax">
+        <strong>MongoDB</strong> = "Working Memory" — fast, queryable, frequently updated<br>
+        <strong>Blockchain</strong> = "Court Record" — immutable, tamper-proof, legal audit trail<br>
+        <strong>IPFS</strong> = "File Cabinet" — large files, content-addressed by hash
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="d">
+
+<div class="S" id="d5">
+  <div class="sl">DOUBT 5 — DIGILOCKER</div>
+  <h2 class="st">DigiLocker — Kya Role Hai? Data Kahan? Verification Kaise?</h2>
+  <p class="sb">DigiLocker is project ka document security layer hai. <strong style="color:var(--rl)">Real Govt DigiLocker (digilocker.gov.in) se connected NAHI hai</strong> — ye in-house custom vault hai, similar concept follow karta hai.</p>
+  <div class="al al-a">
+    <div class="ai">⚠️</div>
+    <div>
+      <div class="at">Important: Custom Implementation Hai</div>
+      <div class="ax">Real DigiLocker API se connected nahi — apna consent-based vault system hai. Citizen documents upload karta hai, official request karta hai, citizen approve/reject karta hai.</div>
+    </div>
+  </div>
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.2rem 0 .8rem">3 Actors — Kya Kya Role Hai</h3>
+  <div class="th">
+    <div class="ps">
+      <div class="psh">👤 Citizen <span class="tg t-b">Document Owner</span></div>
+      <div class="pss">URL: /digilocker</div>
+      <div class="psb">Apne documents vault mein upload karo (Aadhaar, Land Deed)<br>Official ki access requests dekho<br><strong>Approve ✅ ya Reject ❌</strong> karo<br>Approve pe: IPFS pe auto-secure + Blockchain record<br><br><span style="color:var(--gl)">Citizen ke bina koi official access nahi kar sakta.</span></div>
+    </div>
+    <div class="ps">
+      <div class="psh">👮 Official <span class="tg t-v">Requester</span></div>
+      <div class="pss">URL: /digilocker-admin</div>
+      <div class="psb">Application ke liye document request bhejo<br>Konsa document chahiye specify karo<br>Citizen approve kare tab tak wait karo<br>Approved: IPFS hash se document access karo<br><br><span style="color:var(--al)">Sirf request — directly access nahi.</span></div>
+    </div>
+    <div class="ps">
+      <div class="psh">⛓️ System <span class="tg t-g">Auto Process</span></div>
+      <div class="pss">Citizen approve karne pe</div>
+      <div class="psb">Vault se document nikalo<br>SHA-256 hash generate (integrity proof)<br>Pinata IPFS pe upload<br>Blockchain pe record (TxID ke saath)<br>IPFS hash MongoDB mein save<br><br><span style="color:var(--gl)">Console: "M7 SECURITY GATEWAY: HASH GENERATED"</span></div>
+    </div>
+  </div>
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.2rem 0 .8rem">DigiLocker Full Flow — Step by Step</h3>
+  <div class="sps">
+    <div class="sp"><div class="spn nb2">1</div><div class="spb"><div class="sph">Citizen Upload <span class="tg t-b">Manual</span></div><div class="spd">/digilocker page pe Aadhaar + Land Deed PDF upload. Binary data ke roop mein DigiLockerVault MongoDB collection mein save. IPFS pe abhi nahi jaata.</div></div></div>
+    <div class="sp"><div class="spn nv">2</div><div class="spb"><div class="sph">Official Request <span class="tg t-a">Manual</span></div><div class="spd">/digilocker-admin → Application select → Request bhejo. DigiLockerRequest MongoDB mein status: pending ke saath. Citizen ko email notification.</div></div></div>
+    <div class="sp"><div class="spn na">3</div><div class="spb"><div class="sph">Citizen Decision <span class="tg t-a">Manual</span></div><div class="spd">/digilocker pe pending requests dikhti hain: Kaun manga, Kaunsa doc, Kab. "Approve" ya "Reject" click karo.</div></div></div>
+    <div class="sp"><div class="spn ng">4</div><div class="spb"><div class="sph">After Approve <span class="tg t-g">Fully Automatic</span></div><div class="spd">Vault se document → SHA-256 hash → Pinata IPFS upload (ipfsHash) → Blockchain record (ipfsHash + contentHash + TxID) → MongoDB update (status: approved). Console: "M7 SECURITY GATEWAY: HASH GENERATED SHA-256: abc123..."</div></div></div>
+    <div class="sp"><div class="spn nc">5</div><div class="spb"><div class="sph">Official Access <span class="tg t-b">Post-Approval Only</span></div><div class="spd">DigiLocker Admin page mein IPFS link. Document download. SHA-256 hash se verify — original ya tampered?</div></div></div>
+  </div>
+  <h3 style="font-size:1rem;font-weight:700;color:var(--al);margin:1.5rem 0 .8rem">DigiLocker Data Kahan Save Hota Hai</h3>
+  <div class="tbw">
+    <table class="dt">
+      <thead><tr><th>Storage</th><th>Kya Data</th><th>Kab</th></tr></thead>
+      <tbody>
+        <tr><td><code>DigiLockerVault</code> (MongoDB)</td><td>Document binary, citizenAadhar, fileName, documentType, isVerified</td><td>Citizen upload kare</td></tr>
+        <tr><td><code>DigiLockerRequest</code> (MongoDB)</td><td>Official ID, applicationId, documentType, status, ipfsHash, SHA-256</td><td>Request + Approve dono pe</td></tr>
+        <tr><td>IPFS (Pinata)</td><td>Actual document file (PDF/Image)</td><td>Sirf citizen APPROVE kare — pehle nahi</td></tr>
+        <tr><td>Blockchain Ledger</td><td>ipfsHash, contentHash (SHA-256), requesterId, citizenAadhar, TxID</td><td>After citizen approval — automatic</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="d">
+
+<div class="S">
+  <div class="sl">QUICK RECAP</div>
+  <h2 class="st">5 Doubts — Short Answers</h2>
+  <div class="th">
+    <div class="cd"><div class="cdh" style="color:var(--rl)">1. URI Fix</div><div style="font-size:.83rem;color:var(--tm)"><span class="tg t-g" style="margin-bottom:.5rem;display:inline-flex">Fixed ✅</span><br>Teeno files fix. .env.local MONGODB_URI auto. DB name elandrecords consistent. Security issue bhi fixed.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--bl)">2. Multiple Officials</div><div style="font-size:.83rem;color:var(--tm)">Haan ho sakte hain. Application designation-based route hoti hai — specific person-based nahi. Blockchain role check karta hai.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--c)">Blockchain</div><div style="font-size:.83rem;color:var(--tm)">3 Orgs, RAFT consensus, Smart Contract hardcoded rules. Propose→Endorse→Order→Commit. Har step immutable. Tamper impossible.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--al)">3. Survey Report</div><div style="font-size:.83rem;color:var(--tm)">Surveyor physically jaata hai, GPS+photos collect karta hai, manually dashboard form fill karta hai. Submit ke baad IPFS+Blockchain automatic.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--gl)">4. 3 Storage</div><div style="font-size:.83rem;color:var(--tm)">MongoDB = Fast queries. Blockchain = Immutable audit. IPFS = Large files. Teeno milke complete secure system.</div></div>
+    <div class="cd"><div class="cdh" style="color:var(--vl)">5. DigiLocker</div><div style="font-size:.83rem;color:var(--tm)">In-house consent vault. Not real Govt DigiLocker. Citizen upload → Official request → Citizen approve → IPFS+Blockchain auto.</div></div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

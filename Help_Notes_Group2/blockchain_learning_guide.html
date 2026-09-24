@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hyperledger Fabric & Blockchain Concepts Guide - Land Record PBL</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0f1a;--bg2:#111827;--bg3:#1a2236;--bdr:rgba(99,102,241,.22);--bdrl:rgba(99,102,241,.12);--ind:#6366f1;--il:#818cf8;--em:#10b981;--el:#34d399;--am:#f59e0b;--al:#fbbf24;--ro:#f43f5e;--rl2:#fb7185;--sk:#0ea5e9;--sl:#38bdf8;--vi:#8b5cf6;--vl:#a78bfa;--tx:#e2e8f0;--tm:#94a3b8;--td:#64748b;--r:12px;--r2:18px}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--ind);border-radius:3px}
+code{background:rgba(99,102,241,.15);color:var(--il);padding:.12rem .5rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.84em;border:1px solid rgba(99,102,241,.2)}
+a{color:var(--il);text-decoration:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,15,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdrl);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:.95rem}
+.nav-dot{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--ind),var(--vi));display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:1.1rem;list-style:none}
+.nav-links a{color:var(--tm);font-size:.8rem;font-weight:500;transition:color .2s}.nav-links a:hover{color:var(--el)}
+
+.print-btn{background:linear-gradient(135deg,var(--ind),var(--vi));color:#fff;border:none;padding:.45rem 1.1rem;border-radius:99px;font-size:.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;box-shadow:0 4px 14px rgba(99,102,241,.4);transition:transform .2s}
+.print-btn:hover{transform:scale(1.04)}
+
+.hero{padding:110px 2rem 3.5rem;text-align:center;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(139,92,246,.18),transparent 65%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(16,185,129,.1),transparent 60%);position:relative;overflow:hidden}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);padding:.35rem 1rem;border-radius:99px;font-size:.73rem;font-weight:700;color:var(--vl);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.25rem}
+h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.15;background:linear-gradient(135deg,#fff 30%,var(--vl) 70%,var(--el) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.9rem}
+.hero-sub{font-size:1rem;color:var(--tm);max-width:740px;margin:0 auto 1.8rem;line-height:1.7}
+
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+.section{padding:2.5rem 0}
+.sl{font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--el);margin-bottom:.35rem}
+.st{font-size:clamp(1.3rem,2.8vw,1.8rem);font-weight:800;line-height:1.2;margin-bottom:.6rem}
+hr.d{border:none;border-top:1px solid var(--bdrl)}
+
+/* CONCEPT CARDS */
+.concept-card{background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r2);padding:1.6rem;margin-bottom:1.6rem;position:relative;transition:border-color .2s}
+.concept-card:hover{border-color:rgba(99,102,241,.4)}
+.concept-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;border-bottom:1px solid var(--bdrl);padding-bottom:.75rem}
+.concept-title{font-size:1.15rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:.65rem}
+.concept-tag{font-size:.65rem;font-weight:700;padding:.2rem .65rem;border-radius:99px;text-transform:uppercase;letter-spacing:.06em}
+.tag-core{background:rgba(99,102,241,.18);color:var(--il);border:1px solid rgba(99,102,241,.3)}
+.tag-sec{background:rgba(16,185,129,.18);color:var(--el);border:1px solid rgba(16,185,129,.3)}
+.tag-consensus{background:rgba(245,158,11,.18);color:var(--al);border:1px solid rgba(245,158,11,.3)}
+.tag-db{background:rgba(14,165,233,.18);color:var(--sl);border:1px solid rgba(14,165,233,.3)}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1rem}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}}
+
+.box-general{background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:1.1rem}
+.box-project{background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:1.1rem}
+.box-title{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.box-general .box-title{color:var(--il)}
+.box-project .box-title{color:var(--el)}
+.box-body{font-size:.87rem;color:var(--tx);line-height:1.75}
+
+.example-callout{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:.85rem 1.1rem;margin-top:.9rem;font-size:.85rem;color:var(--tm)}
+.example-callout strong{color:var(--al)}
+
+footer{background:var(--bg2);border-top:1px solid var(--bdrl);padding:2rem 0;text-align:center;margin-top:3rem}
+footer p{font-size:.78rem;color:var(--td)}
+
+/* PRINT OPTIMIZATION (A4 SHEET PRINTING) */
+@media print {
+  body { background: #fff !important; color: #111 !important; font-size: 11pt; line-height: 1.5; }
+  nav, .print-btn, .hero-sub, .badge { display: none !important; }
+  .hero { padding: 1rem 0 !important; background: none !important; }
+  h1 { font-size: 20pt !important; color: #000 !important; -webkit-text-fill-color: initial !important; background: none !important; margin-bottom: 0.5rem; }
+  .section { padding: 1rem 0 !important; }
+  .concept-card { background: #fff !important; border: 1px solid #ccc !important; border-radius: 8px !important; padding: 1rem !important; margin-bottom: 1.2rem !important; page-break-inside: avoid; }
+  .concept-title { color: #000 !important; font-size: 13pt !important; }
+  .two-col { grid-template-columns: 1fr 1fr !important; gap: 0.8rem !important; }
+  .box-general { background: #f8f9fa !important; border: 1px solid #ddd !important; color: #222 !important; }
+  .box-project { background: #f0fdf4 !important; border: 1px solid #bbf7d0 !important; color: #222 !important; }
+  .box-general .box-title { color: #4338ca !important; }
+  .box-project .box-title { color: #15803d !important; }
+  .box-body { color: #222 !important; font-size: 9.5pt !important; }
+  .example-callout { background: #fffbeb !important; border: 1px solid #fde68a !important; color: #333 !important; font-size: 9.5pt !important; }
+  code { background: #f1f5f9 !important; color: #0f172a !important; border: 1px solid #cbd5e1 !important; }
+  @page { size: A4; margin: 1.5cm; }
+}
+</style>
+</head>
+<body>
+<nav>
+<div class="nav-brand"><div class="nav-dot">&#128218;</div> Blockchain & Fabric Simplified Guide</div>
+<ul class="nav-links">
+<li><a href="#core">Core Concepts</a></li>
+<li><a href="#network">Network Roles</a></li>
+<li><a href="#security">Security & Privacy</a></li>
+<li><a href="#data">Data & Identity</a></li>
+</ul>
+<button class="print-btn" onclick="window.print()">&#128424; Print to A4 PDF</button>
+</nav>
+
+<header class="hero">
+<div class="badge">&#128640; Hinglish Easy Explanation Guide</div>
+<h1>Blockchain & Hyperledger Fabric<br>Terminologies Made Easy</h1>
+<p class="hero-sub">Agar aapko Blockchain aur Hyperledger Fabric ka zero knowledge hai, to yeh guide aapke liye hai! Har concept ko <strong>Aasaan Hindi-English (Hinglish)</strong> mein samjhaya gaya hai real-life examples ke sath.</p>
+</header>
+<hr class="d"/>
+
+<!-- SECTION 1: CORE BLOCKCHAIN & FABRIC -->
+<section class="section" id="core">
+<div class="container">
+<div class="sl">Foundation</div>
+<h2 class="st">1. Core Blockchain Concepts</h2>
+
+<!-- CONCEPT 1 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128279;</span> Hyperledger Fabric (Private / Permissioned Blockchain)</div>
+<span class="concept-tag tag-core">Blockchain Engine</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Bitcoin/Ethereum public blockchain hote hain jahan koi bhi unknown banda join kar sakta hai. But <strong>Hyperledger Fabric ek Private / Permissioned Blockchain</strong> hai. Yahan sirf wahi log/departments part le sakte hain jinhe permission mili ho. Isme koi Crypto / Bitcoins nahi hote, yeh pure Enterprise Business ke liye bana hai.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Land Registration ek sarkari kaam hai. Yahan public Bitcoin miners transaction approve nahi kar sakte! Hyperledger Fabric ensure karta hai ki sirf Government Departments (Registration, Revenue, Collectorate) hi land records ko verify aur approve karein.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Public Blockchain = WhatsApp Group jiska link public hai, koi bhi aake message daal sakta hai. Hyperledger Fabric = Official Office Slack / Teams Group jisme sirf HR se identity verify hone ke baad hi entry milti hai.
+</div>
+</div>
+
+<!-- CONCEPT 2 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#127970;</span> Organization (Org / MSP)</div>
+<span class="concept-tag tag-core">Network Entity</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Organization ka matlab hota hai blockchain network ka ek <strong>independent member / department</strong>. Har Organization ka apna ek <strong>MSP (Membership Service Provider)</strong> hota hai jo us department ke logo ke digital certificates aur keys ko manage karta hai.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Aapke project mein <strong>3 Organizations</strong> banaye gaye hain:<br>
+1. <strong>Org1MSP (Registration Dept)</strong>: Land Application accept karta hai.<br>
+2. <strong>Org2MSP (Revenue Dept)</strong>: Land Ownership & Survey reports check karta hai.<br>
+3. <strong>Org3MSP (Collectorate Dept)</strong>: Final Legal Approval deta hai.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Ek passport banane ke liye Police Verification Dept, Passport Seva Kendra, aur Regional Passport Office hote hain. Teeno alag-alag Orgs hain par milkar 1 passport approve karte hain.
+</div>
+</div>
+
+<!-- CONCEPT 3 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128220;</span> Chaincode (Smart Contract in Node.js)</div>
+<div class="concept-tag tag-core">Business Logic</div>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Smart Contract (Fabric mein isko <strong>Chaincode</strong> kehte hain) ek computer code hota hai jisme **Business Rules** likhe hote hain. Yeh code automated tareeke se blockchain par execute hota hai bina kisi insaan ke manipulate kiye.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Aapka chaincode <code>land-registration-contract.js</code> (Node.js) mein likha hai. Iske andar functions hain jaise <code>createApplication()</code>, <code>forwardApplication()</code>, <code>addCoOwnerConsent()</code>. Rules likhe hain ki Org1 ke baad hi Org2 approve kar sakta hai.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Vending Machine &mdash; Aap ₹20 ka coin daalte ho, machine automatically Cold Drink bahar nikal deti hai. Koi clerk beech mein baith kar manual decision nahi leta. Chaincode bhi aisa hi automatic rule executor hai.
+</div>
+</div>
+
+</div>
+</section>
+<hr class="d"/>
+
+<!-- SECTION 2: NETWORK NODES & CONSENSUS -->
+<section class="section" id="network">
+<div class="container">
+<div class="sl">Infrastructure</div>
+<h2 class="st">2. Peer Nodes, Orderer & Consensus</h2>
+
+<!-- CONCEPT 4 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128452;</span> Peer Nodes (Endorsing & Committing Peers)</div>
+<span class="concept-tag tag-consensus">Network Nodes</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Peer ek Docker Container / Computer Server hota hai jo Blockchain ki <strong>Ledger Copy (Kitab)</strong> aur <strong>Smart Contract</strong> ko apne paas store rakhta hai.<br>
+• <strong>Endorsing Peer</strong>: Transaction ki validity verify aur sign karta hai.<br>
+• <strong>Committing Peer</strong>: Block ko ledger mein write karta hai.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Har Organization ka apna Peer hai:<br>
+• <code>peer0.org1.land.com</code> (Registration Dept Peer)<br>
+• <code>peer0.org2.land.com</code> (Revenue Dept Peer)<br>
+• <code>peer0.org3.land.com</code> (Collectorate Dept Peer)<br>
+Jab aap application submit karte ho, teeno peers isko verify karke signature dete hain.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Bank ki 3 different branches ke 3 Head Clerks. Teeno ke paas same passbook record ledger ki copy hoti hai.
+</div>
+</div>
+
+<!-- CONCEPT 5 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128260;</span> Orderer Node & Raft Consensus</div>
+<span class="concept-tag tag-consensus">Ordering Service</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+<strong>Orderer</strong> network ka traffic cop hai. Iska kaam hai saare Endorsed transactions ko correct time-sequence mein arrange karna, unka Ek Naya Block banana, aur saare Peers ko send karna.<br>
+<strong>Raft Consensus</strong> ek fast & secure algorithm hai jisme aapas mein Leader chun kar blocks finalize kiye jaate hain (bina Heavy Mining ke).
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Aapke project mein <code>orderer.land.com</code> (Raft ordering service) chalti hai. Yeh ensure karta hai ki Land Application #101 pehle record ho aur Land Application #102 uske baad. Order of transactions hamesha 100% accurate rehta hai.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Bank Token Counter &mdash; Jo banda pehle token leta hai, Queue Manager (Orderer) usko pehle number par line mein lagata hai taaki koi beech mein jumping na kar sake.
+</div>
+</div>
+
+<!-- CONCEPT 6 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128451;</span> CouchDB World State Database</div>
+<span class="concept-tag tag-db">State Storage</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Blockchain ke 2 parts hote hain: 1) <strong>Transaction History Log</strong> (Sabhi past changes ka record) aur 2) <strong>World State Database</strong> (CURRENT Status of Asset). Hyperledger Fabric **CouchDB** use karta hai jisse aap Rich JSON Queries (e.g. status='approved') search kar sakte hain.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Har peer ke piche ek CouchDB container chal raha hota hai (e.g., <code>couchdb0</code>, <code>couchdb1</code>). Jab aap search karte ho <em>"Show all land records in Revenue status"</em>, to CouchDB instanly query execute karke result deta hai.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> History Ledger = Bank Statement ka 5 saal ka register. World State (CouchDB) = Aapke Screen par dikhne wala <strong>Current Account Balance (₹50,000)</strong>.
+</div>
+</div>
+
+</div>
+</section>
+<hr class="d"/>
+
+<!-- SECTION 3: SECURITY, CERTIFICATES & IDENTITY -->
+<section class="section" id="security">
+<div class="container">
+<div class="sl">Identity & Access</div>
+<h2 class="st">3. Security, Certificates & Access Control</h2>
+
+<!-- CONCEPT 7 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128272;</span> CA (Certificate Authority) & X.509 Digital Certificates</div>
+<span class="concept-tag tag-sec">Identity System</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Hyperledger Fabric mein Passwords nahi hote! Har User aur Officer ke paas ek Digital ID Card hota hai jise <strong>X.509 Certificate</strong> kehte hain. Is Certificate ko <strong>CA (Certificate Authority)</strong> issue karta hai. Digital Signature se pata chalta hai ki transaction kisne sign kiya.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Org1, Org2, aur Org3 ke apne CA Containers chalte hain (e.g. <code>ca.org1.land.com</code>). Jab Org2 Revenue Officer log in karta hai, to uska X.509 Certificate transaction ke sath attach hota hai to prove unki real identity.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Government Issued Biometric Smart Card / Voter ID Card. Is card ko dekhte hi Security Guard ko pata chal jata hai ki aap authentic officer ho ya nahi.
+</div>
+</div>
+
+<!-- CONCEPT 8 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128737;</span> ABAC (Attribute-Based Access Control)</div>
+<span class="concept-tag tag-sec">Access Policy</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+<strong>ABAC</strong> ek security rule hai jo user ke Digital Certificate ke andar ke <strong>Attributes (Attributes/Roles)</strong> check karta hai. For example: Agar certificate mein <code>role=collector</code> likha hai, tabhi permission milegi, varna access REJECT ho jayega.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+In <code>land-registration-contract.js</code>, <code>resolveOwnershipDispute()</code> function ABAC check karta hai: <code>if (mspId !== 'Org3MSP') throw Error('Only Collectorate can resolve')</code>. Koi aam citizen ya Org1 officer dispute resolve nahi kar sakta.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Office Door Lock Code &mdash; Guard swipe card check karta hai. Agar card par "Executive Manager" ka stamp hai tabhi Locker Room ka darwaza khulta hai.
+</div>
+</div>
+
+<!-- CONCEPT 9 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#128451;</span> IPFS (InterPlanetary File System) & Document Hashing</div>
+<span class="concept-tag tag-sec">Decentralized Storage</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+Blockchain par heavy files (jaise 10MB land deed PDFs, scan images) store karna bohot expensive aur slow hota hai. Isliye heavy files ko **IPFS** (Decentralized File Storage) par rakha jata hai, aur IPFS dwara mila unique **Hash Address (Content ID)** blockchain par save kiya jata hai.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Aapke project mein property deeds Pinata IPFS gateway par upload hoti hain. Iska **SHA-256 Hash + IPFS CID** (e.g. <code>QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco</code>) blockchain state mein save rehta hai for 100% tamper-proof record.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Badi Almirah mein asli file rakhna (IPFS), aur Bank Passbook par sirf us File ka **Locker Receipt Code (IPFS Hash)** stamp karna.
+</div>
+</div>
+
+<!-- CONCEPT 10 -->
+<div class="concept-card">
+<div class="concept-header">
+<div class="concept-title"><span>&#127380;</span> DID (Decentralized Identity) & Privacy (AES-256)</div>
+<span class="concept-tag tag-sec">Citizen Privacy</span>
+</div>
+<div class="two-col">
+<div class="box-general">
+<div class="box-title"><span>&#128161;</span> General Meaning (Saral Bhasha Mein)</div>
+<div class="box-body">
+<strong>DID</strong> ek aisa digital identity standard hai jisme user ka sensitive data (Aadhaar number, phone number) bina kisi central server ke share kiya ja sakta hai. Privacy ke liye sensitive fields ko **AES-256 Encryption** se lock kar diya jata hai.
+</div>
+</div>
+<div class="box-project">
+<div class="box-title"><span>&#9881;</span> Aapke Land Project Mein Iska Kaam</div>
+<div class="box-body">
+Aapke project mein citizen ka Aadhaar number blockchain par plain text mein save nahi hota. <code>encryptData()</code> function use karke isko AES-256 cipher format mein change karke save kiya jata hai taaki privacy maintain rahe.
+</div>
+</div>
+</div>
+<div class="example-callout">
+<strong>&#128681; Real-Life Example:</strong> Sealed Envelope &mdash; Aap confidential letter par Wax Seal laga kar bechte ho. Sirf intended receiver hi seal tod kar andar ki cheez padh sakta hai.
+</div>
+</div>
+
+</div>
+</section>
+
+<footer>
+<p>Land Registration System PBL &middot; Hyperledger Fabric & Blockchain Concepts Guide &middot; Generated by Antigravity IDE</p>
+<p style="margin-top:.25rem;font-size:.7rem;color:var(--td);">Designed for A4 Printing &middot; Press Ctrl + P to Print or Save as PDF</p>
+</footer>
+</body>
+</html>

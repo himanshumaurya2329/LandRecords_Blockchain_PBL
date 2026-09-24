@@ -1,0 +1,41 @@
+{
+  "name": "fabric-api",
+  "version": "1.0.0",
+  "description": "Hyperledger Fabric API for Land Registration System",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "enroll-admins": "node src/enrollAdmins.js",
+    "register-users": "node src/registerUsers.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "app-root-path": "^3.1.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "fabric-ca-client": "^2.2.20",
+    "fabric-network": "^2.2.20",
+    "fabric-protos": "^2.2.20",
+    "jsonwebtoken": "^9.0.2",
+    "jsrsasign": "^11.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2"
+  },
+  "overrides": {
+    "jsrsasign": "^11.1.0"
+  },
+  "keywords": [
+    "hyperledger",
+    "fabric",
+    "blockchain",
+    "land-registration"
+  ],
+  "author": "Land Registration System",
+  "license": "MIT"
+}

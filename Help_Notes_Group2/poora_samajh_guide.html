@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LandRecords PBL - Poora Samajh Aao Guide (Hinglish)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07111e;--bg2:#0d1b2e;--bg3:#14253a;--bg4:#1c3050;
+  --ind:#4f8ef7;--ind-l:#7ab0ff;
+  --em:#10c9a0;--em-l:#34f2c4;
+  --am:#fbbf24;--am-l:#fde68a;
+  --ro:#f87171;
+  --sk:#38bdf8;
+  --vi:#a78bfa;
+  --tx:#e8f0fe;--tm:#8da6c5;--td:#4d6b8a;
+  --bdr:rgba(79,142,247,0.2);--bdr-l:rgba(79,142,247,0.1);
+  --r:12px;--r2:18px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden;padding-bottom:4rem}
+::-webkit-scrollbar{width:7px}::-webkit-scrollbar-thumb{background:var(--ind);border-radius:4px}
+code{background:rgba(79,142,247,0.18);color:var(--ind-l);padding:.15rem .5rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.86em;border:1px solid rgba(79,142,247,0.3)}
+a{color:var(--sk);text-decoration:none}a:hover{text-decoration:underline}
+ul{padding-left:1.5rem}li{margin-bottom:.4rem}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,17,30,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr-l);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-brand{display:flex;align-items:center;gap:.7rem;font-weight:700;font-size:.95rem}
+.nav-dot{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--em),var(--ind));display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:1rem;list-style:none}
+.nav-links a{color:var(--tm);font-size:.8rem;font-weight:500}
+.nav-links a:hover{color:var(--em-l);text-decoration:none}
+@media(max-width:900px){.nav-links{display:none}}
+
+/* HERO */
+.hero{padding:115px 2rem 3rem;text-align:center;background:radial-gradient(ellipse 80% 55% at 50% -10%,rgba(79,142,247,.2),transparent 65%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(79,142,247,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(79,142,247,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.35);padding:.35rem 1rem;border-radius:99px;font-size:.76rem;font-weight:700;color:var(--ind-l);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.3rem}
+h1{font-size:clamp(2rem,4.2vw,3.2rem);font-weight:800;line-height:1.2;background:linear-gradient(135deg,#fff 20%,var(--ind-l) 60%,var(--em-l) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.9rem}
+.hero-sub{font-size:1rem;color:var(--tm);max-width:720px;margin:0 auto 1.5rem}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+.section{padding:3rem 0}
+.sl{font-size:.73rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--em-l);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.st{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;line-height:1.25;margin-bottom:.75rem}
+.sb{color:var(--tm);font-size:.93rem;margin-bottom:1.4rem}
+hr.d{border:none;border-top:1px solid var(--bdr-l);margin:2.5rem 0}
+
+/* CARDS */
+.card{background:rgba(13,27,46,.85);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.5rem;backdrop-filter:blur(8px);transition:transform .2s,border-color .2s}
+.card:hover{border-color:var(--bdr);transform:translateY(-2px)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.3rem}
+@media(max-width:800px){.two{grid-template-columns:1fr}}
+
+/* TAGS */
+.tag{font-size:.69rem;font-weight:700;padding:.2rem .6rem;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;display:inline-flex;align-items:center;gap:.3rem}
+.t-green{background:rgba(16,201,160,.15);color:var(--em-l);border:1px solid rgba(16,201,160,.3)}
+.t-blue{background:rgba(79,142,247,.15);color:var(--ind-l);border:1px solid rgba(79,142,247,.3)}
+.t-amber{background:rgba(251,191,36,.15);color:var(--am-l);border:1px solid rgba(251,191,36,.3)}
+.t-red{background:rgba(248,113,113,.15);color:#fca5a5;border:1px solid rgba(248,113,113,.3)}
+.t-violet{background:rgba(167,139,250,.15);color:#c4b5fd;border:1px solid rgba(167,139,250,.3)}
+
+/* ALERTS */
+.alert{border-radius:var(--r);padding:1rem 1.2rem;display:flex;gap:.85rem;align-items:flex-start;margin:1.2rem 0}
+.al-ok{background:rgba(16,201,160,.07);border:1px solid rgba(16,201,160,.3)}
+.al-warn{background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.3)}
+.al-info{background:rgba(79,142,247,.07);border:1px solid rgba(79,142,247,.3)}
+.al-red{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.3)}
+.a-ico{font-size:1.2rem;flex-shrink:0;margin-top:.1rem}
+.a-t{font-weight:700;font-size:.9rem;margin-bottom:.2rem}
+.al-ok .a-t{color:var(--em-l)}.al-warn .a-t{color:var(--am-l)}.al-info .a-t{color:var(--ind-l)}.al-red .a-t{color:#fca5a5}
+.a-x{font-size:.85rem;color:var(--tm);line-height:1.7}
+
+/* CODE BLOCKS */
+.cb-wrap{margin:1rem 0}
+.cb-hdr{background:#0a1628;border:1px solid var(--bdr);border-bottom:none;border-radius:var(--r) var(--r) 0 0;padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--tm)}
+.cb{background:#060e1a;border:1px solid var(--bdr);border-radius:0 0 var(--r) var(--r);padding:1.1rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.9;color:#b8c9de}
+.cb.full{border-radius:var(--r)}
+.cm{color:#3d5a78}.kw{color:#7ab0ff;font-weight:600}.val{color:#67e8a0}.eq{color:#f87171}.cmd{color:#38bdf8;font-weight:600}.cmt{color:#3d5a78}
+
+/* WORKFLOW / STEPPER */
+.wf{display:flex;flex-direction:column;gap:.5rem;position:relative}
+.wf::before{content:'';position:absolute;left:22px;top:30px;bottom:30px;width:2px;background:linear-gradient(to bottom,var(--ind),rgba(79,142,247,.05))}
+.wf-step{display:flex;gap:1.2rem;align-items:flex-start}
+.wf-dot{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;flex-shrink:0;color:#fff;box-shadow:0 0 14px rgba(79,142,247,.35)}
+.dot-blue{background:linear-gradient(135deg,#2563eb,#4f8ef7)}
+.dot-green{background:linear-gradient(135deg,#059669,#10c9a0)}
+.dot-amber{background:linear-gradient(135deg,#d97706,#fbbf24)}
+.dot-violet{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.dot-red{background:linear-gradient(135deg,#dc2626,#f87171)}
+.dot-teal{background:linear-gradient(135deg,#0891b2,#38bdf8)}
+.dot-pink{background:linear-gradient(135deg,#db2777,#f472b6)}
+.dot-ind{background:linear-gradient(135deg,#4338ca,#818cf8)}
+.dot-orange{background:linear-gradient(135deg,#c2410c,#fb923c)}
+.dot-slate{background:linear-gradient(135deg,#334155,#64748b)}
+.wf-body{flex:1;background:rgba(13,27,46,.8);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.2rem;margin-bottom:.8rem}
+.wf-h{font-size:1rem;font-weight:700;color:#fff;margin-bottom:.3rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.wf-role{font-size:.78rem;color:var(--tm);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.wf-desc{font-size:.87rem;color:var(--tm);line-height:1.65}
+
+/* FLOW CHART (pipeline arrows) */
+.pipeline{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin:1.2rem 0;padding:1rem 1.2rem;background:rgba(13,27,46,.8);border:1px solid var(--bdr-l);border-radius:var(--r2)}
+.pipe-node{background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.35);padding:.4rem .85rem;border-radius:8px;font-size:.8rem;font-weight:700;color:var(--ind-l);white-space:nowrap}
+.pipe-arr{color:var(--em-l);font-size:1.1rem;font-weight:700}
+
+/* PAGE CARDS */
+.page-card{background:rgba(13,27,46,.8);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.3rem;transition:all .2s}
+.page-card:hover{border-color:var(--bdr);transform:translateY(-2px)}
+.pc-url{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--em-l);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.pc-title{font-size:1rem;font-weight:700;margin-bottom:.4rem}
+.pc-desc{font-size:.85rem;color:var(--tm)}
+
+/* TABLE */
+.tw{overflow-x:auto;margin:1.2rem 0}
+.dt{width:100%;border-collapse:separate;border-spacing:0;font-size:.84rem}
+.dt th{background:var(--bg3);color:var(--tm);font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.8rem 1rem;text-align:left}
+.dt th:first-child{border-radius:8px 0 0 8px}.dt th:last-child{border-radius:0 8px 8px 0}
+.dt td{padding:.9rem 1rem;border-bottom:1px solid var(--bdr-l);vertical-align:middle}
+.dt tr:last-child td{border-bottom:none}.dt tr:hover td{background:rgba(79,142,247,.03)}
+
+/* TOAST */
+#toast{position:fixed;bottom:22px;right:22px;z-index:999;background:var(--em);color:#000;font-weight:700;font-size:.85rem;padding:.75rem 1.3rem;border-radius:8px;box-shadow:0 10px 25px rgba(0,0,0,.4);opacity:0;transform:translateY(20px);transition:all .3s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-dot">📜</div>
+    <span>E-Land PBL — Poori Samajh Guide</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#q1">MongoDB URI</a></li>
+    <li><a href="#q2">DB Setup</a></li>
+    <li><a href="#q3">Config Enough?</a></li>
+    <li><a href="#pages">Pages Map</a></li>
+    <li><a href="#workflow">Full Workflow</a></li>
+    <li><a href="#credentials">Credentials</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="badge">🇮🇳 Hinglish Guide · Sab Doubts Clear</div>
+  <h1>LandRecords PBL — Poora Project Samjho</h1>
+  <p class="hero-sub">Teri 5 saari doubts ka jawab, simple hinglish mein. MongoDB URI, pages ka map, pura workflow diagram, credentials sab kuch yahan hai.</p>
+</section>
+
+<div class="container">
+
+  <!-- Q1: MongoDB URI -->
+  <section class="section" id="q1">
+    <div class="sl">✅ Doubt #1</div>
+    <h2 class="st">Tera MongoDB Atlas URI sahi hai? Kya update chahiye?</h2>
+
+    <div class="alert al-ok">
+      <div class="a-ico">✅</div>
+      <div>
+        <div class="a-t">Haan, Tera URI Bilkul Sahi Hai!</div>
+        <div class="a-x">
+          Tune jo likha hai woh format bilkul correct hai. Neeche dono parts ka matlab samjha deta hoon:
+        </div>
+      </div>
+    </div>
+
+    <div class="cb-wrap">
+      <div class="cb-hdr">client/.env.local — Line 5 (Teri Current Value)</div>
+      <div class="cb">
+<span class="kw">MONGODB_URI</span><span class="eq">=</span><span class="val">mongodb+srv://hkmaurya3000_db_user:lJnUqfKeii7c508u@cluster0.gz5epzo.mongodb.net/<span style="color:#fbbf24;font-weight:700">elandrecords</span>?retryWrites=true&w=majority</span>
+      </div>
+    </div>
+
+    <div class="two" style="margin-top:1.2rem">
+      <div class="card">
+        <div style="color:var(--em-l);font-weight:700;margin-bottom:.7rem">🔍 URI ke Parts ka Matlab</div>
+        <table style="width:100%;font-size:.84rem;border-collapse:collapse">
+          <tr style="border-bottom:1px solid var(--bdr-l)">
+            <td style="padding:.6rem;color:var(--ind-l);font-family:'JetBrains Mono',monospace;font-weight:600">mongodb+srv://</td>
+            <td style="padding:.6rem;color:var(--tm)">MongoDB Atlas cloud ka secure connection protocol</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bdr-l)">
+            <td style="padding:.6rem;color:var(--ind-l);font-family:'JetBrains Mono',monospace;font-weight:600">hkmaurya3000_db_user</td>
+            <td style="padding:.6rem;color:var(--tm)">Tera Atlas database username</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bdr-l)">
+            <td style="padding:.6rem;color:var(--ind-l);font-family:'JetBrains Mono',monospace;font-weight:600">:lJnUqfKeii7c508u</td>
+            <td style="padding:.6rem;color:var(--tm)">Tera Atlas DB password</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--bdr-l)">
+            <td style="padding:.6rem;color:var(--am-l);font-family:'JetBrains Mono',monospace;font-weight:600">/elandrecords</td>
+            <td style="padding:.6rem;color:var(--tm)"><strong style="color:#fff">Ye database ka naam hai</strong> — sabse zaroori part. Ismein sab data store hoga</td>
+          </tr>
+          <tr>
+            <td style="padding:.6rem;color:var(--ind-l);font-family:'JetBrains Mono',monospace;font-weight:600">?retryWrites=true&w=majority</td>
+            <td style="padding:.6rem;color:var(--tm)">Connection options — automatic retry + data safety. Ye likhna zaroori hai, exactly yahi rakho</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div class="alert al-warn" style="margin-top:0">
+          <div class="a-ico">⚠️</div>
+          <div>
+            <div class="a-t">Ek Important Consistency Issue</div>
+            <div class="a-x">
+              Kuch scripts (jaise <code>create-admin.js</code>, <code>fix-credentials.js</code>) mein hardcoded likha hai <code>mongodb://localhost:27017/elandrecords</code> — ye <strong>local MongoDB</strong> connect karta hai. Kyunki tu <strong>Atlas (cloud)</strong> use kar raha hai, un scripts ko chalaane se pehle unke andar ka URI bhi change karna padega ya seedha terminal se dono env variables inject karo.<br><br>
+              Solution: Script chalane se pehle run kar:
+            </div>
+          </div>
+        </div>
+        <div class="cb-wrap">
+          <div class="cb-hdr">Sirf Atlas use karne ke liye — scripts mein update karo</div>
+          <div class="cb">
+<span class="cmt"># create-admin.js line 56 mein ye change karo:</span>
+<span class="cmt"># PAHLE: await mongoose.connect('mongodb://localhost:27017/eland-records');</span>
+<span class="kw">await</span> mongoose.connect(process.env.MONGODB_URI || <span class="val">'...'</span>);
+          </div>
+        </div>
+        <div class="alert al-info" style="margin-top:.5rem">
+          <div class="a-ico">💡</div>
+          <div>
+            <div class="a-t">Sabse Aasaan Tarika</div>
+            <div class="a-x">In scripts ke directory mein bhi ek <code>.env</code> file bana jo <code>MONGODB_URI=your_atlas_uri</code> likha ho, aur <code>require('dotenv').config()</code> already hai — automatically pick ho jayegi.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- Q2: Database Setup -->
+  <section class="section" id="q2">
+    <div class="sl">🗄️ Doubt #2</div>
+    <h2 class="st">Kya DB setup ke liye extra scripts chalane padenge?</h2>
+    <p class="sb">Short answer: <strong style="color:var(--em-l)">Haan — kuch scripts chalani padhengi!</strong> Lekin woh mostly ek baar chalani hain. Neeche complete list hai:</p>
+
+    <div class="three">
+      <div class="card">
+        <div style="font-size:1.3rem;margin-bottom:.6rem">🔐</div>
+        <div style="font-weight:700;color:#fff;margin-bottom:.4rem">1. create-admin.js</div>
+        <div class="tag t-red" style="margin-bottom:.6rem">Mandatory — Ek Baar</div>
+        <div style="font-size:.86rem;color:var(--tm)">
+          Super Admin account banata hai: <br>
+          Email: <code>admin@elandrecords.gov</code><br>
+          Password: <code>admin123</code><br><br>
+          <strong style="color:#fff">Isko chalaye bina admin login hi nahi hoga.</strong>
+        </div>
+        <div class="cb-wrap" style="margin-top:.8rem">
+          <div class="cb full" style="font-size:.76rem">cd client<br><span class="cmd">node create-admin.js</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:1.3rem;margin-bottom:.6rem">👮</div>
+        <div style="font-weight:700;color:#fff;margin-bottom:.4rem">2. fix-credentials.js</div>
+        <div class="tag t-amber" style="margin-bottom:.6rem">Mandatory — Ek Baar</div>
+        <div style="font-size:.86rem;color:var(--tm)">
+          Saare government officials (Clerk, MRO, Surveyor, Collector etc.) banata hai ya update karta hai.<br><br>
+          <strong style="color:#fff">Iske bina koi bhi official login nahi kar payega.</strong>
+        </div>
+        <div class="cb-wrap" style="margin-top:.8rem">
+          <div class="cb full" style="font-size:.76rem">cd client<br><span class="cmd">node fix-credentials.js</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-size:1.3rem;margin-bottom:.6rem">🔄</div>
+        <div style="font-weight:700;color:#fff;margin-bottom:.4rem">3. sync-status.js</div>
+        <div class="tag t-blue" style="margin-bottom:.6rem">Optional — Sirf Agar Problem Ho</div>
+        <div style="font-size:.86rem;color:var(--tm)">
+          Agar application ka status MongoDB aur Blockchain mein alag ho jaye (demo ke time aisa ho sakta hai), tab ye script status sync karta hai.<br><br>
+          Normal run mein yeh nahi chahiye.
+        </div>
+        <div class="cb-wrap" style="margin-top:.8rem">
+          <div class="cb full" style="font-size:.76rem">cd client<br><span class="cmd">node sync-status.js</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert al-ok" style="margin-top:1.2rem">
+      <div class="a-ico">📋</div>
+      <div>
+        <div class="a-t">One-Time Setup Order (Pehli Baar Chalane Ka Sahi Sequence)</div>
+        <div class="a-x">
+          <strong>Step 1:</strong> MongoDB Atlas cluster online ho (free tier pe start hota hai automatically)<br>
+          <strong>Step 2:</strong> <code>cd client</code> → <code>node create-admin.js</code> (admin account banta hai)<br>
+          <strong>Step 3:</strong> <code>node fix-credentials.js</code> (officials bante hain)<br>
+          <strong>Step 4:</strong> Fabric blockchain network start karo (WSL2 mein)<br>
+          <strong>Step 5:</strong> <code>cd fabric-api && npm start</code><br>
+          <strong>Step 6:</strong> <code>cd client && npm run dev</code><br>
+          Aur ho gaya! 🎉 Iske baad har baar sirf Step 4-6 hi karna hai.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- Q3: Config Enough + Manual Steps -->
+  <section class="section" id="q3">
+    <div class="sl">⚙️ Doubt #3</div>
+    <h2 class="st">Kya setup enough hai? Kya manual interaction chahiye?</h2>
+
+    <div class="two">
+      <div>
+        <div class="card">
+          <div style="color:var(--em-l);font-weight:700;font-size:1rem;margin-bottom:.8rem">✅ Kya Automatic Hota Hai</div>
+          <ul style="font-size:.88rem;color:var(--tm)">
+            <li>User form submit karta hai → Data <strong style="color:#fff">automatically MongoDB + Blockchain</strong> mein save hota hai</li>
+            <li>Official action leta hai → <strong style="color:#fff">Email automatically</strong> user ko jaata hai</li>
+            <li>Ministry Welfare final approve karta hai → <strong style="color:#fff">Patta certificate automatically generate</strong> hota hai aur IPFS pe upload hota hai</li>
+            <li>Har step pe Blockchain Transaction ID <strong style="color:#fff">automatically</strong> history mein save hoti hai</li>
+            <li>User dashboard <strong style="color:#fff">real-time status</strong> show karta hai</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div style="color:var(--am-l);font-weight:700;font-size:1rem;margin-bottom:.8rem">⚠️ Kahan Manual Interaction Chahiye</div>
+          <ul style="font-size:.88rem;color:var(--tm)">
+            <li><strong style="color:#fff">Har official</strong> ko apni ID se login karke apni dashboard open karni padegi</li>
+            <li>Clerk ko application review karke "Forward" button click karna padega</li>
+            <li>Surveyor ko survey report submit karni padegi</li>
+            <li>Collector/Ministry Welfare ko final "Approve" click karna padega</li>
+            <li>Citizen (user) apni DigiLocker document requests <strong style="color:#fff">manually approve ya reject</strong> karta hai</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert al-info" style="margin-top:1rem">
+      <div class="a-ico">🔁</div>
+      <div>
+        <div class="a-t">Summary: Project Har Baar Kaise Start Karna Hai</div>
+        <div class="a-x">
+          Scripts (create-admin, fix-credentials) <strong>sirf pehli baar</strong> chalani hain. Har baar naya project run karne ke liye: Blockchain Network → Fabric API → Next.js Client. Bas teeno terminals mein.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- Q4: Pages Map -->
+  <section class="section" id="pages">
+    <div class="sl">🗺️ Doubt #4</div>
+    <h2 class="st">Project Mein Kitne Pages Hain? Kya Kaam Karte Hain?</h2>
+    <p class="sb">Project mein <strong style="color:var(--em-l)">14 main pages</strong> hain — 3 groups mein baante hain: User, Official, aur Admin.</p>
+
+    <!-- User Pages -->
+    <div style="margin-bottom:2rem">
+      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+        <div class="tag t-blue">👤 USER PORTAL</div>
+        <span style="color:var(--tm);font-size:.85rem">5 Pages — Citizen ke liye</span>
+      </div>
+      <div class="three">
+        <div class="page-card">
+          <div class="pc-url">🏠 / (Home)</div>
+          <div class="pc-title">Landing Page</div>
+          <div class="pc-desc">Homepage — yahan se User Login, User Register, Official Login, Admin Login sab ke buttons hain. Pura project ka entry point.</div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">📝 /userregistration</div>
+          <div class="pc-title">User Registration</div>
+          <div class="pc-desc">Citizen apna account banata hai. Email OTP se verify hota hai. Name, Aadhaar, phone, address sab bharta hai. First time use.</div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">🔑 /userlogin</div>
+          <div class="pc-title">User Login</div>
+          <div class="pc-desc">Registered citizen apne username aur password se login karta hai.</div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">📊 /user-dashboard</div>
+          <div class="pc-title">User Dashboard ⭐ (Main Page)</div>
+          <div class="pc-desc">
+            Sabse important user page. Yahan:<br>
+            • Land registration form submit hota hai<br>
+            • Apni requests ka status track hota hai<br>
+            • Documents download hote hain (Patta)<br>
+            • Notifications aati hain<br>
+            • Profile dikhai deta hai
+          </div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">🔐 /digilocker</div>
+          <div class="pc-title">DigiLocker Vault</div>
+          <div class="pc-desc">Citizen ka document locker. Officials jo DigiLocker access request karte hain, citizen unhe yahan approve/reject kar sakta hai. Aadhaar card, land deed IPFS pe store hote hain.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Pages -->
+    <div style="margin-bottom:2rem">
+      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+        <div class="tag t-violet">👮 OFFICIAL PORTAL</div>
+        <span style="color:var(--tm);font-size:.85rem">4 Pages — Government Employees ke liye</span>
+      </div>
+      <div class="three">
+        <div class="page-card">
+          <div class="pc-url">📋 /officialregistration</div>
+          <div class="pc-title">Official Registration</div>
+          <div class="pc-desc">Naya government employee apna account banata hai. Email verify hota hai. Designation (Clerk/MRO/Surveyor etc.) choose karta hai. <strong>NOTE: Ye sirf naye official ke liye — existing ke liye fix-credentials.js kaam karti hai.</strong></div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">🔑 /officiallogin</div>
+          <div class="pc-title">Official Login</div>
+          <div class="pc-desc">Government employee apne credentials se login karta hai. Designation ke hisaab se uska dashboard configure hota hai automatically.</div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">🏛️ /official-dashboard</div>
+          <div class="pc-title">Official Dashboard ⭐ (Main Page)</div>
+          <div class="pc-desc">
+            Har official ke role ke hisaab se alag dikhai deta hai:<br>
+            • Clerk: Nayi applications review + forward<br>
+            • Surveyor: Survey report upload<br>
+            • MRO: Verify + forward<br>
+            • Collector: Final approve
+          </div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">📂 /digilocker-admin</div>
+          <div class="pc-title">Official DigiLocker</div>
+          <div class="pc-desc">Officials yahan se citizen ke documents request karte hain. Agar citizen ne approve kiya to documents yahan accessible hote hain.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Pages -->
+    <div>
+      <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:1rem">
+        <div class="tag t-amber">👑 ADMIN PORTAL</div>
+        <span style="color:var(--tm);font-size:.85rem">3 Pages — Super Admin ke liye</span>
+      </div>
+      <div class="three">
+        <div class="page-card">
+          <div class="pc-url">👑 /adminlogin</div>
+          <div class="pc-title">Admin Login</div>
+          <div class="pc-desc">Super Admin ka login page. Separate se home page pe link nahi dikhata — URL seedha daalni padti hai ya bottom mein hidden link hai.</div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">📊 /admin-dashboard</div>
+          <div class="pc-title">Admin Dashboard ⭐ (Control Center)</div>
+          <div class="pc-desc">
+            Poore system ka overview:<br>
+            • Total users, officials, applications count<br>
+            • Kisi bhi user ka data dekh sakta hai<br>
+            • Officials add/delete kar sakta hai<br>
+            • Saari applications ka status dekh sakta hai
+          </div>
+        </div>
+        <div class="page-card">
+          <div class="pc-url">⛓️ /blockchain-explorer</div>
+          <div class="pc-title">Blockchain Explorer</div>
+          <div class="pc-desc">Saare blockchain transactions dekh sakta hai. Transaction ID, block number, timestamp — har cheez. Proof ke liye use hota hai.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- Q5: Full Workflow + Example -->
+  <section class="section" id="workflow">
+    <div class="sl">🔄 Doubt #5 — Sabse Important</div>
+    <h2 class="st">Ek Example ke Saath Poora Workflow</h2>
+    <p class="sb">Example: <strong>"Ramesh Kumar apni zameen ka patta (ownership certificate) banwana chahta hai."</strong> Step by step dekhte hain kya hoga, kahan manual click chahiye, data kahan kahan jayega.</p>
+
+    <!-- Data Flow Diagram -->
+    <div style="background:rgba(13,27,46,.8);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.5rem;margin-bottom:2rem">
+      <div style="text-align:center;font-weight:700;color:var(--em-l);margin-bottom:1rem;font-size:.9rem;text-transform:uppercase;letter-spacing:.06em">📊 Data ka Safar — High Level</div>
+      <div class="pipeline">
+        <div class="pipe-node">👤 User</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node">🖥️ Next.js UI</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node">📡 Fabric API :3001</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node">⛓️ Blockchain</div>
+      </div>
+      <div class="pipeline" style="margin-top:.5rem">
+        <div class="pipe-node">📝 Form Data</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node">🍃 MongoDB</div>
+        <div class="pipe-arr">&amp;</div>
+        <div class="pipe-node">📌 IPFS (Pinata)</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node">📧 Email</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node">✅ Final Patta</div>
+      </div>
+    </div>
+
+    <!-- Approval Pipeline -->
+    <div style="background:rgba(13,27,46,.8);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.5rem;margin-bottom:2rem">
+      <div style="text-align:center;font-weight:700;color:var(--am-l);margin-bottom:1rem;font-size:.9rem;text-transform:uppercase;letter-spacing:.06em">📋 Approval Chain (11 Officials)</div>
+      <div class="pipeline" style="flex-wrap:wrap;justify-content:center;gap:.3rem">
+        <div class="pipe-node" style="background:rgba(79,142,247,.2)">Clerk</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(167,139,250,.2)">Superintendent</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(16,201,160,.2)">Project Officer</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(56,189,248,.2)">MRO</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(251,191,36,.2)">Surveyor</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(16,201,160,.2)">Revenue Inspector</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(79,142,247,.2)">VRO</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(248,113,113,.2)">Revenue Dept. Officer</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(167,139,250,.2)">Joint Collector</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(248,113,113,.2)">District Collector</div>
+        <div class="pipe-arr">→</div>
+        <div class="pipe-node" style="background:rgba(16,201,160,.3);border-color:var(--em-l)">✅ Ministry Welfare → PATTA GENERATE</div>
+      </div>
+    </div>
+
+    <!-- Step by Step Workflow -->
+    <div class="wf">
+
+      <!-- Step 1 -->
+      <div class="wf-step">
+        <div class="wf-dot dot-blue">1</div>
+        <div class="wf-body">
+          <div class="wf-h">👤 Ramesh — User Registration <span class="tag t-blue">Manual</span></div>
+          <div class="wf-role">📍 URL: <code>/userregistration</code> | Kaun: Citizen (Ramesh) | Page: User Registration</div>
+          <div class="wf-desc">
+            Ramesh <code>localhost:3000/userregistration</code> pe jaata hai.<br>
+            Form mein: Name, Email, Aadhaar, Phone, Date of Birth, Address bharta hai.<br>
+            "Send OTP" click karta hai → OTP uske Gmail pe aata hai (teri SMTP se).<br>
+            OTP enter karta hai → Account ban jaata hai → MongoDB mein save hota hai.<br>
+            <span style="color:var(--em-l)">✓ Data automatically save hota hai — koi extra step nahi.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="wf-step">
+        <div class="wf-dot dot-blue">2</div>
+        <div class="wf-body">
+          <div class="wf-h">👤 Ramesh — Login + Form Submit <span class="tag t-blue">Manual</span></div>
+          <div class="wf-role">📍 URL: <code>/userlogin</code> → <code>/user-dashboard</code> | Kaun: Citizen</div>
+          <div class="wf-desc">
+            Ramesh login karta hai → User Dashboard par aata hai.<br>
+            "Apply for Land Registration" button click karta hai.<br>
+            Form mein: Land details — Survey Number, Area, Owner Name, Location, Address bharta hai.<br>
+            Document (zameen ka kaagaz) PDF upload karta hai → <strong style="color:var(--am-l)">Pinata IPFS pe automatically upload</strong> hota hai.<br>
+            Submit karta hai:<br>
+            &nbsp;&nbsp;→ MongoDB mein application save hoti hai<br>
+            &nbsp;&nbsp;→ Blockchain pe transaction hoti hai (Fabric API ke through)<br>
+            &nbsp;&nbsp;→ Receipt Number generate hoti hai (e.g. <code>RCPT-2024-0001</code>)<br>
+            <span style="color:var(--em-l)">✓ Yeh sab automatically hota hai, sirf form bharna manual hai.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="wf-step">
+        <div class="wf-dot dot-teal">3</div>
+        <div class="wf-body">
+          <div class="wf-h">👮 Clerk — Review + Forward <span class="tag t-amber">Manual Action Required</span></div>
+          <div class="wf-role">📍 URL: <code>/officiallogin</code> → <code>/official-dashboard</code> | Login: <code>clerk / clerk123</code></div>
+          <div class="wf-desc">
+            Clerk apne credentials se login karta hai → Official Dashboard open hota hai.<br>
+            Dashboard mein "Pending Applications" tab mein Ramesh ki application dikhti hai.<br>
+            Clerk details review karta hai — documents check karta hai.<br>
+            "Forward" button click karta hai (remarks optional) → Blockchain pe transaction hoti hai.<br>
+            Application automatically Superintendent ke paas chali jaati hai.<br>
+            <strong style="color:var(--am-l)">Ramesh ko email automatically aata hai:</strong> "Your application has been forwarded by Clerk."<br>
+            <span style="color:var(--em-l)">✓ Sirf "Forward" click karna manual hai. Email, blockchain update sab automatic.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="wf-step">
+        <div class="wf-dot dot-violet">4</div>
+        <div class="wf-body">
+          <div class="wf-h">👮 Superintendent → Project Officer → MRO <span class="tag t-amber">Manual (Each)</span></div>
+          <div class="wf-role">📍 Same process as Clerk | Login credentials neeche table mein</div>
+          <div class="wf-desc">
+            Yeh chain mein ek ek karke aage badhta hai. Har official:<br>
+            1. Login karta hai apni credentials se<br>
+            2. Official Dashboard pe pending application dekhta hai<br>
+            3. Review karke "Forward" ya extra data (jaise survey data) submit karta hai<br>
+            4. Next official ke paas application automatically move hoti hai<br>
+            <span style="color:var(--em-l)">✓ Har baar: Login → Dashboard → Review → Click Forward = Automatic aage move.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 - Surveyor -->
+      <div class="wf-step">
+        <div class="wf-dot dot-amber">5</div>
+        <div class="wf-body">
+          <div class="wf-h">🗺️ Surveyor — Survey Report Upload <span class="tag t-amber">Manual</span></div>
+          <div class="wf-role">📍 URL: <code>/official-dashboard</code> | Login: <code>surveyor1 / surveyor123</code></div>
+          <div class="wf-desc">
+            Surveyor login karta hai → apna dashboard dekhta hai.<br>
+            Ramesh ki application select karta hai.<br>
+            Survey form mein: Land dimensions, boundary details, coordinates, survey findings bharta hai.<br>
+            Survey report PDF upload karta hai → IPFS pe save hoti hai automatically.<br>
+            Submit karta hai → Blockchain pe survey data save hota hai.<br>
+            <span style="color:var(--em-l)">✓ Physical survey manually hoti hai, uska digital report submit karna manual hai.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 - Final Approval -->
+      <div class="wf-step">
+        <div class="wf-dot dot-pink">6</div>
+        <div class="wf-body">
+          <div class="wf-h">... Revenue Inspector → VRO → Revenue Dept → Joint Collector → District Collector <span class="tag t-blue">Same Process</span></div>
+          <div class="wf-role">Chain continue hoti hai, har step pe manual click + automatic email</div>
+          <div class="wf-desc">
+            Har level pe same process: Login → Dashboard → Review → Action.<br>
+            Ramesh ka dashboard har step ke baad update hota rahta hai.<br>
+            Wo <code>/user-dashboard</code> pe status track kar sakta hai.<br>
+            <span style="color:var(--em-l)">Koi bhi stage pe koi bhi sirf ek browser tab mein — mujhe kitne pages open karne padenge? Uska jawab: Ek time pe ek hi official ka page open hoga. Ek ke baad ek.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7 - Ministry Final -->
+      <div class="wf-step">
+        <div class="wf-dot dot-green">7</div>
+        <div class="wf-body">
+          <div class="wf-h">🎯 Ministry of Welfare — FINAL APPROVE <span class="tag t-red">Most Important Step</span></div>
+          <div class="wf-role">📍 URL: <code>/official-dashboard</code> | Login: <code>ministry_welfare1 / ministry_welfare123</code></div>
+          <div class="wf-desc">
+            Ministry of Welfare official login karta hai → Dashboard pe application aati hai.<br>
+            Final review karta hai → "Approve" button click karta hai.<br>
+            <strong style="color:var(--am-l)">YE SAB AUTOMATICALLY HOTA HAI (no manual step needed):</strong><br>
+            &nbsp;&nbsp;1. Blockchain pe FINAL APPROVAL transaction hoti hai<br>
+            &nbsp;&nbsp;2. Application status "completed" ho jaata hai MongoDB mein<br>
+            &nbsp;&nbsp;3. <strong style="color:var(--em-l)">Patta Certificate PDF automatically generate</strong> hota hai (HTML → PDF → IPFS upload)<br>
+            &nbsp;&nbsp;4. Certificate number generate hota hai<br>
+            &nbsp;&nbsp;5. QR code generate hota hai<br>
+            &nbsp;&nbsp;6. Ramesh ko email aata hai<br>
+            <span style="color:var(--em-l)">✓ Sirf "Approve" click karna manual hai. Patta generate bhi automatic!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8 - User Gets Patta -->
+      <div class="wf-step">
+        <div class="wf-dot dot-green">8</div>
+        <div class="wf-body">
+          <div class="wf-h">🎉 Ramesh — Patta Download <span class="tag t-green">Automatic + Manual</span></div>
+          <div class="wf-role">📍 URL: <code>/user-dashboard</code> | Kaun: Citizen (Ramesh)</div>
+          <div class="wf-desc">
+            Ramesh ko email aata hai ki application approved ho gayi.<br>
+            Ramesh <code>/user-dashboard</code> pe login karta hai.<br>
+            "Download Patta" button click karta hai → IPFS se PDF download hoti hai.<br>
+            QR code scan karke verify kar sakta hai ki patta genuine hai ya nahi (<code>/verify/CERT-XXX</code>).<br>
+            <span style="color:var(--em-l)">✓ Complete! Zameen ka digital patta mil gaya.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- Q5 Part 2: Credentials -->
+  <section class="section" id="credentials">
+    <div class="sl">🔑 Credentials Ready Hain?</div>
+    <h2 class="st">Official & Admin Credentials — Pehle Se Bani Hain!</h2>
+    <p class="sb">Haan! <code>fix-credentials.js</code> chalane ke baad <strong style="color:var(--em-l)">yeh sab accounts ready mil jaate hain</strong>. Ek baar script chalana hai, fir inn credentials se directly login hota hai:</p>
+
+    <div class="tw">
+      <table class="dt">
+        <thead>
+          <tr>
+            <th>Role (Designation)</th>
+            <th>Department</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Login URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Super Admin</strong> 👑</td>
+            <td><span class="tag t-amber">System</span></td>
+            <td><code>admin@elandrecords.gov</code></td>
+            <td><code>admin123</code></td>
+            <td><code>/adminlogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Clerk</strong></td>
+            <td><span class="tag t-blue">Registration (Org1)</span></td>
+            <td><code>clerk</code></td>
+            <td><code>clerk123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Superintendent</strong></td>
+            <td><span class="tag t-blue">Registration (Org1)</span></td>
+            <td><code>superintendent</code></td>
+            <td><code>superintendent123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Project Officer</strong></td>
+            <td><span class="tag t-blue">Registration (Org1)</span></td>
+            <td><code>project_officer</code></td>
+            <td><code>project_officer123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>MRO</strong></td>
+            <td><span class="tag t-green">Revenue (Org2)</span></td>
+            <td><code>mro1</code></td>
+            <td><code>mro123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>VRO</strong></td>
+            <td><span class="tag t-green">Revenue (Org2)</span></td>
+            <td><code>vro1</code></td>
+            <td><code>vro123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Surveyor</strong></td>
+            <td><span class="tag t-green">Revenue (Org2)</span></td>
+            <td><code>surveyor1</code></td>
+            <td><code>surveyor123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Revenue Inspector</strong></td>
+            <td><span class="tag t-green">Revenue (Org2)</span></td>
+            <td><code>revenue_inspector1</code></td>
+            <td><code>revenue_inspector123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Revenue Dept. Officer</strong></td>
+            <td><span class="tag t-green">Revenue (Org2)</span></td>
+            <td><code>revenue_dept_officer1</code></td>
+            <td><code>revenue_dept_officer123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Joint Collector</strong></td>
+            <td><span class="tag t-violet">Collectorate (Org3)</span></td>
+            <td><code>joint_collector1</code></td>
+            <td><code>joint_collector123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>District Collector</strong></td>
+            <td><span class="tag t-violet">Collectorate (Org3)</span></td>
+            <td><code>district_collector1</code></td>
+            <td><code>district_collector123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+          <tr>
+            <td><strong>Ministry Welfare</strong> ✅ Final</td>
+            <td><span class="tag t-violet">Collectorate (Org3)</span></td>
+            <td><code>ministry_welfare1</code></td>
+            <td><code>ministry_welfare123</code></td>
+            <td><code>/officiallogin</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert al-warn">
+      <div class="a-ico">⚠️</div>
+      <div>
+        <div class="a-t">Demo ke Liye Tip</div>
+        <div class="a-x">
+          Ek application ka complete journey dikhane ke liye tujhe ek ek karke <strong>12 alag logins</strong> karne padenge (user + 11 officials). Demo mein usually 3-4 key steps dikhate hain:<br>
+          1. User registration + form submit<br>
+          2. Clerk action (forward)<br>
+          3. Surveyor (survey report)<br>
+          4. Ministry Welfare (final approve + patta)<br>
+          5. User dashboard pe patta download<br>
+          Yeh 5 steps mein poora cycle dikhao — professor impressed ho jayega! 🎯
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="d">
+
+  <!-- Final Quick Reference -->
+  <section class="section">
+    <div class="sl">📋 Quick Reference</div>
+    <h2 class="st">Ek Baar Mein Saari Cheezein</h2>
+    <div class="two">
+      <div class="card">
+        <div style="color:var(--em-l);font-weight:700;margin-bottom:.8rem">✅ Tera Current .env.local Status</div>
+        <ul style="font-size:.86rem;color:var(--tm)">
+          <li><span style="color:var(--em-l)">✅ MongoDB Atlas URI</span> — Sahi hai, <code>/elandrecords</code> ke saath</li>
+          <li><span style="color:var(--em-l)">✅ Pinata IPFS Keys</span> — Set hain</li>
+          <li><span style="color:var(--em-l)">✅ Gmail SMTP</span> — Set hai</li>
+          <li><span style="color:var(--em-l)">✅ Fabric API URL</span> — <code>localhost:3001</code> sahi hai</li>
+          <li><span style="color:var(--em-l)">✅ Base URL</span> — <code>localhost:3000</code> sahi hai</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div style="color:var(--am-l);font-weight:700;margin-bottom:.8rem">📋 Abhi Jo Karna Hai (One Time)</div>
+        <div class="cb-wrap" style="margin:0">
+          <div class="cb full" style="font-size:.78rem">
+<span class="cmt"># Terminal 1 — Seed Database (ek baar):</span>
+<span class="cmd">cd client</span>
+<span class="cmd">node create-admin.js</span>
+<span class="cmd">node fix-credentials.js</span>
+
+<span class="cmt"># Terminal 2 — Har baar chalao (WSL2):</span>
+<span class="cmd">./start-network.sh</span>
+
+<span class="cmt"># Terminal 3 — Har baar:</span>
+<span class="cmd">cd fabric-api && npm start</span>
+
+<span class="cmt"># Terminal 4 — Har baar:</span>
+<span class="cmd">cd client && npm run dev</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div id="toast">✅ Copied!</div>
+<script>
+function showToast(msg){const t=document.getElementById('toast');t.innerText=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+</script>
+</body>
+</html>

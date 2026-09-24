@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Joint Ownership Feature - Implementation Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0f1a;--bg2:#111827;--bg3:#1a2236;--bdr:rgba(99,102,241,.22);--bdrl:rgba(99,102,241,.12);--ind:#6366f1;--il:#818cf8;--em:#10b981;--el:#34d399;--am:#f59e0b;--al:#fbbf24;--ro:#f43f5e;--rl2:#fb7185;--sk:#0ea5e9;--sl:#38bdf8;--vi:#8b5cf6;--vl:#a78bfa;--tx:#e2e8f0;--tm:#94a3b8;--td:#64748b;--r:12px;--r2:20px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--ind);border-radius:3px}
+code{background:rgba(99,102,241,.15);color:var(--il);padding:.12rem .5rem;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.84em;border:1px solid rgba(99,102,241,.2)}
+a{color:var(--il)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,15,26,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdrl);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:.95rem}
+.nav-dot{width:32px;height:32px;border-radius:99px;background:linear-gradient(135deg,var(--em),var(--sk));display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nav-links{display:flex;gap:1.1rem;list-style:none}
+.nav-links a{color:var(--tm);text-decoration:none;font-size:.8rem;font-weight:500;transition:color .2s}.nav-links a:hover{color:var(--el)}
+.hero{padding:120px 2rem 5rem;text-align:center;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(16,185,129,.15),transparent 65%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(14,165,233,.08),transparent 60%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(16,185,129,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.04) 1px,transparent 1px);background-size:55px 55px}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);padding:.35rem 1rem;border-radius:99px;font-size:.73rem;font-weight:700;color:var(--el);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.5rem;position:relative}
+h1{font-size:clamp(2rem,4.5vw,3.6rem);font-weight:800;line-height:1.1;background:linear-gradient(135deg,#fff 25%,var(--el) 75%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1rem;position:relative}
+.hero-sub{font-size:1rem;color:var(--tm);max-width:640px;margin:0 auto 2.5rem;position:relative}
+.hero-stats{display:flex;gap:1.25rem;justify-content:center;flex-wrap:wrap;position:relative}
+.sp{background:var(--bg3);border:1px solid rgba(16,185,129,.25);border-radius:12px;padding:.65rem 1.25rem;text-align:center}
+.sp .n{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--el),var(--sl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp .l{font-size:.7rem;color:var(--tm);font-weight:500}
+.container{max-width:1140px;margin:0 auto;padding:0 2rem}
+.section{padding:4rem 0}
+.sl{font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--el);margin-bottom:.5rem}
+.st{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;line-height:1.2;margin-bottom:.8rem}
+.sb{color:var(--tm);max-width:700px;font-size:.9rem}
+hr.d{border:none;border-top:1px solid var(--bdrl)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:720px){.two{grid-template-columns:1fr}}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem}
+@media(max-width:900px){.three{grid-template-columns:1fr}}
+
+/* MEMBER CARDS */
+.mc{border-radius:var(--r2);overflow:hidden;border:2px solid;transition:transform .25s,box-shadow .25s}
+.mc:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.7)}
+.mc.m1{border-color:rgba(99,102,241,.5);background:linear-gradient(160deg,rgba(99,102,241,.1),var(--bg2))}
+.mc.m2{border-color:rgba(16,185,129,.5);background:linear-gradient(160deg,rgba(16,185,129,.1),var(--bg2))}
+.mc.m3{border-color:rgba(245,158,11,.5);background:linear-gradient(160deg,rgba(245,158,11,.1),var(--bg2))}
+.mc-top{padding:1.5rem 1.5rem 1rem;display:flex;align-items:center;gap:1rem}
+.mc-avatar{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.m1 .mc-avatar{background:rgba(99,102,241,.2);border:2px solid rgba(99,102,241,.4)}
+.m2 .mc-avatar{background:rgba(16,185,129,.2);border:2px solid rgba(16,185,129,.4)}
+.m3 .mc-avatar{background:rgba(245,158,11,.2);border:2px solid rgba(245,158,11,.4)}
+.mc-name{font-size:1rem;font-weight:800;color:var(--tx)}
+.m1 .mc-role{color:var(--il)}.m2 .mc-role{color:var(--el)}.m3 .mc-role{color:var(--al)}
+.mc-role{font-size:.73rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:.15rem}
+.mc-body{padding:.5rem 1.5rem 1.5rem}
+.mc-desc{font-size:.84rem;color:var(--tm);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--bdrl)}
+.task-list{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.task-list li{display:flex;align-items:flex-start;gap:.7rem;font-size:.82rem}
+.task-num{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.67rem;font-weight:800;flex-shrink:0;margin-top:.1rem}
+.m1 .task-num{background:rgba(99,102,241,.2);color:var(--il)}.m2 .task-num{background:rgba(16,185,129,.2);color:var(--el)}.m3 .task-num{background:rgba(245,158,11,.2);color:var(--al)}
+.task-text{color:var(--tx);font-weight:500}
+.task-sub{color:var(--tm);font-size:.77rem}
+.mc-files{margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--bdrl)}
+.mc-files-t{font-size:.68rem;font-weight:700;color:var(--td);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem}
+.file-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.ft{font-size:.67rem;font-weight:600;padding:.15rem .55rem;border-radius:6px;font-family:'JetBrains Mono',monospace}
+.m1 .ft{background:rgba(99,102,241,.15);color:var(--il);border:1px solid rgba(99,102,241,.25)}
+.m2 .ft{background:rgba(16,185,129,.15);color:var(--el);border:1px solid rgba(16,185,129,.25)}
+.m3 .ft{background:rgba(245,158,11,.15);color:var(--al);border:1px solid rgba(245,158,11,.25)}
+
+/* FLOW DIAGRAM */
+.flow{background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r2);padding:2rem;margin-top:1.75rem;overflow-x:auto}
+.flow-title{text-align:center;font-size:.82rem;font-weight:700;color:var(--tm);margin-bottom:1.75rem;letter-spacing:.06em;text-transform:uppercase}
+.flow-grid{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:nowrap;min-width:820px}
+.fb{text-align:center;flex-shrink:0}
+.fbox{padding:.65rem 1rem;border-radius:10px;font-size:.72rem;font-weight:700;min-width:100px;max-width:115px;line-height:1.3}
+.fb1 .fbox{background:rgba(99,102,241,.15);border:2px solid rgba(99,102,241,.4);color:var(--il)}
+.fb2 .fbox{background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);color:var(--el)}
+.fb3 .fbox{background:rgba(245,158,11,.15);border:2px solid rgba(245,158,11,.4);color:var(--al)}
+.fb4 .fbox{background:rgba(14,165,233,.15);border:2px solid rgba(14,165,233,.4);color:var(--sl)}
+.fb5 .fbox{background:rgba(139,92,246,.15);border:2px solid rgba(139,92,246,.4);color:var(--vl)}
+.fb6 .fbox{background:rgba(74,222,128,.15);border:2px solid rgba(74,222,128,.4);color:#4ade80}
+.fb-sub{font-size:.62rem;color:var(--td);margin-top:.3rem}
+.farr{color:var(--td);font-size:1.3rem;flex-shrink:0}
+
+/* CODE BLOCKS */
+.cb{background:#0d1117;border:1px solid var(--bdrl);border-radius:var(--r);padding:1.25rem 1.5rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.77rem;line-height:1.85;color:#c9d1d9;margin-top:.9rem}
+.cb .cm{color:#8b949e}.cb .kw{color:#ff7b72}.cb .fn{color:#d2a8ff}.cb .str{color:#a5d6ff}.cb .num{color:#f8c555}.cb .cls{color:#ffa657}.cb .op{color:#ff7b72}
+.cb-header{background:var(--bg3);border:1px solid var(--bdrl);border-bottom:none;border-radius:var(--r) var(--r) 0 0;padding:.55rem 1.2rem;display:flex;align-items:center;justify-content:space-between}
+.cb-header + .cb{border-radius:0 0 var(--r) var(--r);margin-top:0}
+.cb-title{font-size:.72rem;font-weight:700;color:var(--tm);font-family:'JetBrains Mono',monospace}
+.cb-badge{font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:99px}
+.cb-badge.new{background:rgba(16,185,129,.2);color:var(--el);border:1px solid rgba(16,185,129,.3)}
+.cb-badge.mod{background:rgba(245,158,11,.2);color:var(--al);border:1px solid rgba(245,158,11,.3)}
+.cb-badge.api{background:rgba(14,165,233,.2);color:var(--sl);border:1px solid rgba(14,165,233,.3)}
+.cb-badge.ui{background:rgba(139,92,246,.2);color:var(--vl);border:1px solid rgba(139,92,246,.3)}
+
+/* SMART CONTRACT FUNCTION TABLE */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1.5rem}
+.fnc{background:var(--bg2);border:1px solid var(--bdrl);border-radius:var(--r);padding:1.1rem 1.25rem;border-left:3px solid}
+.fnc.fnew{border-left-color:var(--em)}.fnc.fmod{border-left-color:var(--am)}.fnc.fread{border-left-color:var(--sk)}
+.fnc-n{font-family:'JetBrains Mono',monospace;font-size:.84rem;font-weight:700;margin-bottom:.3rem}
+.fnc.fnew .fnc-n{color:var(--el)}.fnc.fmod .fnc-n{color:var(--al)}.fnc.fread .fnc-n{color:var(--sl)}
+.fnc-t{font-size:.67rem;font-weight:700;padding:.12rem .45rem;border-radius:5px;display:inline-block;margin-bottom:.4rem}
+.fnc.fnew .fnc-t{background:rgba(16,185,129,.15);color:var(--el)}.fnc.fmod .fnc-t{background:rgba(245,158,11,.15);color:var(--al)}.fnc.fread .fnc-t{background:rgba(14,165,233,.15);color:var(--sl)}
+.fnc-d{font-size:.8rem;color:var(--tm)}
+.fnc-who{font-size:.71rem;color:var(--td);margin-top:.35rem;font-weight:500}
+
+/* ALERTS */
+.alert{border-radius:var(--r);padding:.9rem 1.1rem;display:flex;gap:.65rem;align-items:flex-start;margin-top:1.25rem}
+.alert.info{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25)}
+.alert.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25)}
+.alert.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25)}
+.alert.sky{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.25)}
+.a-ico{font-size:1.1rem;flex-shrink:0;margin-top:.05rem}
+.a-t{font-weight:700;font-size:.88rem;margin-bottom:.2rem}
+.alert.info .a-t{color:var(--il)}.alert.ok .a-t{color:var(--el)}.alert.warn .a-t{color:var(--al)}.alert.sky .a-t{color:var(--sl)}
+.a-x{font-size:.83rem;color:var(--tm)}
+
+/* TABLE */
+.lt{width:100%;border-collapse:separate;border-spacing:0;margin-top:1.25rem;font-size:.83rem}
+.lt th{background:var(--bg3);color:var(--tm);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.7rem 1rem;text-align:left}
+.lt th:first-child{border-radius:9px 0 0 9px}.lt th:last-child{border-radius:0 9px 9px 0}
+.lt td{padding:.8rem 1rem;border-bottom:1px solid var(--bdrl);vertical-align:top}
+.lt tr:last-child td{border-bottom:none}.lt tr:hover td{background:rgba(99,102,241,.03)}
+.new-tag{background:rgba(16,185,129,.15);color:var(--el);border:1px solid rgba(16,185,129,.3);font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:99px}
+.mod-tag{background:rgba(245,158,11,.15);color:var(--al);border:1px solid rgba(245,158,11,.3);font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:99px}
+
+footer{background:var(--bg2);border-top:1px solid var(--bdrl);padding:2rem 0;text-align:center}
+footer p{font-size:.78rem;color:var(--td)}
+
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .55s ease both}
+</style>
+</head>
+<body>
+<nav>
+<div class="nav-brand"><div class="nav-dot">&#129309;</div> Joint Ownership &mdash; Implementation Plan</div>
+<ul class="nav-links">
+<li><a href="#concept">Concept</a></li>
+<li><a href="#members">Team Work</a></li>
+<li><a href="#smartcontract">Smart Contract</a></li>
+<li><a href="#code">Code</a></li>
+<li><a href="#api">API</a></li>
+<li><a href="#frontend">Frontend</a></li>
+</ul>
+</nav>
+
+<header class="hero">
+<div class="badge fu">&#128279; New Feature &middot; No New Org Required &middot; Existing Network</div>
+<h1 class="fu">Joint Land Ownership<br>Implementation Plan</h1>
+<p class="hero-sub fu">A complete guide to implementing co-ownership of land records in the existing 3-org Hyperledger Fabric network. Work is distributed across 3 group members with clear boundaries.</p>
+<div class="hero-stats fu">
+<div class="sp"><div class="n">3</div><div class="l">Members</div></div>
+<div class="sp"><div class="n">5</div><div class="l">New Chaincode Functions</div></div>
+<div class="sp"><div class="n">2</div><div class="l">Modified Functions</div></div>
+<div class="sp"><div class="n">6</div><div class="l">New API Endpoints</div></div>
+<div class="sp"><div class="n">3</div><div class="l">New Frontend Pages</div></div>
+</div>
+</header>
+<hr class="d"/>
+
+<!-- CONCEPT -->
+<section class="section" id="concept">
+<div class="container">
+<div class="sl">Feature Overview</div>
+<h2 class="st">What Is Joint Ownership?</h2>
+<p class="sb">Joint ownership allows a single land record to be registered in the name of <strong>multiple co-owners</strong> (e.g., husband + wife, family members, business partners). All owners must give their <strong>digital consent</strong> for the registration to proceed. Every co-owner's share percentage is recorded on the blockchain permanently.</p>
+
+<div class="two" style="margin-top:1.75rem;">
+<div>
+<div class="alert ok"><span class="a-ico">&#9989;</span><div>
+<div class="a-t">What Changes in the Existing System</div>
+<div class="a-x"><ul style="padding-left:1rem;margin-top:.4rem;line-height:1.9;">
+<li>The <code>application</code> object gains a new <code>owners[]</code> array field (replaces single owner)</li>
+<li><code>createApplication()</code> is modified to accept multiple owners with share percentages</li>
+<li>A new <strong>consent mechanism</strong> is added &mdash; all co-owners must sign digitally</li>
+<li>New <strong>ownership transfer</strong> function for when one co-owner sells their share</li>
+<li>New <strong>co-owner dispute</strong> flag that freezes the land record</li>
+<li>No new organizations, No new Docker configs &mdash; only chaincode + API + UI changes</li>
+</ul></div>
+</div></div>
+
+<div class="alert warn" style="margin-top:.9rem;"><span class="a-ico">&#9888;&#65039;</span><div>
+<div class="a-t">Business Rules (Must Enforce in Chaincode)</div>
+<div class="a-x"><ul style="padding-left:1rem;margin-top:.4rem;line-height:1.9;">
+<li>All co-owners' share percentages must sum to exactly <strong>100%</strong></li>
+<li>Minimum 2, maximum 5 co-owners per land record</li>
+<li>An owner cannot hold less than <strong>1% share</strong></li>
+<li>All co-owners must provide consent before status progresses past <code>submitted</code></li>
+<li>Any partial share transfer requires <strong>other co-owners' approval</strong></li>
+<li>A disputed record is <strong>frozen</strong> &mdash; no status change until dispute resolved</li>
+</ul></div>
+</div></div>
+</div>
+
+<div>
+<div class="alert sky"><span class="a-ico">&#128161;</span><div>
+<div class="a-t">Why This Works Without a New Organization</div>
+<div class="a-x">Joint ownership is a <strong>data model change + new business logic</strong> &mdash; it does not require a new endorser or a new MSP. The same 3 existing organizations (Org1 Registration, Org2 Revenue, Org3 Collectorate) process the application. The only thing that changes is:<br/><br/>
+&#9312; The <em>asset schema</em> has a richer ownership structure<br/>
+&#9313; The <em>consent</em> from co-owners is tracked on-chain<br/>
+&#9314; New chaincode functions handle co-owner operations<br/>
+&#9315; The frontend shows a multi-owner application form<br/><br/>
+This is 100% backward-compatible with existing single-owner applications.</div>
+</div></div>
+
+<div class="alert info" style="margin-top:.9rem;"><span class="a-ico">&#128202;</span><div>
+<div class="a-t">New Fields Added to the Land Application Object</div>
+<div class="a-x" style="font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:2;">
+<span style="color:var(--el);">owners</span>: [ { ownerId, name, aadhar, sharePercent, consentStatus, consentTimestamp } ]<br/>
+<span style="color:var(--el);">ownershipType</span>: <span style="color:var(--al);">"single"</span> | <span style="color:var(--al);">"joint"</span><br/>
+<span style="color:var(--el);">allConsentsGiven</span>: <span style="color:var(--sl);">false</span> (true when every owner consents)<br/>
+<span style="color:var(--el);">isDisputed</span>: <span style="color:var(--sl);">false</span> (frozen if any owner raises dispute)<br/>
+<span style="color:var(--el);">disputeDetails</span>: { raisedBy, reason, timestamp }</div>
+</div></div>
+</div>
+</div>
+
+<!-- FLOW DIAGRAM -->
+<div class="flow">
+<div class="flow-title">&#9654; JOINT OWNERSHIP APPLICATION FLOW</div>
+<div class="flow-grid">
+<div class="fb fb1"><div class="fbox">Citizen Submits<br/>Joint Application</div><div class="fb-sub">Multiple owners listed<br/>with share %</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb2"><div class="fbox">All Co-Owners<br/>Give Consent</div><div class="fb-sub">Each owner signs<br/>via DigiLocker</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb3"><div class="fbox">Org1 Registration<br/>Verifies Owners</div><div class="fb-sub">ID verification<br/>of all co-owners</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb4"><div class="fbox">Org2 Revenue<br/>Checks Shares</div><div class="fb-sub">Validates 100%<br/>share total</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb5"><div class="fbox">Org3 Collector<br/>Final Approval</div><div class="fb-sub">Certificate lists<br/>all co-owners</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb6"><div class="fbox">Joint Record<br/>Completed</div><div class="fb-sub">Immutable on<br/>blockchain</div></div>
+</div>
+</div>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- MEMBER WORK DISTRIBUTION -->
+<section class="section" id="members">
+<div class="container">
+<div class="sl">Team Distribution</div>
+<h2 class="st">Work Distribution Among 3 Group Members</h2>
+<p class="sb">Work is split by system layer: Member 1 handles the blockchain core (chaincode), Member 2 handles the backend API, and Member 3 handles the frontend UI. Each member's work is independent and can be done in parallel.</p>
+
+<div class="three" style="margin-top:2rem;">
+
+<div class="mc m1">
+<div class="mc-top">
+<div class="mc-avatar">&#9881;</div>
+<div>
+<div class="mc-name">Member 1</div>
+<div class="mc-role">Blockchain / Chaincode Layer</div>
+</div>
+</div>
+<div class="mc-body">
+<p class="mc-desc">Responsible for ALL smart contract changes. Writes the new chaincode functions and modifies existing ones. Works directly in <code>land-registration-contract.js</code>. This is the most critical part &mdash; everything else depends on it.</p>
+<ul class="task-list">
+<li><span class="task-num">1</span><div><div class="task-text">Modify <code>createApplication()</code></div><div class="task-sub">Add <code>owners[]</code> array, <code>ownershipType</code>, <code>allConsentsGiven</code> fields to the asset schema</div></div></li>
+<li><span class="task-num">2</span><div><div class="task-text">Write <code>addCoOwnerConsent()</code></div><div class="task-sub">Each co-owner calls this to digitally approve being listed as a co-owner. Tracks consent per ownerId. Sets <code>allConsentsGiven=true</code> when all sign.</div></div></li>
+<li><span class="task-num">3</span><div><div class="task-text">Write <code>transferOwnershipShare()</code></div><div class="task-sub">Allows one co-owner to transfer their % share to another person or existing co-owner. Requires consent from all other co-owners.</div></div></li>
+<li><span class="task-num">4</span><div><div class="task-text">Write <code>raiseOwnershipDispute()</code></div><div class="task-sub">A co-owner can flag a dispute. Freezes the application &mdash; no forwarding is possible. Records reason and timestamp on chain.</div></div></li>
+<li><span class="task-num">5</span><div><div class="task-text">Write <code>resolveOwnershipDispute()</code></div><div class="task-sub">Org3 (Collector) resolves a dispute. Unfreezes the record. Both parties must have submitted their arguments.</div></div></li>
+<li><span class="task-num">6</span><div><div class="task-text">Modify <code>forwardApplication()</code></div><div class="task-sub">Add guard: if <code>allConsentsGiven !== true</code>, reject forwarding with error message. Also add freeze check for <code>isDisputed</code>.</div></div></li>
+<li><span class="task-num">7</span><div><div class="task-text">Write <code>getOwnershipDetails()</code></div><div class="task-sub">Read-only query returning all owners, their shares, and consent status for a given applicationId.</div></div></li>
+</ul>
+<div class="mc-files">
+<div class="mc-files-t">Files to Edit</div>
+<div class="file-tags">
+<span class="ft">land-registration-contract.js</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="mc m2">
+<div class="mc-top">
+<div class="mc-avatar">&#128279;</div>
+<div>
+<div class="mc-name">Member 2</div>
+<div class="mc-role">Backend API Layer</div>
+</div>
+</div>
+<div class="mc-body">
+<p class="mc-desc">Responsible for all Express.js REST API changes. Creates new routes that call the new chaincode functions. Also updates the user-to-org mapping for co-owners and writes the DigiLocker consent verification middleware.</p>
+<ul class="task-list">
+<li><span class="task-num">1</span><div><div class="task-text">Add <code>POST /api/land/joint</code></div><div class="task-sub">New route to create a joint land application with multiple owners and their share percentages</div></div></li>
+<li><span class="task-num">2</span><div><div class="task-text">Add <code>POST /api/land/:id/consent</code></div><div class="task-sub">Co-owner submits their consent. Calls <code>addCoOwnerConsent()</code> chaincode function via fabricClient.js</div></div></li>
+<li><span class="task-num">3</span><div><div class="task-text">Add <code>POST /api/land/:id/transfer-share</code></div><div class="task-sub">Owner transfers their share. Includes validation that shares still sum to 100%</div></div></li>
+<li><span class="task-num">4</span><div><div class="task-text">Add <code>POST /api/land/:id/dispute</code></div><div class="task-sub">Co-owner raises a dispute. Calls <code>raiseOwnershipDispute()</code>. Sends notification to all other co-owners.</div></div></li>
+<li><span class="task-num">5</span><div><div class="task-text">Add <code>PUT /api/land/:id/dispute/resolve</code></div><div class="task-sub">Collector resolves dispute. Only Org3 JWT tokens are authorized to call this endpoint.</div></div></li>
+<li><span class="task-num">6</span><div><div class="task-text">Add <code>GET /api/land/:id/owners</code></div><div class="task-sub">Returns all owners with consent status. Used by frontend dashboard to show live consent tracking.</div></div></li>
+<li><span class="task-num">7</span><div><div class="task-text">Update <code>userOrgMap.js</code></div><div class="task-sub">Map each co-owner's user ID to their respective org so the right connection profile is used per user</div></div></li>
+</ul>
+<div class="mc-files">
+<div class="mc-files-t">Files to Edit / Create</div>
+<div class="file-tags">
+<span class="ft">landController.js</span>
+<span class="ft">index.js (routes)</span>
+<span class="ft">userOrgMap.js</span>
+<span class="ft">jointOwnershipRoutes.js</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="mc m3">
+<div class="mc-top">
+<div class="mc-avatar">&#128421;</div>
+<div>
+<div class="mc-name">Member 3</div>
+<div class="mc-role">Frontend UI Layer</div>
+</div>
+</div>
+<div class="mc-body">
+<p class="mc-desc">Responsible for all Next.js frontend changes. Creates new pages and components for multi-owner application submission, co-owner consent panel, and the ownership dashboard showing shares visually.</p>
+<ul class="task-list">
+<li><span class="task-num">1</span><div><div class="task-text">Create <code>joint-application/</code> page</div><div class="task-sub">New form where the primary owner adds co-owners, sets each person's share %, and validates that total = 100%</div></div></li>
+<li><span class="task-num">2</span><div><div class="task-text">Create Co-Owner Consent Panel</div><div class="task-sub">Page where each co-owner logs in and sees pending consent requests. One-click approve/reject. Shows who has/hasn't consented yet.</div></div></li>
+<li><span class="task-num">3</span><div><div class="task-text">Create Ownership Dashboard Widget</div><div class="task-sub">Visual pie chart / progress bar showing each owner's share %. Shows consent status with color indicators (green = consented, red = pending).</div></div></li>
+<li><span class="task-num">4</span><div><div class="task-text">Update Official Dashboard</div><div class="task-sub">Org1/2/3 officials now see "all owners consented" badge before being allowed to forward the application. If not all consented, show warning.</div></div></li>
+<li><span class="task-num">5</span><div><div class="task-text">Create Share Transfer Page</div><div class="task-sub">UI for an owner to initiate a share transfer to another person. Shows current ownership breakdown and new proposed breakdown.</div></div></li>
+<li><span class="task-num">6</span><div><div class="task-text">Create Dispute Management UI</div><div class="task-sub">Co-owner can raise a dispute with a reason. Shows dispute status on the application card. Collector dashboard shows "Resolve Dispute" button.</div></div></li>
+</ul>
+<div class="mc-files">
+<div class="mc-files-t">Files to Create</div>
+<div class="file-tags">
+<span class="ft">joint-application/page.tsx</span>
+<span class="ft">consent-panel/page.tsx</span>
+<span class="ft">ownership-dashboard/page.tsx</span>
+<span class="ft">OwnershipPieChart.tsx</span>
+<span class="ft">ConsentStatusBadge.tsx</span>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- SMART CONTRACT FUNCTIONS -->
+<section class="section" id="smartcontract">
+<div class="container">
+<div class="sl">Chaincode Design</div>
+<h2 class="st">5 New + 2 Modified Smart Contract Functions</h2>
+<p class="sb">All functions go inside <code>LandRegistrationContract</code> class in <code>land-registration-contract.js</code>. Green = new, Yellow = modified existing.</p>
+
+<div class="fn-grid">
+<div class="fnc fnew">
+<div class="fnc-n">addCoOwnerConsent(applicationId, ownerId, consentData)</div>
+<div class="fnc-t">NEW FUNCTION</div>
+<div class="fnc-d">Called by each co-owner to digitally approve their co-ownership. Checks the caller's ID matches one of the listed owners. Updates <code>consentStatus: 'approved'</code> for that owner. When all owners have consented, sets <code>allConsentsGiven = true</code>. Records event in history[].</div>
+<div class="fnc-who">&#128100; Called by: Each co-owner individually (any org)</div>
+</div>
+
+<div class="fnc fnew">
+<div class="fnc-n">transferOwnershipShare(applicationId, fromOwnerId, toOwnerId, sharePercent)</div>
+<div class="fnc-t">NEW FUNCTION</div>
+<div class="fnc-d">Transfers <code>sharePercent</code> from one owner to another (existing or new person). Validates: shares still sum to 100%, record must be <code>completed</code> status, record is not disputed. Requires approval from all other co-owners (tracked via a <code>transferApprovals[]</code> sub-array). Logs transfer event.</div>
+<div class="fnc-who">&#128100; Called by: Property owner (Org1 MSP)</div>
+</div>
+
+<div class="fnc fnew">
+<div class="fnc-n">raiseOwnershipDispute(applicationId, raisedBy, reason)</div>
+<div class="fnc-t">NEW FUNCTION</div>
+<div class="fnc-d">Sets <code>isDisputed = true</code> on the application object. Records dispute details (who raised it, reason, timestamp). Any co-owner can call this. A disputed record <strong>cannot be forwarded</strong> in the workflow &mdash; guarded in <code>forwardApplication()</code>.</div>
+<div class="fnc-who">&#128100; Called by: Any co-owner (any org)</div>
+</div>
+
+<div class="fnc fnew">
+<div class="fnc-n">resolveOwnershipDispute(applicationId, resolutionDetails)</div>
+<div class="fnc-t">NEW FUNCTION</div>
+<div class="fnc-d">Sets <code>isDisputed = false</code>. Records the resolution decision and by whom. Can only be called by Org3 (Collectorate/Collector role). Unfreezes the application so workflow can continue. Logs resolution event in history[].</div>
+<div class="fnc-who">&#128273; Only Org3MSP &mdash; Collector or Joint Collector</div>
+</div>
+
+<div class="fnc fread">
+<div class="fnc-n">getOwnershipDetails(applicationId)</div>
+<div class="fnc-t">NEW READ FUNCTION</div>
+<div class="fnc-d">Read-only query. Returns full ownership breakdown: each owner's name, Aadhaar (decrypted), share %, consent status, and consent timestamp. Also returns <code>allConsentsGiven</code>, <code>isDisputed</code>, and dispute details if applicable.</div>
+<div class="fnc-who">&#128202; Any org &mdash; read-only, no state change</div>
+</div>
+
+<div class="fnc fmod">
+<div class="fnc-n">createApplication() &mdash; MODIFIED</div>
+<div class="fnc-t">MODIFIED EXISTING</div>
+<div class="fnc-d">Add new fields to the application object: <code>owners: []</code>, <code>ownershipType: 'single'|'joint'</code>, <code>allConsentsGiven: false</code>, <code>isDisputed: false</code>, <code>disputeDetails: null</code>. For <code>ownershipType='joint'</code>, build the owners array from transient data. Validate share percentages sum to 100%.</div>
+<div class="fnc-who">&#9881; Org1 Registration Dept (applicant role)</div>
+</div>
+
+<div class="fnc fmod">
+<div class="fnc-n">forwardApplication() &mdash; MODIFIED</div>
+<div class="fnc-t">MODIFIED EXISTING</div>
+<div class="fnc-d">Add two guards at the top of the function: <strong>Guard 1:</strong> if <code>application.isDisputed === true</code>, throw error "Application is frozen due to ownership dispute". <strong>Guard 2:</strong> if <code>application.ownershipType === 'joint'</code> and <code>application.allConsentsGiven !== true</code>, throw error "All co-owners must provide consent before forwarding".</div>
+<div class="fnc-who">&#9881; All orgs (same as before)</div>
+</div>
+</div>
+
+<table class="lt" style="margin-top:2rem;">
+<thead><tr><th>Function</th><th>Type</th><th>Who Can Call</th><th>Parameters</th></tr></thead>
+<tbody>
+<tr><td><code>addCoOwnerConsent</code></td><td><span class="new-tag">NEW</span></td><td>Any co-owner (any org)</td><td>applicationId, ownerId, consentData{remarks}</td></tr>
+<tr><td><code>transferOwnershipShare</code></td><td><span class="new-tag">NEW</span></td><td>Property owner (Org1MSP)</td><td>applicationId, fromOwnerId, toOwnerId, sharePercent, newOwnerData</td></tr>
+<tr><td><code>raiseOwnershipDispute</code></td><td><span class="new-tag">NEW</span></td><td>Any co-owner</td><td>applicationId, raisedBy, reason</td></tr>
+<tr><td><code>resolveOwnershipDispute</code></td><td><span class="new-tag">NEW</span></td><td>Org3MSP only (collector)</td><td>applicationId, resolutionDataStr</td></tr>
+<tr><td><code>getOwnershipDetails</code></td><td><span class="new-tag">NEW</span></td><td>All orgs (read)</td><td>applicationId</td></tr>
+<tr><td><code>createApplication</code></td><td><span class="mod-tag">MODIFIED</span></td><td>Org1 (applicant role)</td><td>Add owners[] to transient userData</td></tr>
+<tr><td><code>forwardApplication</code></td><td><span class="mod-tag">MODIFIED</span></td><td>All orgs (role-based)</td><td>No new params, adds guards inside</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- CODE SECTION -->
+<section class="section" id="code">
+<div class="container">
+<div class="sl">Smart Contract Code</div>
+<h2 class="st">Actual Code to Write (Member 1)</h2>
+
+<div class="alert ok"><span class="a-ico">&#127775;</span><div>
+<div class="a-t">How to Add This Code</div>
+<div class="a-x">All code below goes <strong>inside the <code>LandRegistrationContract</code> class</strong> in <code>land-registration-contract.js</code>, before the closing <code>}</code> on line 582. The modifications to existing functions are shown separately.</div>
+</div></div>
+
+<!-- SCHEMA CHANGE -->
+<div class="cb-header"><div class="cb-title">STEP 1: New fields in createApplication() &mdash; inside the application object (around line 92)</div><span class="cb-badge mod">MODIFY</span></div>
+<div class="cb"><span class="cm">// Add these fields to the application object (after line 108, before the closing })</span>
+<span class="cm">// The existing application object already has: applicationId, userData, status, createdAt, history</span>
+<span class="cm">// ADD these new fields:</span>
+
+        <span class="kw">const</span> application = {
+            applicationId,
+            userData,
+            status: <span class="str">'submitted'</span>,
+            createdAt: ctx.stub.getTxTimestamp().seconds.toString(),
+            updatedAt: ctx.stub.getTxTimestamp().seconds.toString(),
+
+            <span class="cm">// --- NEW: Joint Ownership Fields ---</span>
+            ownershipType: userDataRaw.ownershipType || <span class="str">'single'</span>,
+            owners: userDataRaw.owners || [],   <span class="cm">// [{ownerId, name, sharePercent, consentStatus:'pending'}]</span>
+            allConsentsGiven: (userDataRaw.ownershipType !== <span class="str">'joint'</span>), <span class="cm">// true for single, false for joint</span>
+            isDisputed: <span class="num">false</span>,
+            disputeDetails: <span class="num">null</span>,
+            <span class="cm">// ------------------------------------</span>
+
+            history: [{ <span class="cm">/* ... existing history entry ... */</span> }]
+        };
+
+<span class="cm">// ALSO ADD validation before storing (after creating application object):</span>
+<span class="kw">if</span> (application.ownershipType === <span class="str">'joint'</span>) {
+    <span class="kw">if</span> (!application.owners || application.owners.length &lt; <span class="num">2</span>) {
+        <span class="kw">throw new</span> Error(<span class="str">'Joint ownership requires at least 2 owners'</span>);
+    }
+    <span class="kw">if</span> (application.owners.length &gt; <span class="num">5</span>) {
+        <span class="kw">throw new</span> Error(<span class="str">'Maximum 5 co-owners allowed'</span>);
+    }
+    <span class="kw">const</span> totalShare = application.owners.reduce((sum, o) =&gt; sum + parseFloat(o.sharePercent), <span class="num">0</span>);
+    <span class="kw">if</span> (Math.abs(totalShare - <span class="num">100</span>) &gt; <span class="num">0.01</span>) {
+        <span class="kw">throw new</span> Error(<span class="str">`Share percentages must sum to 100%. Current total: ${totalShare}%`</span>);
+    }
+    <span class="cm">// Initialize all owners with pending consent status</span>
+    application.owners = application.owners.map(o =&gt; ({
+        ...o,
+        consentStatus: <span class="str">'pending'</span>,
+        consentTimestamp: <span class="num">null</span>
+    }));
+}</div>
+
+<!-- addCoOwnerConsent -->
+<div class="cb-header" style="margin-top:1.5rem;"><div class="cb-title">STEP 2: addCoOwnerConsent() &mdash; Complete new function</div><span class="cb-badge new">NEW</span></div>
+<div class="cb">    <span class="cm">/**
+     * M10: Co-owner provides digital consent to the joint ownership application
+     * Called individually by each co-owner listed in the owners[] array
+     */</span>
+    <span class="kw">async</span> <span class="fn">addCoOwnerConsent</span>(ctx, applicationId, ownerId, consentDataStr) {
+        console.info(<span class="str">'===== addCoOwnerConsent START ====='</span>);
+
+        <span class="kw">const</span> cid = <span class="kw">new</span> ClientIdentity(ctx.stub);
+        <span class="kw">const</span> callerEnrollmentId = cid.getAttributeValue(<span class="str">'hf.EnrollmentID'</span>) || ownerId;
+
+        <span class="kw">const</span> applicationAsBytes = <span class="kw">await</span> ctx.stub.getState(applicationId);
+        <span class="kw">if</span> (!applicationAsBytes || applicationAsBytes.length === <span class="num">0</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">`Application ${applicationId} does not exist`</span>);
+        }
+        <span class="kw">const</span> application = JSON.parse(applicationAsBytes.toString());
+
+        <span class="cm">// Only valid for joint applications</span>
+        <span class="kw">if</span> (application.ownershipType !== <span class="str">'joint'</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">'This is not a joint ownership application'</span>);
+        }
+
+        <span class="cm">// Find the owner in the owners array by ownerId</span>
+        <span class="kw">const</span> ownerIndex = application.owners.findIndex(o =&gt; o.ownerId === ownerId);
+        <span class="kw">if</span> (ownerIndex === <span class="num">-1</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">`Owner ${ownerId} is not listed as a co-owner for this application`</span>);
+        }
+
+        <span class="kw">if</span> (application.owners[ownerIndex].consentStatus === <span class="str">'approved'</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">`Owner ${ownerId} has already given consent`</span>);
+        }
+
+        <span class="kw">const</span> consentData = JSON.parse(consentDataStr);
+        <span class="kw">const</span> timestamp = ctx.stub.getTxTimestamp().seconds.toString();
+
+        <span class="cm">// Update the specific owner's consent status</span>
+        application.owners[ownerIndex].consentStatus = <span class="str">'approved'</span>;
+        application.owners[ownerIndex].consentTimestamp = timestamp;
+        application.owners[ownerIndex].consentRemarks = consentData.remarks || <span class="str">'Consent given'</span>;
+
+        <span class="cm">// Check if ALL owners have now consented</span>
+        <span class="kw">const</span> allConsented = application.owners.every(o =&gt; o.consentStatus === <span class="str">'approved'</span>);
+        application.allConsentsGiven = allConsented;
+        application.updatedAt = timestamp;
+
+        <span class="kw">const</span> txId = ctx.stub.getTxID();
+        <span class="kw">const</span> transactionId = <span class="str">'TXN-'</span> + timestamp + <span class="str">'-'</span> + txId.substr(<span class="num">0</span>, <span class="num">8</span>);
+
+        application.history.push({
+            transactionId,
+            officialId: callerEnrollmentId,
+            officialName: callerEnrollmentId,
+            designation: <span class="str">'co_owner'</span>,
+            action: <span class="str">'consent_given'</span>,
+            remarks: <span class="str">`Co-owner ${ownerId} consented. All consented: ${allConsented}`</span>,
+            timestamp,
+            data: { ownerId, sharePercent: application.owners[ownerIndex].sharePercent },
+            documents: []
+        });
+
+        <span class="kw">await</span> ctx.stub.putState(applicationId, Buffer.from(JSON.stringify(application)));
+        console.info(<span class="str">'===== addCoOwnerConsent END ====='</span>);
+        <span class="kw">return</span> JSON.stringify({
+            message: allConsented ? <span class="str">'All co-owners have consented. Application can now be forwarded.'</span> : <span class="str">'Consent recorded. Waiting for other co-owners.'</span>,
+            allConsentsGiven: allConsented,
+            owners: application.owners
+        });
+    }</div>
+
+<!-- raiseDispute -->
+<div class="cb-header" style="margin-top:1.5rem;"><div class="cb-title">STEP 3: raiseOwnershipDispute() &mdash; Complete new function</div><span class="cb-badge new">NEW</span></div>
+<div class="cb">    <span class="cm">/**
+     * M11: Any co-owner raises a dispute, freezing the application
+     */</span>
+    <span class="kw">async</span> <span class="fn">raiseOwnershipDispute</span>(ctx, applicationId, raisedBy, reason) {
+        console.info(<span class="str">'===== raiseOwnershipDispute START ====='</span>);
+
+        <span class="kw">const</span> applicationAsBytes = <span class="kw">await</span> ctx.stub.getState(applicationId);
+        <span class="kw">if</span> (!applicationAsBytes || applicationAsBytes.length === <span class="num">0</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">`Application ${applicationId} does not exist`</span>);
+        }
+        <span class="kw">const</span> application = JSON.parse(applicationAsBytes.toString());
+
+        <span class="kw">if</span> (application.ownershipType !== <span class="str">'joint'</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">'Disputes can only be raised for joint ownership applications'</span>);
+        }
+        <span class="kw">if</span> (application.isDisputed) {
+            <span class="kw">throw new</span> Error(<span class="str">'Application already has an active dispute'</span>);
+        }
+
+        <span class="cm">// Verify the raiser is a listed co-owner</span>
+        <span class="kw">const</span> isOwner = application.owners.some(o =&gt; o.ownerId === raisedBy);
+        <span class="kw">if</span> (!isOwner) {
+            <span class="kw">throw new</span> Error(<span class="str">`${raisedBy} is not a listed co-owner and cannot raise a dispute`</span>);
+        }
+
+        <span class="kw">const</span> timestamp = ctx.stub.getTxTimestamp().seconds.toString();
+        application.isDisputed = <span class="num">true</span>;
+        application.disputeDetails = { raisedBy, reason, timestamp, resolvedAt: <span class="num">null</span> };
+        application.updatedAt = timestamp;
+
+        <span class="kw">const</span> txId = ctx.stub.getTxID();
+        application.history.push({
+            transactionId: <span class="str">'TXN-'</span> + timestamp + <span class="str">'-'</span> + txId.substr(<span class="num">0</span>, <span class="num">8</span>),
+            officialId: raisedBy, officialName: raisedBy, designation: <span class="str">'co_owner'</span>,
+            action: <span class="str">'dispute_raised'</span>,
+            remarks: <span class="str">`DISPUTE: ${reason}. Application FROZEN.`</span>,
+            timestamp, data: { raisedBy, reason }, documents: []
+        });
+
+        <span class="kw">await</span> ctx.stub.putState(applicationId, Buffer.from(JSON.stringify(application)));
+        console.info(<span class="str">'===== raiseOwnershipDispute END ====='</span>);
+        <span class="kw">return</span> JSON.stringify({ message: <span class="str">'Dispute raised. Application is now FROZEN. Contact Collectorate to resolve.'</span>, disputeDetails: application.disputeDetails });
+    }</div>
+
+<!-- resolveDispute -->
+<div class="cb-header" style="margin-top:1.5rem;"><div class="cb-title">STEP 4: resolveOwnershipDispute() &mdash; Complete new function</div><span class="cb-badge new">NEW</span></div>
+<div class="cb">    <span class="cm">/**
+     * M12: Org3 Collector resolves the dispute, unfreezing the application
+     */</span>
+    <span class="kw">async</span> <span class="fn">resolveOwnershipDispute</span>(ctx, applicationId, resolutionDataStr) {
+        console.info(<span class="str">'===== resolveOwnershipDispute START ====='</span>);
+
+        <span class="kw">const</span> cid = <span class="kw">new</span> ClientIdentity(ctx.stub);
+        <span class="kw">const</span> mspId = cid.getMSPID();
+
+        <span class="cm">// Only Org3 (Collectorate) can resolve disputes</span>
+        <span class="kw">if</span> (mspId !== <span class="str">'Org3MSP'</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">'Only the Collectorate (Org3) can resolve ownership disputes'</span>);
+        }
+
+        <span class="kw">const</span> applicationAsBytes = <span class="kw">await</span> ctx.stub.getState(applicationId);
+        <span class="kw">if</span> (!applicationAsBytes || applicationAsBytes.length === <span class="num">0</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">`Application ${applicationId} does not exist`</span>);
+        }
+        <span class="kw">const</span> application = JSON.parse(applicationAsBytes.toString());
+
+        <span class="kw">if</span> (!application.isDisputed) {
+            <span class="kw">throw new</span> Error(<span class="str">'This application has no active dispute to resolve'</span>);
+        }
+
+        <span class="kw">const</span> resolution = JSON.parse(resolutionDataStr);
+        <span class="kw">const</span> timestamp = ctx.stub.getTxTimestamp().seconds.toString();
+
+        application.isDisputed = <span class="num">false</span>;
+        application.disputeDetails.resolvedAt = timestamp;
+        application.disputeDetails.resolution = resolution.decision;
+        application.disputeDetails.resolvedBy = cid.getAttributeValue(<span class="str">'hf.EnrollmentID'</span>) || <span class="str">'collector'</span>;
+        application.updatedAt = timestamp;
+
+        <span class="kw">const</span> txId = ctx.stub.getTxID();
+        application.history.push({
+            transactionId: <span class="str">'TXN-'</span> + timestamp + <span class="str">'-'</span> + txId.substr(<span class="num">0</span>, <span class="num">8</span>),
+            officialId: application.disputeDetails.resolvedBy,
+            officialName: application.disputeDetails.resolvedBy, designation: <span class="str">'joint_collector'</span>,
+            action: <span class="str">'dispute_resolved'</span>,
+            remarks: <span class="str">`Dispute resolved. Decision: ${resolution.decision}. Application UNFROZEN.`</span>,
+            timestamp, data: resolution, documents: []
+        });
+
+        <span class="kw">await</span> ctx.stub.putState(applicationId, Buffer.from(JSON.stringify(application)));
+        console.info(<span class="str">'===== resolveOwnershipDispute END ====='</span>);
+        <span class="kw">return</span> JSON.stringify({ message: <span class="str">'Dispute resolved. Application is now active again.'</span>, application });
+    }</div>
+
+<!-- getOwnershipDetails -->
+<div class="cb-header" style="margin-top:1.5rem;"><div class="cb-title">STEP 5: getOwnershipDetails() &mdash; Read-only query function</div><span class="cb-badge new">NEW</span></div>
+<div class="cb">    <span class="cm">/**
+     * M13: Read-only query - returns full ownership breakdown with consent status
+     */</span>
+    <span class="kw">async</span> <span class="fn">getOwnershipDetails</span>(ctx, applicationId) {
+        console.info(<span class="str">'===== getOwnershipDetails START ====='</span>);
+
+        <span class="kw">const</span> applicationAsBytes = <span class="kw">await</span> ctx.stub.getState(applicationId);
+        <span class="kw">if</span> (!applicationAsBytes || applicationAsBytes.length === <span class="num">0</span>) {
+            <span class="kw">throw new</span> Error(<span class="str">`Application ${applicationId} does not exist`</span>);
+        }
+        <span class="kw">const</span> application = JSON.parse(applicationAsBytes.toString());
+
+        <span class="kw">const</span> result = {
+            applicationId,
+            ownershipType: application.ownershipType,
+            allConsentsGiven: application.allConsentsGiven,
+            isDisputed: application.isDisputed,
+            disputeDetails: application.disputeDetails,
+            owners: (application.owners || []).map(o =&gt; ({
+                ownerId: o.ownerId,
+                name: o.name,
+                sharePercent: o.sharePercent,
+                consentStatus: o.consentStatus,
+                consentTimestamp: o.consentTimestamp
+            })),
+            pendingConsents: (application.owners || []).filter(o =&gt; o.consentStatus !== <span class="str">'approved'</span>).length,
+            totalOwners: (application.owners || []).length
+        };
+
+        console.info(<span class="str">'===== getOwnershipDetails END ====='</span>);
+        <span class="kw">return</span> JSON.stringify(result);
+    }</div>
+
+<!-- forwardApplication guard -->
+<div class="cb-header" style="margin-top:1.5rem;"><div class="cb-title">STEP 6: forwardApplication() &mdash; Add 2 guards at the TOP (after parsing application, line ~248)</div><span class="cb-badge mod">MODIFY</span></div>
+<div class="cb">    <span class="cm">// --- ADD THESE TWO GUARDS IMMEDIATELY AFTER: const application = JSON.parse(applicationAsBytes.toString()); ---</span>
+
+    <span class="cm">// JOINT OWNERSHIP GUARD 1: Check dispute freeze</span>
+    <span class="kw">if</span> (application.isDisputed === <span class="num">true</span>) {
+        <span class="kw">throw new</span> Error(
+            <span class="str">`Application ${applicationId} is FROZEN due to an active ownership dispute. `</span> +
+            <span class="str">`Raised by: ${application.disputeDetails?.raisedBy}. Contact Collectorate to resolve.`</span>
+        );
+    }
+
+    <span class="cm">// JOINT OWNERSHIP GUARD 2: Require all co-owner consents before workflow starts</span>
+    <span class="kw">if</span> (application.ownershipType === <span class="str">'joint'</span> &amp;&amp; application.allConsentsGiven !== <span class="num">true</span>) {
+        <span class="kw">const</span> pendingOwners = (application.owners || [])
+            .filter(o =&gt; o.consentStatus !== <span class="str">'approved'</span>)
+            .map(o =&gt; o.name || o.ownerId);
+        <span class="kw">throw new</span> Error(
+            <span class="str">`Cannot forward: Not all co-owners have given consent. Pending: [${pendingOwners.join(', ')}]`</span>
+        );
+    }
+
+    <span class="cm">// ... existing workflowSequence code continues below unchanged ...</span></div>
+
+</div>
+</section>
+<hr class="d"/>
+
+<!-- API SECTION -->
+<section class="section" id="api">
+<div class="container">
+<div class="sl">Backend API (Member 2)</div>
+<h2 class="st">New REST API Endpoints</h2>
+<p class="sb">All routes call the new chaincode functions via the existing <code>fabricClient.js</code> pattern. Create a new file <code>jointOwnershipRoutes.js</code> and import it in <code>index.js</code>.</p>
+
+<div class="cb-header"><div class="cb-title">fabric-api/src/jointOwnershipRoutes.js &mdash; New file (Member 2 creates this)</div><span class="cb-badge api">API</span></div>
+<div class="cb"><span class="kw">const</span> express = require(<span class="str">'express'</span>);
+<span class="kw">const</span> router = express.Router();
+<span class="kw">const</span> { getGateway } = require(<span class="str">'./fabricClient'</span>);
+<span class="kw">const</span> { getUserOrg } = require(<span class="str">'./userOrgMap'</span>);
+
+<span class="cm">// POST /api/land/joint - Create joint ownership application</span>
+router.post(<span class="str">'/joint'</span>, <span class="kw">async</span> (req, res) =&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { applicationId, owners, primaryOwner } = req.body;
+    <span class="cm">// owners = [{ ownerId, name, aadhar, sharePercent }, ...]</span>
+    <span class="kw">const</span> totalShare = owners.reduce((s, o) =&gt; s + parseFloat(o.sharePercent), <span class="num">0</span>);
+    <span class="kw">if</span> (Math.abs(totalShare - <span class="num">100</span>) &gt; <span class="num">0.01</span>) <span class="kw">return</span> res.status(<span class="num">400</span>).json({ error: <span class="str">`Shares must total 100%. Got: ${totalShare}%`</span> });
+    <span class="kw">const</span> { gateway, network } = <span class="kw">await</span> getGateway(getUserOrg(primaryOwner));
+    <span class="kw">const</span> contract = network.getContract(<span class="str">'land-registration'</span>);
+    <span class="kw">const</span> transientData = { userData: Buffer.from(JSON.stringify({ ...req.body, ownershipType: <span class="str">'joint'</span>, owners })) };
+    <span class="kw">const</span> result = <span class="kw">await</span> contract.createTransaction(<span class="str">'createApplication'</span>).setTransient(transientData).submit(applicationId);
+    gateway.disconnect();
+    res.json(JSON.parse(result.toString()));
+  } <span class="kw">catch</span>(e) { res.status(<span class="num">500</span>).json({ error: e.message }); }
+});
+
+<span class="cm">// POST /api/land/:id/consent - Co-owner gives consent</span>
+router.post(<span class="str">'/:id/consent'</span>, <span class="kw">async</span> (req, res) =&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { ownerId, remarks, username } = req.body;
+    <span class="kw">const</span> { gateway, network } = <span class="kw">await</span> getGateway(getUserOrg(username));
+    <span class="kw">const</span> contract = network.getContract(<span class="str">'land-registration'</span>);
+    <span class="kw">const</span> result = <span class="kw">await</span> contract.submitTransaction(<span class="str">'addCoOwnerConsent'</span>, req.params.id, ownerId, JSON.stringify({ remarks }));
+    gateway.disconnect();
+    res.json(JSON.parse(result.toString()));
+  } <span class="kw">catch</span>(e) { res.status(<span class="num">500</span>).json({ error: e.message }); }
+});
+
+<span class="cm">// POST /api/land/:id/dispute - Raise ownership dispute</span>
+router.post(<span class="str">'/:id/dispute'</span>, <span class="kw">async</span> (req, res) =&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { raisedBy, reason, username } = req.body;
+    <span class="kw">const</span> { gateway, network } = <span class="kw">await</span> getGateway(getUserOrg(username));
+    <span class="kw">const</span> contract = network.getContract(<span class="str">'land-registration'</span>);
+    <span class="kw">const</span> result = <span class="kw">await</span> contract.submitTransaction(<span class="str">'raiseOwnershipDispute'</span>, req.params.id, raisedBy, reason);
+    gateway.disconnect();
+    res.json(JSON.parse(result.toString()));
+  } <span class="kw">catch</span>(e) { res.status(<span class="num">500</span>).json({ error: e.message }); }
+});
+
+<span class="cm">// PUT /api/land/:id/dispute/resolve - Collector resolves dispute</span>
+router.put(<span class="str">'/:id/dispute/resolve'</span>, <span class="kw">async</span> (req, res) =&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { decision, username } = req.body;
+    <span class="kw">const</span> { gateway, network } = <span class="kw">await</span> getGateway(<span class="str">'Org3MSP'</span>); <span class="cm">// Only Org3</span>
+    <span class="kw">const</span> contract = network.getContract(<span class="str">'land-registration'</span>);
+    <span class="kw">const</span> result = <span class="kw">await</span> contract.submitTransaction(<span class="str">'resolveOwnershipDispute'</span>, req.params.id, JSON.stringify({ decision }));
+    gateway.disconnect();
+    res.json(JSON.parse(result.toString()));
+  } <span class="kw">catch</span>(e) { res.status(<span class="num">500</span>).json({ error: e.message }); }
+});
+
+<span class="cm">// GET /api/land/:id/owners - Get ownership details</span>
+router.get(<span class="str">'/:id/owners'</span>, <span class="kw">async</span> (req, res) =&gt; {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { gateway, network } = <span class="kw">await</span> getGateway(<span class="str">'Org1MSP'</span>);
+    <span class="kw">const</span> contract = network.getContract(<span class="str">'land-registration'</span>);
+    <span class="kw">const</span> result = <span class="kw">await</span> contract.evaluateTransaction(<span class="str">'getOwnershipDetails'</span>, req.params.id);
+    gateway.disconnect();
+    res.json(JSON.parse(result.toString()));
+  } <span class="kw">catch</span>(e) { res.status(<span class="num">500</span>).json({ error: e.message }); }
+});
+
+module.exports = router;</div>
+
+<div class="alert sky" style="margin-top:1.25rem;"><span class="a-ico">&#128073;</span><div>
+<div class="a-t">Also update fabric-api/index.js (2 lines)</div>
+<div class="a-x">Add these 2 lines to <code>index.js</code> to register the new routes:<br/>
+<code style="display:block;margin-top:.5rem;">const jointOwnershipRoutes = require('./src/jointOwnershipRoutes');</code>
+<code style="display:block;margin-top:.25rem;">app.use('/api/land', jointOwnershipRoutes);</code></div>
+</div></div>
+</div>
+</section>
+<hr class="d"/>
+
+<!-- FRONTEND SECTION -->
+<section class="section" id="frontend">
+<div class="container">
+<div class="sl">Frontend UI (Member 3)</div>
+<h2 class="st">Key Frontend Logic to Implement</h2>
+
+<div class="cb-header"><div class="cb-title">client/src/app/joint-application/page.tsx &mdash; Key logic snippet</div><span class="cb-badge ui">FRONTEND</span></div>
+<div class="cb"><span class="cm">// Joint Application Form - Key State and Validation (Member 3 builds this page)</span>
+<span class="kw">const</span> [owners, setOwners] = useState([
+  { ownerId: <span class="str">''</span>, name: <span class="str">''</span>, aadhar: <span class="str">''</span>, sharePercent: <span class="num">50</span> },
+  { ownerId: <span class="str">''</span>, name: <span class="str">''</span>, aadhar: <span class="str">''</span>, sharePercent: <span class="num">50</span> },
+]);
+
+<span class="cm">// Real-time share total validation</span>
+<span class="kw">const</span> totalShare = owners.reduce((sum, o) =&gt; sum + parseFloat(o.sharePercent || <span class="num">0</span>), <span class="num">0</span>);
+<span class="kw">const</span> isValid = Math.abs(totalShare - <span class="num">100</span>) &lt; <span class="num">0.01</span> &amp;&amp; owners.length &gt;= <span class="num">2</span>;
+
+<span class="cm">// Submit handler</span>
+<span class="kw">const</span> handleSubmit = <span class="kw">async</span> () =&gt; {
+  <span class="kw">if</span> (!isValid) <span class="kw">return</span> alert(<span class="str">`Share total must be 100%. Currently: ${totalShare}%`</span>);
+  <span class="kw">await</span> fetch(<span class="str">'/api/land/joint'</span>, {
+    method: <span class="str">'POST'</span>,
+    headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+    body: JSON.stringify({ applicationId, owners, primaryOwner: session.user.id, ownershipType: <span class="str">'joint'</span> })
+  });
+};
+
+<span class="cm">// UI: Show share distribution bar - totals must reach 100% green bar</span>
+<span class="cm">// Each owner row has: Name input, Aadhaar input, Share % slider (1-98)</span>
+<span class="cm">// At bottom: Real-time "Total: XX% / 100%" indicator (red if != 100, green if = 100)</span>
+<span class="cm">// "Add Co-Owner" button (max 5), "Remove" button per row (min 2 owners)</span></div>
+
+<div class="cb-header" style="margin-top:1.25rem;"><div class="cb-title">Consent Panel &mdash; Key Logic (shown in official-dashboard or user-dashboard)</div><span class="cb-badge ui">FRONTEND</span></div>
+<div class="cb"><span class="cm">// Consent status panel component (shown to each co-owner on their dashboard)</span>
+<span class="cm">// Fetches: GET /api/land/:id/owners and shows for each owner:</span>
+<span class="cm">// - Green checkmark if consentStatus === 'approved'</span>
+<span class="cm">// - Red clock if consentStatus === 'pending'</span>
+<span class="cm">// - "Give Consent" button if current user has pending consent</span>
+
+<span class="kw">const</span> handleConsent = <span class="kw">async</span> (applicationId) =&gt; {
+  <span class="kw">await</span> fetch(<span class="str">`/api/land/${applicationId}/consent`</span>, {
+    method: <span class="str">'POST'</span>,
+    body: JSON.stringify({ ownerId: session.user.id, remarks: <span class="str">'I agree to this joint ownership'</span>, username: session.user.username })
+  });
+  refetchOwnershipDetails(); <span class="cm">// Refresh the consent panel</span>
+};
+
+<span class="cm">// For OFFICIALS: forwardApplication button is DISABLED with tooltip:</span>
+<span class="cm">// "Waiting for X co-owner(s) to give consent" until allConsentsGiven === true</span></div>
+
+<div style="margin-top:1.75rem;">
+<div class="sl">Summary &mdash; All Files to Create or Modify</div>
+<table class="lt">
+<thead><tr><th>Member</th><th>File</th><th>Action</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Member 1</td><td><code>land-registration-contract.js</code></td><td><span class="mod-tag">MODIFY</span></td><td>Modify createApplication(), forwardApplication(); Add 5 new functions</td></tr>
+<tr><td>Member 2</td><td><code>jointOwnershipRoutes.js</code></td><td><span class="new-tag">CREATE</span></td><td>New file with all 6 joint ownership API routes</td></tr>
+<tr><td>Member 2</td><td><code>index.js</code></td><td><span class="mod-tag">MODIFY</span></td><td>Import and register the new routes (2 lines)</td></tr>
+<tr><td>Member 2</td><td><code>userOrgMap.js</code></td><td><span class="mod-tag">MODIFY</span></td><td>Ensure co-owner usernames are mapped to their correct org</td></tr>
+<tr><td>Member 3</td><td><code>joint-application/page.tsx</code></td><td><span class="new-tag">CREATE</span></td><td>Multi-owner application form with share % validator</td></tr>
+<tr><td>Member 3</td><td><code>consent-panel/page.tsx</code></td><td><span class="new-tag">CREATE</span></td><td>Co-owner consent approval page</td></tr>
+<tr><td>Member 3</td><td><code>ownership-dashboard/page.tsx</code></td><td><span class="new-tag">CREATE</span></td><td>Visual pie chart / share breakdown dashboard</td></tr>
+<tr><td>Member 3</td><td><code>official-dashboard/page.tsx</code></td><td><span class="mod-tag">MODIFY</span></td><td>Disable forward button + show consent warning for joint applications</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</section>
+
+<footer>
+<p>Joint Ownership Feature Plan &middot; Blockchain Land Registration PBL &middot; Generated by Antigravity IDE</p>
+<p style="margin-top:.3rem;">Works within existing 3-Org Hyperledger Fabric Network &middot; No new organizations needed</p>
+</footer>
+</body>
+</html>

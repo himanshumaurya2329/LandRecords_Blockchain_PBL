@@ -1,0 +1,165 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { apiCall, auth } from '@/lib/fabric-api';
+
+export async function GET(req: NextRequest) {
+  try {
+    // Get current user from fabric authentication
+    const currentUser = auth.getCurrentUser();
+    if (!currentUser) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    // Fetch all applications from blockchain
+    const result = await apiCall('/api/land/applications');
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          totalApplications: 0,
+          pendingApplications: 0,
+          completedApplications: 0,
+          rejectedApplications: 0,
+          myApplications: 0,
+          error: 'Failed to fetch applications from blockchain'
+        },
+        { status: 500 }
+      );
+    }
+
+    const applications = result.data;
+
+    // Calculate statistics
+    const totalApplications = applications.length;
+    const pendingApplications = applications.filter((app: any) =>
+      ['pending', 'with_clerk', 'with_revenue', 'with_survey'].includes(app.status)
+    ).length;
+    const completedApplications = applications.filter((app: any) =>
+      app.status === 'approved'
+    ).length;
+    const rejectedApplications = applications.filter((app: any) =>
+      app.status === 'rejected'
+    ).length;
+
+    // Calculate applications for current user's role/stage
+    let myApplications = 0;
+    const userRole = currentUser.role;
+
+    switch (userRole) {
+      case 'clerk':
+      case 'superintendent':
+        myApplications = applications.filter((app: any) =>
+          app.status === 'pending' || app.status === 'with_clerk'
+        ).length;
+        break;
+
+      case 'mro':
+      case 'vro':
+      case 'revenue_officer':
+      case 'revenue_dept':
+        myApplications = applications.filter((app: any) =>
+          app.status === 'verified' || app.status === 'with_revenue'
+        ).length;
+        break;
+
+      case 'surveyor':
+        myApplications = applications.filter((app: any) =>
+          app.status === 'surveyed' || app.status === 'with_survey'
+        ).length;
+        break;
+
+      case 'joint_collector':
+      case 'collector':
+      case 'mw':
+        myApplications = applications.filter((app: any) =>
+          app.status === 'approved' || app.status === 'with_collector'
+        ).length;
+        break;
+
+      default:
+        myApplications = applications.length; // Admin sees all
+    }
+
+    return NextResponse.json({
+      totalApplications,
+      pendingApplications,
+      completedApplications,
+      rejectedApplications,
+      myApplications,
+      userRole: currentUser.role,
+      userOrg: currentUser.org,
+    });
+  } catch (error) {
+    console.error('Stats error:', error);
+    return NextResponse.json(
+      {
+        totalApplications: 0,
+        pendingApplications: 0,
+        completedApplications: 0,
+        rejectedApplications: 0,
+        myApplications: 0,
+        error: 'Failed to fetch statistics'
+      },
+      { status: 500 }
+    );
+  }
+}
+
+    // Get all applications where this official appears in the action history OR is currently assigned
+    const allApplications = await LandRequest.find({
+      $or: [
+        { currentlyWith: official._id.toString() },
+        { 'actionHistory.officialId': official._id.toString() }
+      ]
+    });
+
+    // Calculate stats based on action history
+    const officialIdStr = official._id.toString();
+    
+    console.log(`[Stats] Official: ${official.firstName} ${official.lastName} (${official.designation})`);
+    console.log(`[Stats] Found ${allApplications.length} applications with history or currently assigned`);
+    
+    // Total = all applications that were ever assigned to this official
+    const total = allApplications.length;
+    
+    // Pending = currently assigned applications that haven't been acted upon yet
+    const pending = allApplications.filter((app: any) => 
+      app.currentlyWith === officialIdStr && 
+      app.status.includes('with_')
+    ).length;
+    
+    // Approved = applications where this official approved/forwarded
+    const approved = allApplications.filter((app: any) => {
+      const officialAction = app.actionHistory?.find(
+        (action: any) => action.officialId === officialIdStr
+      );
+      return officialAction && 
+             (officialAction.action === 'approved' || officialAction.action === 'forwarded');
+    }).length;
+    
+    // Rejected = applications where this official rejected
+    const rejected = allApplications.filter((app: any) => {
+      const officialAction = app.actionHistory?.find(
+        (action: any) => action.officialId === officialIdStr
+      );
+      return officialAction && officialAction.action === 'rejected';
+    }).length;
+    
+    console.log(`[Stats] Calculated - Total: ${total}, Pending: ${pending}, Approved: ${approved}, Rejected: ${rejected}`);
+
+    return NextResponse.json({
+      success: true,
+      stats: {
+        total,
+        pending,
+        approved,
+        rejected
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
