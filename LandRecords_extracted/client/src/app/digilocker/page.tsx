@@ -167,17 +167,17 @@ export default function CitizenDigiLocker() {
               </div>
               <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px' }}>📄 {doc.fileName}</div>
               <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '4px', wordBreak: 'break-all' }}>
-                🔗 IPFS: <span style={{ color: '#38bdf8' }}>{doc.ipfsHash}</span>
+                🔗 IPFS: {doc.ipfsHash ? <span style={{ color: '#38bdf8' }}>{doc.ipfsHash}</span> : <span style={{ color: '#94a3b8' }}>Stored securely in DigiLocker Vault</span>}
               </div>
               <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '16px' }}>
                 🕐 Verified: {new Date(doc.verifiedAt).toLocaleDateString('en-IN')}
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
-                <a href={`https://gateway.pinata.cloud/ipfs/${doc.ipfsHash}`} target="_blank"
+                <a href={doc.ipfsHash ? `/api/documents/view?hash=${doc.ipfsHash}` : `/api/digilocker-vault?id=${doc._id}&action=view`} target="_blank"
                   style={{ flex: 1, background: '#1e40af', color: 'white', padding: '8px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontSize: '13px' }}>
                   👁️ View
                 </a>
-                <a href={`https://gateway.pinata.cloud/ipfs/${doc.ipfsHash}`} download
+                <a href={`/api/digilocker-vault?id=${doc._id}&action=download`} download={doc.fileName}
                   style={{ flex: 1, background: '#334155', color: 'white', padding: '8px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontSize: '13px' }}>
                   ⬇️ Download
                 </a>

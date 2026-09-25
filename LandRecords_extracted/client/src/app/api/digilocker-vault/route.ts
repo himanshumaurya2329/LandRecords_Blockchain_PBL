@@ -6,10 +6,34 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB();
     const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+    const action = searchParams.get('action') || 'view';
+
+    // If an ID is provided, stream the document directly (view or download)
+    if (id) {
+      const doc = await DigiLockerVault.findById(id);
+      if (!doc || !doc.fileData) {
+        return NextResponse.json({ error: 'Document or file data not found' }, { status: 404 });
+      }
+
+      const base64Data = doc.fileData.includes(',') ? doc.fileData.split(',')[1] : doc.fileData;
+      const buffer = Buffer.from(base64Data, 'base64');
+      const disposition = action === 'download' ? 'attachment' : 'inline';
+
+      return new NextResponse(buffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `${disposition}; filename="${doc.fileName || 'document.pdf'}"`,
+          'Content-Length': buffer.length.toString(),
+        },
+      });
+    }
+
     const aadhar = searchParams.get('aadhar');
     const email = searchParams.get('email');
     if (!aadhar && !email) {
-      return NextResponse.json({ error: 'Aadhar or email required' }, { status: 400 });
+      return NextResponse.json({ error: 'Aadhar, email, or id required' }, { status: 400 });
     }
     const query = aadhar ? { citizenAadhar: aadhar } : { citizenEmail: email };
     // Don't return fileData (too large) — only metadata

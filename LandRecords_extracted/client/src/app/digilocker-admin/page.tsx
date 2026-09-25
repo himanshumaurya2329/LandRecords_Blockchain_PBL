@@ -171,12 +171,10 @@ export default function DigiLockerAdmin() {
                   <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>
                     Uploaded: {new Date(doc.verifiedAt).toLocaleString('en-IN')}
                   </div>
-                  {doc.ipfsHash && (
-                  <a href={`https://gateway.pinata.cloud/ipfs/${doc.ipfsHash}`} target="_blank"
+                  <a href={doc.ipfsHash ? `/api/documents/view?hash=${doc.ipfsHash}` : `/api/digilocker-vault?id=${doc._id}&action=view`} target="_blank"
                     style={{ display: 'inline-block', marginTop: '8px', fontSize: '12px', color: '#38bdf8', textDecoration: 'none' }}>
-                    🔗 View on IPFS →
+                    {doc.ipfsHash ? '🔗 View on IPFS →' : '📄 View Document →'}
                   </a>
-                )}
 
                 </div>
               ))
