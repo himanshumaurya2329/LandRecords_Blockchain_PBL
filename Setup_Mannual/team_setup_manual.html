@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>E-Land Records PBL - Team Project Setup Manual</title>
+<title>E-Land Records PBL - Team Project Setup & Run Manual</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -26,6 +26,7 @@
   --amber: #f59e0b;
   --amber-light: #fbbf24;
   --rose: #f43f5e;
+  --rose-light: #fb7185;
   --sky: #0ea5e9;
   --sky-light: #38bdf8;
   --purple: #8b5cf6;
@@ -43,8 +44,9 @@ body {
   line-height: 1.7;
   font-size: 15px;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 85% 65%, rgba(16, 185, 129, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(14, 165, 233, 0.08) 0%, transparent 40%);
   background-attachment: fixed;
 }
 
@@ -53,10 +55,10 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10, 14, 23, 0.85);
+  background: rgba(10, 14, 23, 0.88);
   backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
-  padding: 0.9rem 2rem;
+  padding: 0.85rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -81,17 +83,28 @@ nav {
 }
 .nav-links {
   display: flex;
-  gap: 1.25rem;
+  gap: 1.1rem;
   list-style: none;
+  flex-wrap: wrap;
 }
 .nav-links a {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.83rem;
+  font-weight: 600;
   transition: color 0.2s;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
 }
-.nav-links a:hover { color: var(--emerald-light); }
+.nav-links a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+.nav-highlight {
+  background: rgba(99, 102, 241, 0.2) !important;
+  color: var(--primary-light) !important;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
 
 /* Container */
 .container {
@@ -103,7 +116,7 @@ nav {
 /* Hero */
 .hero {
   text-align: center;
-  padding: 3rem 1rem 4rem;
+  padding: 3rem 1rem 3.5rem;
   border-bottom: 1px solid var(--border-subtle);
   position: relative;
 }
@@ -134,8 +147,8 @@ h1 {
 .hero-p {
   color: var(--text-muted);
   font-size: 1.05rem;
-  max-width: 760px;
-  margin: 0 auto 2rem;
+  max-width: 800px;
+  margin: 0 auto 2.2rem;
 }
 .stats-bar {
   display: flex;
@@ -149,6 +162,7 @@ h1 {
   padding: 0.7rem 1.4rem;
   border-radius: var(--radius-md);
   text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 .stat-val {
   font-size: 1.4rem;
@@ -162,10 +176,107 @@ h1 {
   font-weight: 600;
 }
 
+/* Scenario Selector Cards (Hero Callouts) */
+.scenario-selector {
+  margin: 3rem 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+.scenario-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.scenario-card-first {
+  border: 2px solid rgba(99, 102, 241, 0.45);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, var(--bg-card) 100%);
+}
+.scenario-card-first:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-light);
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.25);
+}
+.scenario-card-daily {
+  border: 2px solid rgba(16, 185, 129, 0.45);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-card) 100%);
+}
+.scenario-card-daily:hover {
+  transform: translateY(-4px);
+  border-color: var(--emerald-light);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.25);
+}
+.scenario-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  margin-bottom: 1rem;
+}
+.scenario-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.scenario-desc {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+.scenario-checklist {
+  list-style: none;
+  margin-bottom: 1.75rem;
+}
+.scenario-checklist li {
+  font-size: 0.86rem;
+  color: #cbd5e1;
+  padding: 0.35rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.scenario-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: filter 0.2s;
+}
+.scenario-btn-first {
+  background: linear-gradient(135deg, var(--primary), var(--purple));
+  color: #fff;
+}
+.scenario-btn-daily {
+  background: linear-gradient(135deg, var(--emerald), var(--sky));
+  color: #000;
+}
+.scenario-btn:hover { filter: brightness(1.15); }
+
 /* Section styling */
 .section {
   padding: 3.5rem 0 1rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
+.section:last-of-type { border-bottom: none; }
 .section-title {
   display: flex;
   align-items: center;
@@ -213,6 +324,8 @@ h1 {
   margin-bottom: 1rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 .card-title {
   font-size: 1.15rem;
@@ -299,6 +412,7 @@ h1 {
 .tag-wsl { background: rgba(245, 158, 11, 0.2); color: var(--amber-light); }
 .tag-pwsh { background: rgba(14, 165, 233, 0.2); color: var(--sky-light); }
 .tag-node { background: rgba(16, 185, 129, 0.2); color: var(--emerald-light); }
+.tag-bash { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
 
 pre {
   padding: 1.1rem 1.25rem;
@@ -405,6 +519,8 @@ tr:hover td { background: rgba(255, 255, 255, 0.02); }
 .badge-role { background: rgba(99, 102, 241, 0.2); color: var(--primary-light); }
 .badge-pass { background: rgba(16, 185, 129, 0.2); color: var(--emerald-light); }
 .badge-dept { background: rgba(245, 158, 11, 0.2); color: var(--amber-light); }
+.badge-danger { background: rgba(244, 63, 94, 0.2); color: var(--rose-light); }
+.badge-safe { background: rgba(16, 185, 129, 0.2); color: var(--emerald-light); }
 
 /* Quick Link Cards */
 .link-box {
@@ -425,6 +541,36 @@ tr:hover td { background: rgba(255, 255, 255, 0.02); }
 .link-title { font-weight: 700; color: #fff; font-size: 0.95rem; }
 .link-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem; }
 
+/* Script Comparison Cards */
+.script-card {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  border-left: 4px solid var(--primary);
+  transition: border-color 0.2s;
+}
+.script-card-setup { border-left-color: var(--rose); }
+.script-card-startnet { border-left-color: var(--sky); }
+.script-card-startonly { border-left-color: var(--emerald); }
+.script-card-stop { border-left-color: var(--amber); }
+
+.script-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.script-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
 footer {
   text-align: center;
   padding: 3rem 1rem;
@@ -439,15 +585,15 @@ footer {
 <nav>
   <a href="#" class="brand">
     <span>🏛️ LandRecords PBL</span>
-    <span class="brand-badge">Setup Guide</span>
+    <span class="brand-badge">Setup & Run Guide</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#prereq">Prerequisites</a></li>
-    <li><a href="#env-setup">Secret Keys (.env)</a></li>
-    <li><a href="#onetime">First Time Setup</a></li>
-    <li><a href="#daily-run">Run Project</a></li>
-    <li><a href="#credentials">Login List</a></li>
-    <li><a href="#stop-network">Stop Network</a></li>
+    <li><a href="#choose-scenario" class="nav-highlight">⚡ Choose Your Scenario</a></li>
+    <li><a href="#first-time-setup">🔰 First Time Setup</a></li>
+    <li><a href="#daily-workflow">⚡ Daily Run (Roz Kaam)</a></li>
+    <li><a href="#scripts-guide">📜 Scripts Compared</a></li>
+    <li><a href="#stop-network">🛑 Stop Network</a></li>
+    <li><a href="#credentials">🔑 Login List</a></li>
   </ul>
 </nav>
 
@@ -456,20 +602,19 @@ footer {
   <!-- HERO -->
   <header class="hero">
     <div class="hero-tag">🚀 Team Collaboration Manual</div>
-    <h1>E-Land Records PBL<br/>Complete Setup & Run Guide</h1>
+    <h1>E-Land Records PBL<br/>Complete Setup & Operations Manual</h1>
     <p class="hero-p">
-      Ye guide hamare team ke dosto ke liye hai taaki repo clone karne ke baad bina kisi doubt ke poora project 
-      (Blockchain, Backend API & Next.js Frontend) aasani se setup aur run kar sakein.
+      Ye guide hamare team ke dosto ke liye hai. Chaahe aap project <strong>pehli baar setup</strong> kar rahe ho ya <strong>roz testing ke liye run</strong> kar rahe ho — yahan exact commands aur scripts ka use simple terms me samjhaya gaya hai.
     </p>
 
     <div class="stats-bar">
       <div class="stat-pill">
         <div class="stat-val">3</div>
-        <div class="stat-lbl">Services Running</div>
+        <div class="stat-lbl">Active Services</div>
       </div>
       <div class="stat-pill">
         <div class="stat-val">3000</div>
-        <div class="stat-lbl">Client Port</div>
+        <div class="stat-lbl">Client Port (Next.js)</div>
       </div>
       <div class="stat-pill">
         <div class="stat-val">3001</div>
@@ -481,6 +626,65 @@ footer {
       </div>
     </div>
   </header>
+
+  <!-- QUICK SELECTION: CHOOSE YOUR SCENARIO -->
+  <section class="section" id="choose-scenario" style="padding-top:2rem;">
+    <div class="section-title">
+      <div class="section-num">⚡</div>
+      <h2>Apna Scenario Chuniye (Select Your Role Today)</h2>
+    </div>
+    <p class="section-desc">
+      Aapko poora manual padhne ki zaroorat nahi hai. Niche diye gaye 2 options me se choose karein:
+    </p>
+
+    <div class="scenario-selector">
+      <!-- PERSONA 1: FIRST TIME -->
+      <div class="scenario-card scenario-card-first">
+        <div>
+          <span class="scenario-badge" style="background:rgba(99,102,241,0.25);color:var(--primary-light);">
+            🔰 One-Time Initialization
+          </span>
+          <div class="scenario-title">1. Pehli Baar Setup Kar Rahe Ho?</div>
+          <p class="scenario-desc">
+            Agar aapne abhi-abhi repo clone kiya hai ya fresh laptop par project install kar rahe ho. Isme dependencies install hongi, database me test users banenge, aur blockchain network generate hoga.
+          </p>
+          <ul class="scenario-checklist">
+            <li>✅ Clone Repo & Create <code>.env.local</code></li>
+            <li>✅ Run <code>npm install</code> in client & fabric-api</li>
+            <li>✅ Seed DB: <code>create-admin.js</code> & <code>create-officials.js</code></li>
+            <li>✅ Run <strong><code>./setup-network.sh</code></strong> (Only 1 time)</li>
+            <li>✅ Launch Client: <code>npm run dev</code></li>
+          </ul>
+        </div>
+        <a href="#first-time-setup" class="scenario-btn scenario-btn-first">
+          Pehle Din Ka Setup Guide Dekhein ⬇️
+        </a>
+      </div>
+
+      <!-- PERSONA 2: DAILY RUNNER -->
+      <div class="scenario-card scenario-card-daily">
+        <div>
+          <span class="scenario-badge" style="background:rgba(16,185,129,0.25);color:var(--emerald-light);">
+            ⚡ Daily Routine (Takes 30 Seconds)
+          </span>
+          <div class="scenario-title">2. Roz Kaam / Testing Ke Liye Start Karna Hai?</div>
+          <p class="scenario-desc">
+            Aapka initial setup pehle se ho chuka hai. Ab roz subah/shaam testing ya coding ke liye project start karna hai bina data delete kiye (Fastest 2-Step Routine).
+          </p>
+          <ul class="scenario-checklist">
+            <li>✅ Docker Desktop open karo</li>
+            <li>✅ Terminal 1 (WSL): <strong><code>./start-only.sh</code></strong></li>
+            <li>✅ Terminal 2 (Terminal): <strong><code>cd client && npm run dev</code></strong></li>
+            <li>✅ Open Browser: <code>http://localhost:3000</code></li>
+            <li>✨ That's it! Network + API + Frontend sab live!</li>
+          </ul>
+        </div>
+        <a href="#daily-workflow" class="scenario-btn scenario-btn-daily">
+          Roz Run Karne Ka Guide Dekhein ⬇️
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- PREREQUISITES -->
   <section class="section" id="prereq">
@@ -550,60 +754,37 @@ docker ps</code></pre>
     </div>
   </section>
 
-  <!-- STEP 2: CLONE & FOLDER OVERVIEW -->
-  <section class="section" id="folders">
+  <!-- PERSONA 1: FIRST TIME SETUP FULL DETAILS -->
+  <section class="section" id="first-time-setup">
     <div class="section-title">
       <div class="section-num">2</div>
-      <h2>Clone Repo & Folder Structure</h2>
-    </div>
-    <p class="section-desc">Repo clone karne ke baad project ka internal structure samajhna zaroori hai:</p>
-
-    <div class="code-box">
-      <div class="code-header">
-        <span class="terminal-tag tag-pwsh">PowerShell / Git Bash</span>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre><code>git clone &lt;YOUR_GITHUB_REPO_URL&gt;
-cd LandRecords_extracted</code></pre>
-    </div>
-
-    <div class="card">
-      <div class="card-title">📁 Project Structure Overview</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.9;color:#94a3b8;margin-top:0.75rem;">
-        ├── <strong style="color:var(--emerald-light)">client/</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Next.js 14 Web Frontend + Auth APIs (Port 3000)<br/>
-        ├── <strong style="color:var(--sky-light)">fabric-api/</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Express.js Backend Bridge connecting to Blockchain (Port 3001)<br/>
-        ├── <strong style="color:var(--amber-light)">fabric-samples/test-network/</strong> → Hyperledger Fabric Network (Docker Containers)<br/>
-        ├── <strong style="color:var(--purple)">chaincode/</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Smart Contracts (land-registration-contract.js)<br/>
-        ├── <strong style="color:#fff">start-only.sh</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Roz network + API chalane ke liye script<br/>
-        ├── <strong style="color:#fff">stop-network.ps1 / .sh</strong> → Network aur containers safely band karne ke liye script<br/>
-        └── <strong style="color:#fff">setup-network.sh</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ One-time initial blockchain generator script
-      </div>
-    </div>
-  </section>
-
-  <!-- STEP 3: ENVIRONMENT VARIABLES -->
-  <section class="section" id="env-setup">
-    <div class="section-title">
-      <div class="section-num">3</div>
-      <h2>Secret Keys (.env) Setup (Important ⚠️)</h2>
+      <h2>🔰 First Time Setup (Naye Person Ke Liye Complete Steps)</h2>
     </div>
     <p class="section-desc">
-      Security ke liye <code>.env.local</code> Git me commit nahi hota. Repo me <code>client/.env.example</code> di gayi hai.
-      Aapko isko copy karke apni <code>.env.local</code> banani hai:
+      Agar aap pehli baar is repo par kaam kar rahe hain, to sequence me in <strong>5 steps</strong> ko follow karein:
     </p>
 
-    <div class="alert alert-danger">
-      <span class="alert-icon">🚫</span>
-      <div>
-        <strong>WARNING: Kabhi bhi <code>.env.local</code> ko GitHub par push mat karna!</strong><br/>
-        Isme aapka MongoDB password, Pinata API key aur Gmail App password hota hai. Ye hamesha local PC par hi rahega.
-      </div>
-    </div>
-
     <div class="step-list">
+      <!-- Step 1: Clone & Folder -->
       <div class="step-item">
-        <div class="step-head">Command: Copy Template to .env.local</div>
-        <div class="step-sub">Client folder me jaakar example file ko copy karein:</div>
+        <div class="step-head">Step 1: Clone Repository & Open Folder</div>
+        <div class="step-sub">Git repo clone karein aur project directory me jayein:</div>
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-pwsh">PowerShell / Git Bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>git clone &lt;YOUR_GITHUB_REPO_URL&gt;
+cd LandRecords_extracted</code></pre>
+        </div>
+      </div>
+
+      <!-- Step 2: Environment Variables -->
+      <div class="step-item">
+        <div class="step-head">Step 2: Environment Variables (.env.local) Banayein</div>
+        <div class="step-sub">
+          Security ke liye <code>.env.local</code> Git me commit nahi hota. Repo me <code>client/.env.example</code> di gayi hai, use copy karke apni file banayein:
+        </div>
         <div class="code-box">
           <div class="code-header">
             <span class="terminal-tag tag-pwsh">Terminal</span>
@@ -612,280 +793,204 @@ cd LandRecords_extracted</code></pre>
           <pre><code>cd client
 cp .env.example .env.local</code></pre>
         </div>
-      </div>
 
-      <div class="step-item">
-        <div class="step-head">Kon-Kon si Keys Setup Karni Hain?</div>
-        <div class="step-sub">Ab <code>client/.env.local</code> file ko kholo aur ye keys enter karo:</div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Variable Name</th>
-                <th>Kya Value Daalni Hai?</th>
-                <th>Kahan Se Milega?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>MONGODB_URI</code></td>
-                <td>Aapka MongoDB connection string (DB name: <code>elandrecords</code>)</td>
-                <td>MongoDB Atlas dashboard se Cluster Connect string lein.</td>
-              </tr>
-              <tr>
-                <td><code>NEXT_PUBLIC_FABRIC_API_URL</code></td>
-                <td><code>http://localhost:3001</code></td>
-                <td>Same rehne dein (Hyperledger REST API bridge).</td>
-              </tr>
-              <tr>
-                <td><code>NEXT_PUBLIC_BASE_URL</code></td>
-                <td><code>http://localhost:3000</code></td>
-                <td>Same rehne dein (Next.js frontend).</td>
-              </tr>
-              <tr>
-                <td><code>PINATA_API_KEY</code><br/><code>PINATA_SECRET_KEY</code><br/><code>PINATA_JWT</code></td>
-                <td>Pinata Cloud IPFS Keys (Property documents store karne ke liye)</td>
-                <td><a href="https://pinata.cloud" target="_blank" style="color:var(--emerald-light);">pinata.cloud</a> par free account banayein aur API keys generate karein. (Agar blank chodenge to mock hashes use honge).</td>
-              </tr>
-              <tr>
-                <td><code>SMTP_USER</code><br/><code>SMTP_PASSWORD</code></td>
-                <td>Gmail ID & 16-character App Password (OTP email ke liye)</td>
-                <td>Google Account → Security → 2-Step Verification ON → App Passwords generate karein. (Development me OTP console me bhi print hota hai).</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="alert alert-warning">
+          <span class="alert-icon">⚠️</span>
+          <div>
+            <strong><code>client/.env.local</code> me ye zaroori keys check karein:</strong><br/>
+            &bull; <code>MONGODB_URI</code> = Aapka MongoDB Atlas connection string (DB: <code>elandrecords</code>)<br/>
+            &bull; <code>NEXT_PUBLIC_FABRIC_API_URL</code> = <code>http://localhost:3001</code><br/>
+            &bull; <code>NEXT_PUBLIC_BASE_URL</code> = <code>http://localhost:3000</code><br/>
+            &bull; <code>PINATA_API_KEY</code>, <code>PINATA_SECRET_KEY</code>, <code>PINATA_JWT</code> = Pinata IPFS keys (agar empty hai to fallback hashes use honge)<br/>
+            &bull; <code>SMTP_USER</code>, <code>SMTP_PASSWORD</code> = Email OTP ke liye (Development me OTP console log me bhi show hota hai)
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- STEP 4: INSTALL DEPENDENCIES -->
-  <section class="section" id="install">
-    <div class="section-title">
-      <div class="section-num">4</div>
-      <h2>Dependencies Install Karein (NPM Install)</h2>
-    </div>
-    <p class="section-desc">Client aur Fabric API dono ke packages install karne honge:</p>
+      <!-- Step 3: Install NPM Dependencies -->
+      <div class="step-item">
+        <div class="step-head">Step 3: Dependencies Install Karein (Client & Fabric API)</div>
+        <div class="step-sub">Dono folders me NPM packages install karein:</div>
+        <div class="grid-2">
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-node">1. Client Dependencies</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd client
+npm install</code></pre>
+          </div>
+          <div class="code-box">
+            <div class="code-header">
+              <span class="terminal-tag tag-node">2. Fabric API Dependencies</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code>cd ../fabric-api
+npm install</code></pre>
+          </div>
+        </div>
+      </div>
 
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">1. Client Dependencies</div>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">Next.js, React, Tailwind, Mongoose, JWT packages:</p>
+      <!-- Step 4: Seed Database -->
+      <div class="step-item">
+        <div class="step-head">Step 4: Database Me Default Users & Officials Seed Karein</div>
+        <div class="step-sub">
+          MongoDB ke andar Super Admin aur government officials (Clerk, MRO, Surveyor, Collector) insert karein:
+        </div>
         <div class="code-box">
           <div class="code-header">
-            <span>Terminal</span>
+            <span class="terminal-tag tag-node">client/ folder me Terminal</span>
             <button class="copy-btn" onclick="copyCode(this)">Copy</button>
           </div>
           <pre><code>cd client
-npm install</code></pre>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">2. Fabric API Dependencies</div>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">Express, fabric-network, fabric-ca-client SDKs:</p>
-        <div class="code-box">
-          <div class="code-header">
-            <span>Terminal</span>
-            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><code>cd ../fabric-api
-npm install</code></pre>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STEP 5: ONE-TIME RUNNABLE FILES -->
-  <section class="section" id="onetime">
-    <div class="section-title">
-      <div class="section-num">5</div>
-      <h2>One-Time (First Time Only) Setup Files</h2>
-    </div>
-    <p class="section-desc">
-      Ye files <strong>sirf ek baar (pehle din)</strong> run karni hain taaki database me Admin aur Officials create ho jayein aur Blockchain network initialise ho jaye:
-    </p>
-
-    <div class="card">
-      <div class="card-title">🌱 Step A: Database me Users & Officials Seed Karna</div>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin:0.5rem 0;">
-        In scripts ko run karne se MongoDB ke andar default Super Admin aur government officials (Clerk, MRO, Surveyor, Collector) insert ho jayenge:
-      </p>
-
-      <div class="code-box">
-        <div class="code-header">
-          <span class="terminal-tag tag-node">Client Folder me Terminal</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code>cd client
 
 # 1. Super Admin banayein (admin@elandrecords.gov / admin123)
 node create-admin.js
 
 # 2. Saare Officials banayein (Clerk, Surveyor, MRO, Collector)
 node create-officials.js</code></pre>
-      </div>
-      <div class="alert alert-success">
-        <span class="alert-icon">✅</span>
-        <div>
-          Dono script complete hone par <code>"Connected to MongoDB"</code> aur <code>"Done!"</code> ka message dikhega.
+        </div>
+        <div class="alert alert-success">
+          <span class="alert-icon">✅</span>
+          <div>Output me <code>"Connected to MongoDB"</code> aur <code>"Done!"</code> ka message dikhega.</div>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-title">⛓️ Step B: Hyperledger Fabric Network Initialize Karna</div>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin:0.5rem 0;">
-        Ye script Docker containers banayegi, <code>mychannel</code> create karegi, 3 organizations ko join karegi aur Smart Contract deploy karegi:
-      </p>
-
-      <div class="code-box">
-        <div class="code-header">
-          <span class="terminal-tag tag-wsl">WSL 2 (Ubuntu) / Git Bash - Root Folder</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      <!-- Step 5: Run setup-network.sh -->
+      <div class="step-item">
+        <div class="step-head">Step 5: Run <code>./setup-network.sh</code> (Hyperledger Fabric Initialize)</div>
+        <div class="step-sub">
+          Ye script 3 organizations (Org1, Org2, Org3) ke cryptographic certs banati hai, channel create karti hai, Docker containers launch karti hai, aur Smart Contract (<code>land-registration-contract.js</code>) deploy karti hai:
         </div>
-        <pre><code># Project root folder me jayein
-cd /c/Users/hmury/Desktop/LandRecords_PBL/LandRecords_extracted
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-wsl">WSL 2 (Ubuntu) / Git Bash - Root Folder</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code># Project root folder me jayein
+cd /path/to/LandRecords_extracted
 
-# Setup network script ko executable permission dein
+# Executable permissions dein
 chmod +x setup-network.sh *.sh
 
 # Network setup run karein (Takes 2-4 minutes)
 ./setup-network.sh</code></pre>
-      </div>
-
-      <div class="alert alert-info">
-        <span class="alert-icon">ℹ️</span>
-        <div>
-          <strong>Note:</strong> <code>./setup-network.sh</code> sirf <strong>pehli baar</strong> chalana hai. Roz roz isko run nahi karna hai!
+        </div>
+        <div class="alert alert-info">
+          <span class="alert-icon">ℹ️</span>
+          <div>
+            <strong>Important:</strong> Ye script sirf <strong>ek baar (pehli baar)</strong> chalani hoti hai. Roz-roz isko run nahi karna hai!
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- STEP 6: DAILY RUNNING COMMANDS -->
-  <section class="section" id="daily-run">
+  <!-- PERSONA 2: DAILY RUNNING WORKFLOW -->
+  <section class="section" id="daily-workflow">
     <div class="section-title">
-      <div class="section-num">6</div>
-      <h2>Roz Project Kaise Start Karein (Daily Running)</h2>
+      <div class="section-num">3</div>
+      <h2>⚡ Daily Run (Roz Kaam / Testing Ke Liye Kaise Start Karein)</h2>
     </div>
     <p class="section-desc">
-      Project ke total <strong>3 components</strong> run hote hain: 
-      <strong>1. Hyperledger Docker Network</strong>, 
-      <strong>2. Fabric API (Port 3001)</strong>, aur 
-      <strong>3. Next.js Client Frontend (Port 3000)</strong>.
+      Initial setup ho chuka hai. Ab roz jab aap computer on karein aur project par kaam karna ho, to sirf ye 2 steps karein:
     </p>
 
-    <!-- METHOD 1: 3 TERMINALS (RECOMMENDED FOR DEVELOPMENT) -->
-    <div class="card" style="border:1px solid rgba(99, 102, 241, 0.4);margin-bottom:2rem;">
+    <!-- METHOD 1: 2-TERMINALS (AUTOMATED & FASTEST) -->
+    <div class="card" style="border:2px solid rgba(16, 185, 129, 0.45);background:linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, var(--bg-card) 100%);">
       <div class="card-header">
         <div class="card-title">
-          <span>🌟 Method 1: 3-Terminal Setup (Recommended for Development & Debugging)</span>
+          <span>🚀 Recommended: 2-Terminal Quick Start (Daily Routine)</span>
         </div>
-        <span class="badge" style="background:rgba(99,102,241,0.25);color:var(--primary-light);">Best for Developers</span>
+        <span class="badge" style="background:rgba(16,185,129,0.25);color:var(--emerald-light);">Fastest & Easiest</span>
       </div>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.25rem;">
-        Is method me <code>fabric-api</code> apne alag terminal me chalti hai jisse aap live API calls, JSON responses, errors aur smart contract execution logs direct screen par dekh sakte hain:
-      </p>
-
-      <div class="grid-3">
-        <!-- Terminal 1 -->
-        <div style="background:var(--bg-inset);padding:1.2rem;border-radius:12px;border-top:3px solid var(--emerald);">
-          <strong style="color:#fff;font-size:0.95rem;">🟢 Terminal 1: Fabric Network</strong>
-          <p style="font-size:0.78rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
-            Docker containers ko resume/start karta hai:
-          </p>
-          <div class="code-box">
-            <div class="code-header">
-              <span class="terminal-tag tag-wsl">WSL 2 / Root Dir</span>
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            </div>
-            <pre><code>./start-network.sh</code></pre>
-          </div>
-          <span style="font-size:0.75rem;color:var(--emerald-light);">Peers, Orderer & CouchDB live ho jayenge.</span>
-        </div>
-
-        <!-- Terminal 2 -->
-        <div style="background:var(--bg-inset);padding:1.2rem;border-radius:12px;border-top:3px solid var(--sky);">
-          <strong style="color:#fff;font-size:0.95rem;">🔵 Terminal 2: Fabric REST API</strong>
-          <p style="font-size:0.78rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
-            Blockchain REST bridge on Port 3001:
-          </p>
-          <div class="code-box">
-            <div class="code-header">
-              <span class="terminal-tag tag-node">fabric-api/ folder</span>
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            </div>
-            <pre><code>cd fabric-api
-npm start</code></pre>
-          </div>
-          <span style="font-size:0.75rem;color:var(--sky-light);">Live server running at http://localhost:3001</span>
-        </div>
-
-        <!-- Terminal 3 -->
-        <div style="background:var(--bg-inset);padding:1.2rem;border-radius:12px;border-top:3px solid var(--purple);">
-          <strong style="color:#fff;font-size:0.95rem;">🟣 Terminal 3: Client Frontend</strong>
-          <p style="font-size:0.78rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
-            Next.js web portal on Port 3000:
-          </p>
-          <div class="code-box">
-            <div class="code-header">
-              <span class="terminal-tag tag-pwsh">client/ folder</span>
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            </div>
-            <pre><code>cd client
-npm run dev</code></pre>
-          </div>
-          <span style="font-size:0.75rem;color:var(--purple);">Browser: http://localhost:3000</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- METHOD 2: 2 TERMINALS (AUTOMATED SHORTCUT) -->
-    <div class="card" style="border:1px solid rgba(16, 185, 129, 0.35);">
-      <div class="card-header">
-        <div class="card-title">
-          <span>⚡ Method 2: 2-Terminal Quick Shortcut (Automated Background)</span>
-        </div>
-        <span class="badge" style="background:rgba(16,185,129,0.25);color:var(--emerald-light);">Quick Demo Mode</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1rem;">
-        Agar aapko fast demo dena hai to <code>./start-only.sh</code> script Hyperledger Docker network ke sath-sath <strong>fabric-api ko automatically background me start</strong> kar deti hai (<code>node index.js &</code>):
+      <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:1.25rem;">
+        Is shortcut method me <code>./start-only.sh</code> Hyperledger Docker containers ko resume karegi aur <strong>fabric-api ko automatically background me port 3001 par start</strong> kar degi:
       </p>
 
       <div class="grid-2">
-        <div class="card" style="margin-bottom:0;background:var(--bg-inset);">
-          <div class="card-title" style="font-size:0.95rem;">🟢 Terminal 1: Network + API (Automated)</div>
+        <!-- Terminal 1 -->
+        <div style="background:var(--bg-inset);padding:1.25rem;border-radius:12px;border-top:3px solid var(--emerald);">
+          <strong style="color:#fff;font-size:0.95rem;">🟢 Terminal 1 (WSL 2): Start Network + API</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
+            Root folder me script run karein (Docker Desktop running hona chahiye):
+          </p>
           <div class="code-box">
             <div class="code-header">
-              <span class="terminal-tag tag-wsl">WSL 2 / Root Dir</span>
+              <span class="terminal-tag tag-wsl">WSL 2 Terminal</span>
               <button class="copy-btn" onclick="copyCode(this)">Copy</button>
             </div>
             <pre><code>./start-only.sh</code></pre>
           </div>
-          <div style="font-size:0.8rem;color:var(--text-muted);">
-            👉 Ye script containers ko start karegi aur backend me <code>node index.js</code> ko port 3001 par launch kar degi.
+          <div style="font-size:0.8rem;color:var(--emerald-light);">
+            👉 Output me <code>{"status":"healthy"}</code> aayega. Port 3001 live ho jayega!
           </div>
         </div>
 
-        <div class="card" style="margin-bottom:0;background:var(--bg-inset);">
-          <div class="card-title" style="font-size:0.95rem;">🟣 Terminal 2: Next.js Client Frontend</div>
+        <!-- Terminal 2 -->
+        <div style="background:var(--bg-inset);padding:1.25rem;border-radius:12px;border-top:3px solid var(--purple);">
+          <strong style="color:#fff;font-size:0.95rem;">🟣 Terminal 2 (PowerShell): Start Next.js Frontend</strong>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0.4rem 0 0.8rem;">
+            Client folder me Next.js dev server run karein:
+          </p>
           <div class="code-box">
             <div class="code-header">
-              <span class="terminal-tag tag-pwsh">client/ folder</span>
+              <span class="terminal-tag tag-pwsh">PowerShell / VS Code</span>
               <button class="copy-btn" onclick="copyCode(this)">Copy</button>
             </div>
             <pre><code>cd client
 npm run dev</code></pre>
           </div>
-          <div style="font-size:0.8rem;color:var(--text-muted);">
-            👉 Next.js frontend start hoga port 3000 par: <a href="http://localhost:3000" target="_blank" style="color:var(--emerald-light);">http://localhost:3000</a>
+          <div style="font-size:0.8rem;color:var(--purple);">
+            👉 Browser me open karein: <a href="http://localhost:3000" target="_blank" style="color:var(--sky-light);">http://localhost:3000</a>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- METHOD 2: 3-TERMINALS (FOR ACTIVE BACKEND DEBUGGING) -->
+    <div class="card" style="border:1px solid rgba(99, 102, 241, 0.35);">
+      <div class="card-header">
+        <div class="card-title">
+          <span>🔍 Alternative: 3-Terminal Developer Mode (Live Backend Logs)</span>
+        </div>
+        <span class="badge" style="background:rgba(99,102,241,0.25);color:var(--primary-light);">Best for API Debugging</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:1.25rem;">
+        Agar aap backend API ya chaincode ka issue debug kar rahe ho aur terminal par live logs dekhna chahte ho:
+      </p>
+
+      <div class="grid-3">
+        <div style="background:var(--bg-inset);padding:1rem;border-radius:10px;">
+          <strong style="color:#fff;font-size:0.88rem;">1. Fabric Containers</strong>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin:0.3rem 0 0.6rem;">WSL me containers start karo:</p>
+          <div class="code-box">
+            <div class="code-header"><span class="terminal-tag tag-wsl">WSL</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>./start-network.sh</code></pre>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-inset);padding:1rem;border-radius:10px;">
+          <strong style="color:#fff;font-size:0.88rem;">2. Fabric REST API</strong>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin:0.3rem 0 0.6rem;">Live logs dekhne ke liye foreground me run karo:</p>
+          <div class="code-box">
+            <div class="code-header"><span class="terminal-tag tag-node">fabric-api</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>cd fabric-api
+npm start</code></pre>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-inset);padding:1rem;border-radius:10px;">
+          <strong style="color:#fff;font-size:0.88rem;">3. Next.js Frontend</strong>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin:0.3rem 0 0.6rem;">Web UI run karo:</p>
+          <div class="code-box">
+            <div class="code-header"><span class="terminal-tag tag-pwsh">client</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>cd client
+npm run dev</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- URLs -->
     <div class="grid-3" style="margin-top:1.5rem;">
@@ -907,13 +1012,214 @@ npm run dev</code></pre>
     </div>
   </section>
 
-  <!-- STEP 7: CREDENTIALS CHEAT SHEET -->
+  <!-- SCRIPTS GUIDE & COMPARISON -->
+  <section class="section" id="scripts-guide">
+    <div class="section-title">
+      <div class="section-num">4</div>
+      <h2>📜 Shell Scripts Comparison (Kab Kaunsi Script Chalani Hai?)</h2>
+    </div>
+    <p class="section-desc">
+      Project me teen mukhya bash scripts hain: <strong><code>setup-network.sh</code></strong>, <strong><code>start-network.sh</code></strong>, aur <strong><code>start-only.sh</code></strong>. Niche simple terms me unka farak aur purpose samjhaya gaya hai:
+    </p>
+
+    <!-- COMPARISON TABLE -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Script Name</th>
+            <th>Kab Chalani Hai? (When to Use)</th>
+            <th>Ye Kya Karti Hai? (What it Does)</th>
+            <th>Fabric API Chalu Karti Hai?</th>
+            <th>Data Pe Asar (Data Safety)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong style="color:var(--rose-light);"><code>./setup-network.sh</code></strong>
+            </td>
+            <td>
+              <strong>Sirf Pehli Baar (Day 1)</strong> ya jab poora blockchain network scratch se reset karna ho.
+            </td>
+            <td>
+              Purane containers & crypto delete karke fresh certificates banati hai, genesis block create karti hai, 3 Orgs ke peers aur CouchDB launch karti hai, aur Smart Contract deploy karti hai (takes 2-4 mins).
+            </td>
+            <td><span class="badge" style="background:rgba(255,255,255,0.1);color:#94a3b8;">Nahi</span></td>
+            <td>
+              <span class="badge badge-danger">⚠️ Data Wipe Hoga</span><br/>
+              <span style="font-size:0.75rem;color:var(--rose-light);">Purana ledger erase ho jata hai</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong style="color:var(--sky-light);"><code>./start-network.sh</code></strong>
+            </td>
+            <td>
+              Jab aapko sirf <strong>Docker network start karna ho</strong> aur <code>fabric-api</code> ko alag terminal me chalana ho taaki live logs monitor kar sakein.
+            </td>
+            <td>
+              Band pade existing containers ko <code>docker start</code> karti hai (~5 seconds) aur Admin cert symlinks dynamically fix karti hai.
+            </td>
+            <td><span class="badge" style="background:rgba(255,255,255,0.1);color:#94a3b8;">Nahi (Manually chalu karo)</span></td>
+            <td>
+              <span class="badge badge-safe">✅ 100% Data Safe</span><br/>
+              <span style="font-size:0.75rem;color:var(--emerald-light);">Ledger ka data bacha rehta hai</span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong style="color:var(--emerald-light);"><code>./start-only.sh</code></strong>
+            </td>
+            <td>
+              <strong>ROZ (Daily Routine)</strong> ke liye sabse best! Roz kaam ya demo start karne ke liye sirf yahi ek script chalani hai.
+            </td>
+            <td>
+              Existing containers start karti hai + certs fix karti hai + <strong>fabric-api ko automatically background me port 3001 par launch karti hai</strong> + healthcheck verify karti hai.
+            </td>
+            <td><span class="badge badge-safe">✅ Haan (Port 3001 par Live)</span></td>
+            <td>
+              <span class="badge badge-safe">✅ 100% Data Safe</span><br/>
+              <span style="font-size:0.75rem;color:var(--emerald-light);">Ledger ka data bacha rehta hai</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DETAILED CARDS -->
+    <div style="margin-top:2rem;">
+      <!-- SCRIPT 1 -->
+      <div class="script-card script-card-setup">
+        <div class="script-title-row">
+          <div class="script-name">1. setup-network.sh — The Initializer</div>
+          <span class="badge badge-danger">Run Only Once (Day 1)</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          <strong>Kyun banayi gayi hai?</strong> Hyperledger Fabric ko run karne ke liye crypto material (MSP certificates), channel genesis block, CouchDB state databases aur chaincode package ki zaroorat hoti hai. Ye script in sabhi heavy tasks ko automate karti hai.
+        </p>
+        <div class="alert alert-danger" style="margin:0.5rem 0;">
+          <span class="alert-icon">⚠️</span>
+          <div>
+            <strong>Rule:</strong> Agar aap roz <code>./setup-network.sh</code> chalaoge to aapke purane sabhi registered land records aur blockchain transactions erase ho jayenge! Isliye ise sirf pehli baar chalayein.
+          </div>
+        </div>
+      </div>
+
+      <!-- SCRIPT 2 -->
+      <div class="script-card script-card-startnet">
+        <div class="script-title-row">
+          <div class="script-name">2. start-network.sh — The Network Resumer</div>
+          <span class="badge" style="background:rgba(14,165,233,0.25);color:var(--sky-light);">For Developers & Debuggers</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          <strong>Kyun banayi gayi hai?</strong> Jab network band ho (stopped state me), to naye containers banane ki zaroorat nahi hoti. Ye script sirf <code>docker start</code> command se existing containers ko wake-up karti hai aur cert symlinks verify karti hai.
+        </p>
+        <div style="font-size:0.84rem;color:#cbd5e1;">
+          👉 <strong>Kab use karein:</strong> Jab aapko <code>cd fabric-api && npm start</code> ek alag terminal window me kholna ho taaki terminal par har ek REST API request aur error log live print hota dikhe.
+        </div>
+      </div>
+
+      <!-- SCRIPT 3 -->
+      <div class="script-card script-card-startonly">
+        <div class="script-title-row">
+          <div class="script-name">3. start-only.sh — The 1-Step Daily Starter</div>
+          <span class="badge badge-safe">Recommended Daily Command</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          <strong>Kyun banayi gayi hai?</strong> Developers ka time bachane ke liye. Aapko containers alag start karne aur fabric-api alag start karne ki zaroorat nahi padti. Ye script containers bhi start kar deti hai aur background me <code>node index.js</code> chala kar port 3001 par healthcheck verify kar leti hai.
+        </p>
+        <div style="font-size:0.84rem;color:#cbd5e1;">
+          👉 <strong>Kab use karein:</strong> Jab bhi aap roz subah ya sham project me frontend ya UI test karna chahte ho. Sirf ek bar <code>./start-only.sh</code> run karo aur kaam shuru!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STOPPING THE NETWORK -->
+  <section class="section" id="stop-network">
+    <div class="section-title">
+      <div class="section-num">5</div>
+      <h2>🛑 Network Ko Stop Kaise Karein (Shutdown Guide)</h2>
+    </div>
+    <p class="section-desc">
+      Kaam khatam hone ke baad RAM aur CPU free karne ke liye network stop karna zaroori hai. Hamesha <strong>Safe Stop</strong> use karein:
+    </p>
+
+    <div class="grid-2">
+      <!-- SAFE STOP -->
+      <div class="card" style="border:2px solid rgba(16, 185, 129, 0.45);">
+        <div class="card-header">
+          <div class="card-title">
+            <span style="color:var(--emerald-light);">🟢 Option A: Safe Stop (Data Safe / Recommended)</span>
+          </div>
+          <span class="badge badge-safe">100% Ledger Safe</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          Ye script <code>fabric-api</code> process ko kill karti hai aur Hyperledger Docker containers ko cleanly <code>docker stop</code> karti hai. <strong>Aapka saara registered land data aur blocks safe rehte hain!</strong>
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-wsl">WSL 2 / Git Bash (Root Dir)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>./stop-network.sh</code></pre>
+        </div>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-pwsh">Windows PowerShell (Root Dir)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>.\stop-network.ps1</code></pre>
+        </div>
+
+        <div style="font-size:0.82rem;color:var(--emerald-light);margin-top:0.5rem;">
+          ✨ Agle din dobara chalu karne ke liye sirf <code>./start-only.sh</code> chalana hoga!
+        </div>
+      </div>
+
+      <!-- DESTRUCTIVE WIPE -->
+      <div class="card" style="border:2px solid rgba(244, 63, 94, 0.45);">
+        <div class="card-header">
+          <div class="card-title">
+            <span style="color:var(--rose-light);">🔴 Option B: Factory Wipe (Destructive Reset)</span>
+          </div>
+          <span class="badge badge-danger">Ledger Delete Hoga</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          ⚠️ <strong>Khatra:</strong> Is command se Docker containers, volumes, crypto certificates aur channel destroy ho jayenge:
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="terminal-tag tag-wsl">WSL 2 / Git Bash</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>cd fabric-samples/test-network
+./network.sh down</code></pre>
+        </div>
+
+        <div class="alert alert-danger" style="margin-top:0.75rem;">
+          <span class="alert-icon">🚫</span>
+          <div>
+            <strong>Isko roz mat chalana!</strong> Ise sirf tab chalana jab aapko blockchain ko 0 se destroy karke dubara <code>./setup-network.sh</code> chalani ho.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDENTIALS CHEAT SHEET -->
   <section class="section" id="credentials">
     <div class="section-title">
-      <div class="section-num">7</div>
-      <h2>Pre-Seeded Login Credentials Cheat Sheet</h2>
+      <div class="section-num">6</div>
+      <h2>🔑 Pre-Seeded Login Credentials Cheat Sheet</h2>
     </div>
-    <p class="section-desc">Testing karne ke liye in login credentials ka use karein:</p>
+    <p class="section-desc">
+      Database seed karne ke baad test karne ke liye ye accounts pehle se bane hote hain:
+    </p>
 
     <div class="table-wrap">
       <table>
@@ -932,47 +1238,47 @@ npm run dev</code></pre>
             <td><code>admin@elandrecords.gov</code></td>
             <td><span class="badge badge-pass">admin123</span></td>
             <td>Full System Admin</td>
-            <td><code>/adminlogin</code></td>
+            <td><a href="http://localhost:3000/adminlogin" target="_blank" style="color:var(--sky-light);">/adminlogin</a></td>
           </tr>
           <tr>
             <td><span class="badge badge-role">Clerk</span></td>
             <td><code>clerk1@gov.in</code></td>
             <td><span class="badge badge-pass">clerk123</span></td>
             <td>Registration Dept (Org1)</td>
-            <td><code>/officiallogin</code></td>
+            <td><a href="http://localhost:3000/officiallogin" target="_blank" style="color:var(--sky-light);">/officiallogin</a></td>
           </tr>
           <tr>
             <td><span class="badge badge-role">Surveyor</span></td>
             <td><code>survey1@gov.in</code></td>
             <td><span class="badge badge-pass">survey123</span></td>
             <td>Revenue Dept (Org2)</td>
-            <td><code>/officiallogin</code></td>
+            <td><a href="http://localhost:3000/officiallogin" target="_blank" style="color:var(--sky-light);">/officiallogin</a></td>
           </tr>
           <tr>
             <td><span class="badge badge-role">MRO</span></td>
             <td><code>mro1@gov.in</code></td>
             <td><span class="badge badge-pass">mro123</span></td>
             <td>Revenue Dept (Org2)</td>
-            <td><code>/officiallogin</code></td>
+            <td><a href="http://localhost:3000/officiallogin" target="_blank" style="color:var(--sky-light);">/officiallogin</a></td>
           </tr>
           <tr>
             <td><span class="badge badge-role">Superintendent</span></td>
             <td><code>super1@gov.in</code></td>
             <td><span class="badge badge-pass">super123</span></td>
             <td>Registration Dept (Org1)</td>
-            <td><code>/officiallogin</code></td>
+            <td><a href="http://localhost:3000/officiallogin" target="_blank" style="color:var(--sky-light);">/officiallogin</a></td>
           </tr>
           <tr>
             <td><span class="badge badge-role">District Collector</span></td>
             <td><code>col1@gov.in</code></td>
             <td><span class="badge badge-pass">collector123</span></td>
             <td>Collectorate (Org3)</td>
-            <td><code>/officiallogin</code></td>
+            <td><a href="http://localhost:3000/officiallogin" target="_blank" style="color:var(--sky-light);">/officiallogin</a></td>
           </tr>
           <tr>
             <td><span class="badge badge-role">Citizen (User)</span></td>
             <td colspan="4" style="color:var(--text-muted);">
-              Aap homepage (<code>/userregistration</code>) se direct koi bhi naya citizen account register kar sakte hain.
+              Aap homepage (<a href="http://localhost:3000/userregistration" target="_blank" style="color:var(--emerald-light);">/userregistration</a>) se direct koi bhi naya citizen account register kar sakte hain.
             </td>
           </tr>
         </tbody>
@@ -980,61 +1286,11 @@ npm run dev</code></pre>
     </div>
   </section>
 
-  <!-- STEP 8: STOP NETWORK -->
-  <section class="section" id="stop-network">
-    <div class="section-title">
-      <div class="section-num">8</div>
-      <h2>Project & Network Ko Stop Kaise Karein</h2>
-    </div>
-    <p class="section-desc">Kaam khatam hone ke baad RAM aur CPU free karne ke liye 2 options hain:</p>
-
-    <div class="grid-2">
-      <div class="card" style="border:1px solid rgba(16, 185, 129, 0.4);">
-        <div class="card-title">🟢 Option 1: Clean Stop (Data Safe / Recommended)</div>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0;">
-          Isse ledger aur MongoDB data safe rehta hai, sirf containers aur servers pause ho jaate hain:
-        </p>
-        <div class="code-box">
-          <div class="code-header">
-            <span class="terminal-tag tag-pwsh">PowerShell me</span>
-            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><code>.\stop-network.ps1</code></pre>
-        </div>
-        <div class="code-box">
-          <div class="code-header">
-            <span class="terminal-tag tag-wsl">WSL / Git Bash me</span>
-            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><code>./stop-network.sh</code></pre>
-        </div>
-      </div>
-
-      <div class="card" style="border:1px solid rgba(244, 63, 94, 0.4);">
-        <div class="card-title">🔴 Option 2: Full Network Reset (Wipe)</div>
-        <p style="color:var(--text-muted);font-size:0.85rem;margin:0.5rem 0;">
-          ⚠️ <strong>Warning:</strong> Is command se saara blockchain data, crypto certificates aur channel destroy ho jayega:
-        </p>
-        <div class="code-box">
-          <div class="code-header">
-            <span class="terminal-tag tag-wsl">WSL / Git Bash me</span>
-            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-          </div>
-          <pre><code>cd fabric-samples/test-network
-./network.sh down</code></pre>
-        </div>
-        <div style="font-size:0.8rem;color:var(--rose);">
-          Sirf tab use karein jab scratch se naya network shuru karna ho!
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STEP 9: GIT COLLABORATION -->
+  <!-- GIT WORKFLOW -->
   <section class="section" id="git-workflow">
     <div class="section-title">
-      <div class="section-num">9</div>
-      <h2>Team Git Branching Rules (No Conflict Guarantee)</h2>
+      <div class="section-num">7</div>
+      <h2>🤝 Team Git Branching Rules (No Conflict Guarantee)</h2>
     </div>
     <p class="section-desc">Kyunki hamare 3 members 3 alag alag folders me kaam kar rahe hain:</p>
 
@@ -1067,7 +1323,7 @@ git checkout -b feature/your-feature-name
 
 # 2. Kaam karne ke baad commit karein
 git add .
-git commit -m "feat: add joint ownership logic"
+git commit -m "feat: add your feature description"
 
 # 3. GitHub par apni branch push karein
 git push origin feature/your-feature-name
@@ -1080,7 +1336,7 @@ git push origin feature/your-feature-name
 </div>
 
 <footer>
-  <p>🏛️ Land Records PBL Collaboration Portal &bull; Generated for Project Team</p>
+  <p>🏛️ Land Records PBL Collaboration Portal &bull; Team Operations Manual</p>
 </footer>
 
 <script>
