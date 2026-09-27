@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Government Order (GO) - District Collector Final Sanction - APP-B04DBF06297D42D5</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      padding: 16mm 18mm;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      border: 3px double #1e3a8a;
+      position: relative;
+    }
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-35deg);
+      font-size: 70px;
+      font-weight: 900;
+      color: rgba(30, 58, 138, 0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #1e3a8a;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .emblem {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+    .header h1 {
+      font-size: 20px;
+      color: #1e3a8a;
+      letter-spacing: 1px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .header h2 {
+      font-size: 13px;
+      color: #334155;
+      font-weight: 700;
+      margin-top: 3px;
+      letter-spacing: 0.5px;
+    }
+    .header h3 {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .badge-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 6px 12px;
+      margin-bottom: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1e40af;
+      position: relative;
+      z-index: 1;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+      position: relative;
+      z-index: 1;
+    }
+    .meta-item {
+      display: flex;
+      margin-bottom: 3px;
+    }
+    .meta-item span.label {
+      width: 140px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .meta-item span.value {
+      font-weight: 700;
+      color: #0f172a;
+      font-family: 'Consolas', monospace;
+    }
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-left: 3px solid #1e3a8a;
+      padding-left: 8px;
+      margin: 12px 0 8px 0;
+      position: relative;
+      z-index: 1;
+    }
+    .proceedings-text {
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #334155;
+      margin-bottom: 12px;
+      text-align: justify;
+      position: relative;
+      z-index: 1;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+      font-size: 11px;
+      position: relative;
+      z-index: 1;
+    }
+    table.data-table th, table.data-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    table.data-table th {
+      background-color: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+    .order-box {
+      background: #f0fdf4;
+      border: 1.5px solid #22c55e;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .order-box h4 {
+      font-size: 12px;
+      color: #15803d;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .order-box p {
+      font-size: 11.5px;
+      color: #166534;
+      line-height: 1.55;
+      text-align: justify;
+    }
+    .signatures-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px dashed #cbd5e1;
+      position: relative;
+      z-index: 1;
+    }
+    .signature-card {
+      text-align: center;
+      width: 48%;
+    }
+    .sign-image {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 24px;
+      color: #1e3a8a;
+      margin-bottom: 4px;
+    }
+    .stamp-box {
+      border: 2px dashed #dc2626;
+      border-radius: 50%;
+      width: 75px;
+      height: 75px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #dc2626;
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      transform: rotate(-12deg);
+      margin: 0 auto 6px auto;
+      line-height: 1.1;
+      background: rgba(220, 38, 38, 0.03);
+    }
+    .sign-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .sign-sub {
+      font-size: 9.5px;
+      color: #64748b;
+    }
+    .blockchain-banner {
+      margin-top: 14px;
+      background: #0f172a;
+      color: #94a3b8;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 9.5px;
+      font-family: 'Consolas', monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2563eb;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.4);
+      z-index: 100;
+    }
+    .print-btn:hover {
+      background: #1d4ed8;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .sheet {
+        box-shadow: none;
+        border: 2px solid #1e3a8a;
+        padding: 10mm 12mm;
+      }
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+  <div class="sheet">
+    <div class="watermark">OFFICIAL GO</div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="emblem">🏛️ 🇮🇳 🏛️</div>
+      <h1>Office of the District Collector & District Magistrate</h1>
+      <h2>Revenue & Land Administration Division | District Varanasi</h2>
+      <h3>Government of Uttar Pradesh | Notification under Section 43 of UP Revenue Code</h3>
+    </div>
+
+    <!-- Badge bar -->
+    <div class="badge-bar">
+      <span>ORDER NO: GO/DM-VAR/2026/LR-REV-4912</span>
+      <span>DATE: SEPTEMBER 28, 2026</span>
+      <span>SANCTION STATUS: ✅ AUTHORIZED</span>
+    </div>
+
+    <!-- Meta Details -->
+    <div class="meta-grid">
+      <div>
+        <div class="meta-item">
+          <span class="label">Application Receipt:</span>
+          <span class="value">APP-B04DBF06297D42D5</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Registered Owner:</span>
+          <span class="value" style="font-family: inherit;">Himanshu Kumar Maurya</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Father's Name:</span>
+          <span class="value" style="font-family: inherit;">Ram Kumar Maurya</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Aadhaar (Masked):</span>
+          <span class="value">XXXX-XXXX-9876</span>
+        </div>
+      </div>
+      <div>
+        <div class="meta-item">
+          <span class="label">Survey / Khasra No:</span>
+          <span class="value">SY-5432/A</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Total Land Extent:</span>
+          <span class="value">250 Sq. Meters</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Mauza / Village:</span>
+          <span class="value" style="font-family: inherit;">Sigra, Varanasi</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">District & State:</span>
+          <span class="value" style="font-family: inherit;">Varanasi, Uttar Pradesh - 221010</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-heading & Proceedings -->
+    <div class="section-title">I. Subject & Official Scrutiny Summary</div>
+    <p class="proceedings-text">
+      <strong>Subject:</strong> Final district-level administrative authorization, title confirmation, and sanction for digital Patta issuance in respect of residential/agricultural land plot bearing <strong>Survey No. SY-5432/A</strong> measuring <strong>250 Sq. Meters</strong> situated at <strong>Sigra, Varanasi</strong>.
+    </p>
+    <p class="proceedings-text">
+      <strong>Preamble:</strong> The application submitted under Electronic Land Registry Protocol has undergone multi-tier statutory verification by the Revenue hierarchy. Ground coordinates, chain of title, encumbrance free status, and physical possession records have been formally endorsed by all designated field authorities as detailed below:
+    </p>
+
+    <!-- Verification Matrix Table -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">Department Authority</th>
+          <th style="width: 25%;">Scope of Verification</th>
+          <th style="width: 35%;">Findings / Remarks</th>
+          <th style="width: 18%;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Clerk & Superintendent</strong><br><small>Registration Dept</small></td>
+          <td>Identity & Document Intake</td>
+          <td>DigiLocker Deed & Aadhaar verified; docHash validated on ledger</td>
+          <td><span class="status-pill">Verified</span></td>
+        </tr>
+        <tr>
+          <td><strong>MRO & Surveyor</strong><br><small>Survey Division</small></td>
+          <td>Boundary & Geo-Coordinates</td>
+          <td>Cadastral map surveyed (Points A-D recorded); total measured: 250 sq.m</td>
+          <td><span class="status-pill">Surveyed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Revenue Inspector</strong><br><small>Revenue Inspection</small></td>
+          <td>Tax & Revenue Records</td>
+          <td>No government dues; land classification confirmed as clear</td>
+          <td><span class="status-pill">Cleared</span></td>
+        </tr>
+        <tr>
+          <td><strong>VRO (Village Officer)</strong><br><small>Local Administration</small></td>
+          <td>Physical Possession & Non-Dispute</td>
+          <td>Physical possession verified in person; zero disputes reported</td>
+          <td><span class="status-pill">Possession OK</span></td>
+        </tr>
+        <tr>
+          <td><strong>Joint Collector</strong><br><small>Collectorate Oversight</small></td>
+          <td>Legal Title Admissibility</td>
+          <td>Administrative oversight complete; recommended for final GO</td>
+          <td><span class="status-pill">Recommended</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Operative Order -->
+    <div class="section-title">II. Executive Order & Sanction</div>
+    <div class="order-box">
+      <h4>ORDER OF THE DISTRICT COLLECTOR & DISTRICT MAGISTRATE</h4>
+      <p>
+        In exercise of the statutory powers vested under the Uttar Pradesh Revenue Code and Land Registration Framework, I hereby grant <strong>FINAL DISTRICT AUTHORIZATION</strong> for the regularized registration and mutation of the property bearing <strong>Survey No. SY-5432/A</strong> in the name of <strong>Himanshu Kumar Maurya</strong>.
+      </p>
+      <p style="margin-top: 5px;">
+        The case record along with the verified cadastral boundary sketches, VRO ground possession report, and integrity hashes is hereby transmitted to the <strong>Ministry of Welfare & State Land Administration</strong> for final governmental endorsement and issuance of the <strong>Cryptographic Patta Certificate</strong>.
+      </p>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signatures-block">
+      <div class="signature-card">
+        <div class="stamp-box">
+          SEAL OF DM<br>VARANASI<br>DISTRICT
+        </div>
+        <div class="sign-title">OFFICE SEAL</div>
+        <div class="sign-sub">District Collectorate, Varanasi</div>
+      </div>
+      <div class="signature-card">
+        <div class="sign-image">Rajesh K. Sharma, IAS</div>
+        <div class="sign-title">District Collector & District Magistrate</div>
+        <div class="sign-sub">IAS | District Collectorate, Varanasi (UP)</div>
+        <div class="sign-sub" style="font-family: monospace; font-size: 8.5px; color: #1e3a8a; margin-top: 2px;">
+          DIGITALLY SIGNED VIA FABRIC ORG3 MSP
+        </div>
+      </div>
+    </div>
+
+    <!-- Blockchain Banner -->
+    <div class="blockchain-banner">
+      <span>BLOCKCHAIN INTEGRITY: ORG3 (COLLECTORATE DEPT)</span>
+      <span>TXN ID: TXN-DC-AUTH-APP-B04DBF06297D42D5</span>
+      <span>HYPERLEDGER FABRIC v2.5</span>
+    </div>
+
+  </div>
+
+</body>
+</html>

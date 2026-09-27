@@ -43,8 +43,15 @@ const users = {
   // Org3 users
   'admin-collector': { password: 'adminpw', role: 'admin', org: 'org3' },
   'joint_collector1': { password: 'joint123', role: 'joint_collector', org: 'org3' },
+  'joint_collector': { password: 'joint123', role: 'joint_collector', org: 'org3' },
   'collector1': { password: 'collector123', role: 'collector', org: 'org3' },
-  'mw1': { password: 'mw123', role: 'mw', org: 'org3' }
+  'collector': { password: 'collector123', role: 'collector', org: 'org3' },
+  'district_collector1': { password: 'collector123', role: 'district_collector', org: 'org3' },
+  'district_collector': { password: 'collector123', role: 'district_collector', org: 'org3' },
+  'mw1': { password: 'mw123', role: 'mw', org: 'org3' },
+  'mw': { password: 'mw123', role: 'mw', org: 'org3' },
+  'ministry_welfare1': { password: 'mw123', role: 'ministry_welfare', org: 'org3' },
+  'ministry_welfare': { password: 'mw123', role: 'ministry_welfare', org: 'org3' }
 };
 
 // JWT Secret (in production, use environment variable)

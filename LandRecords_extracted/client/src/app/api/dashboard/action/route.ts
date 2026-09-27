@@ -260,9 +260,9 @@ export async function POST(req: NextRequest) {
         officialId: official._id,
         officialName: `${official.firstName} ${official.lastName}`,
         designation: official.designation,
-        action: (resolvedAction === 'forward' || resolvedAction === 'submit') ? 'forwarded' :
-          (resolvedAction === 'approve') ? 'approved' :
-            (resolvedAction === 'reject') ? 'rejected' : 'data_added',
+        action: ((resolvedAction as string) === 'forward' || (resolvedAction as string) === 'submit') ? 'forwarded' :
+          ((resolvedAction as string) === 'approve') ? 'approved' :
+            ((resolvedAction as string) === 'reject') ? 'rejected' : 'data_added',
         remarks: remarks || `Action ${action} performed`,
         timestamp: new Date(),
         data: officialData,

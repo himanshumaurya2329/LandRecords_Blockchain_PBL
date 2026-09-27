@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ministry of Welfare - Land Support & Welfare Policy Document - APP-B04DBF06297D42D5</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #0f172a;
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      padding: 16mm 18mm;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      border: 3px double #db2777;
+      position: relative;
+    }
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-35deg);
+      font-size: 65px;
+      font-weight: 900;
+      color: rgba(219, 39, 119, 0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+      text-transform: uppercase;
+      letter-spacing: 6px;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #db2777;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .emblem {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+    .header h1 {
+      font-size: 20px;
+      color: #be185d;
+      letter-spacing: 1px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .header h2 {
+      font-size: 13px;
+      color: #334155;
+      font-weight: 700;
+      margin-top: 3px;
+      letter-spacing: 0.5px;
+    }
+    .header h3 {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .badge-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fdf2f8;
+      border: 1px solid #fbcfe8;
+      border-radius: 6px;
+      padding: 6px 12px;
+      margin-bottom: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #9d174d;
+      position: relative;
+      z-index: 1;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+      position: relative;
+      z-index: 1;
+    }
+    .meta-item {
+      display: flex;
+      margin-bottom: 3px;
+    }
+    .meta-item span.label {
+      width: 140px;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .meta-item span.value {
+      font-weight: 700;
+      color: #0f172a;
+      font-family: 'Consolas', monospace;
+    }
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #9d174d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-left: 3px solid #db2777;
+      padding-left: 8px;
+      margin: 12px 0 8px 0;
+      position: relative;
+      z-index: 1;
+    }
+    .proceedings-text {
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #334155;
+      margin-bottom: 12px;
+      text-align: justify;
+      position: relative;
+      z-index: 1;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+      font-size: 11px;
+      position: relative;
+      z-index: 1;
+    }
+    table.data-table th, table.data-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    table.data-table th {
+      background-color: #fdf2f8;
+      color: #9d174d;
+      font-weight: 700;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #86efac;
+    }
+    .order-box {
+      background: #fdf2f8;
+      border: 1.5px solid #ec4899;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .order-box h4 {
+      font-size: 12px;
+      color: #9d174d;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .order-box p {
+      font-size: 11.5px;
+      color: #831843;
+      line-height: 1.55;
+      text-align: justify;
+    }
+    .signatures-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px dashed #cbd5e1;
+      position: relative;
+      z-index: 1;
+    }
+    .signature-card {
+      text-align: center;
+      width: 48%;
+    }
+    .sign-image {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 24px;
+      color: #9d174d;
+      margin-bottom: 4px;
+    }
+    .stamp-box {
+      border: 2px dashed #db2777;
+      border-radius: 50%;
+      width: 75px;
+      height: 75px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #db2777;
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      transform: rotate(-10deg);
+      margin: 0 auto 6px auto;
+      line-height: 1.1;
+      background: rgba(219, 39, 119, 0.03);
+    }
+    .sign-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .sign-sub {
+      font-size: 9.5px;
+      color: #64748b;
+    }
+    .blockchain-banner {
+      margin-top: 14px;
+      background: #0f172a;
+      color: #f472b6;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 9.5px;
+      font-family: 'Consolas', monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .print-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #db2777;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(219,39,119,0.4);
+      z-index: 100;
+    }
+    .print-btn:hover {
+      background: #be185d;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .sheet {
+        box-shadow: none;
+        border: 2px solid #db2777;
+        padding: 10mm 12mm;
+      }
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+  <div class="sheet">
+    <div class="watermark">MINISTRY POLICY</div>
+
+    <!-- Header -->
+    <div class="header">
+      <div class="emblem">🏛️ 🇮🇳 🏛️</div>
+      <h1>Ministry of Welfare & State Land Administration</h1>
+      <h2>State Government Notification & Land Support Policy Directive</h2>
+      <h3>Government of Uttar Pradesh | Form-XII under Rule 19 of State Welfare Code</h3>
+    </div>
+
+    <!-- Badge bar -->
+    <div class="badge-bar">
+      <span>POLICY REF: NOTIF-UP/MW-REV/2026/POL-8831</span>
+      <span>DATE: SEPTEMBER 28, 2026</span>
+      <span>WELFARE STATUS: ✅ ELIGIBLE & APPROVED</span>
+    </div>
+
+    <!-- Meta Details -->
+    <div class="meta-grid">
+      <div>
+        <div class="meta-item">
+          <span class="label">Application Receipt:</span>
+          <span class="value">APP-B04DBF06297D42D5</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Beneficiary / Owner:</span>
+          <span class="value" style="font-family: inherit;">Himanshu Kumar Maurya</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Father's Name:</span>
+          <span class="value" style="font-family: inherit;">Ram Kumar Maurya</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Aadhaar (Masked):</span>
+          <span class="value">XXXX-XXXX-9876</span>
+        </div>
+      </div>
+      <div>
+        <div class="meta-item">
+          <span class="label">Survey / Khasra No:</span>
+          <span class="value">SY-5432/A</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Sanctioned Area:</span>
+          <span class="value">250 Sq. Meters</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Village / Location:</span>
+          <span class="value" style="font-family: inherit;">Sigra, Varanasi</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Scheme Category:</span>
+          <span class="value" style="font-family: inherit;">Land Title Regularization</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section I -->
+    <div class="section-title">I. Statutory Policy Framework & Entitlement Clearance</div>
+    <p class="proceedings-text">
+      Under the powers conferred by the <strong>State Land Welfare and Title Regularization Act</strong>, the Ministry of Welfare certifies that the subject property bearing <strong>Survey No. SY-5432/A</strong> situated in <strong>Sigra, Varanasi</strong> has completed all statutory clearances across the entire administrative hierarchy, including Joint Collector and District Collector endorsements.
+    </p>
+
+    <!-- Verification Table -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 25%;">Compliance Criterion</th>
+          <th style="width: 45%;">Statutory Verification Standard</th>
+          <th style="width: 30%;">Ministry Determination</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Title Legitimacy</strong></td>
+          <td>Clean chain of title verified from DigiLocker deed repository</td>
+          <td><span class="status-pill">100% Cleared</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cadastral Demarcation</strong></td>
+          <td>Surveyor & RI ground measurement of 250 sq. meters confirmed</td>
+          <td><span class="status-pill">Survey Concurred</span></td>
+        </tr>
+        <tr>
+          <td><strong>Physical Possession</strong></td>
+          <td>VRO on-site verification & absence of third-party litigation</td>
+          <td><span class="status-pill">Confirmed</span></td>
+        </tr>
+        <tr>
+          <td><strong>Collectorate Order</strong></td>
+          <td>District Magistrate G.O. No. GO/DM-VAR/2026/LR-REV-4912 issued</td>
+          <td><span class="status-pill">Sanctioned</span></td>
+        </tr>
+        <tr>
+          <td><strong>Welfare Scheme Subsidy</strong></td>
+          <td>Exemption of standard title conversion levies under Section 14</td>
+          <td><span class="status-pill">Exempted</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Section II -->
+    <div class="section-title">II. Final Ministerial Sanction & Patta Authorization</div>
+    <div class="order-box">
+      <h4>FINAL GOVERNMENTAL APPROVAL & CRYPTOGRAPHIC PATTA DIRECTIVE</h4>
+      <p>
+        The competent authority of the <strong>Ministry of Welfare</strong> hereby accords <strong>FINAL MINISTERIAL APPROVAL</strong> for the completion of the land registration process for <strong>Himanshu Kumar Maurya</strong>.
+      </p>
+      <p style="margin-top: 5px;">
+        The system is directed to commit the final state transaction to the Hyperledger Fabric blockchain, update the status to <strong>COMPLETED</strong>, and immediately generate the official <strong>Digital Patta Certificate</strong> with tamper-evident QR code and cryptographic proof.
+      </p>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signatures-block">
+      <div class="signature-card">
+        <div class="stamp-box">
+          MINISTRY OF<br>WELFARE & REVENUE<br>GOVT OF U.P.
+        </div>
+        <div class="sign-title">STATE EMBLEM SEAL</div>
+        <div class="sign-sub">Secretariat, Lucknow (UP)</div>
+      </div>
+      <div class="signature-card">
+        <div class="sign-image">Dr. Sunita Agarwal, IAS</div>
+        <div class="sign-title">Principal Secretary</div>
+        <div class="sign-sub">Ministry of Welfare & Land Administration</div>
+        <div class="sign-sub" style="font-family: monospace; font-size: 8.5px; color: #be185d; margin-top: 2px;">
+          DIGITALLY AUTHORIZED VIA FABRIC ORG3 / STATE MSP
+        </div>
+      </div>
+    </div>
+
+    <!-- Blockchain Banner -->
+    <div class="blockchain-banner">
+      <span>BLOCKCHAIN ANCHOR: ORG3 (MINISTRY WELFARE)</span>
+      <span>FINAL STATUS: COMPLETED / PATTA GENERATION</span>
+      <span>HYPERLEDGER FABRIC v2.5</span>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { FaFileUpload, FaCheckCircle } from 'react-icons/fa';
 
 export interface MinistryWelfareFieldsHandle {
@@ -15,6 +15,22 @@ const MinistryWelfareFields = forwardRef<MinistryWelfareFieldsHandle, any>(
   const [welfareEligibility, setWelfareEligibility] = useState('');
   const [eligibilityNote, setEligibilityNote] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const latestDataRef = useRef({
+    policyFile,
+    policyType,
+    welfareEligibility,
+    eligibilityNote,
+  });
+
+  useEffect(() => {
+    latestDataRef.current = {
+      policyFile,
+      policyType,
+      welfareEligibility,
+      eligibilityNote,
+    };
+  });
 
   useEffect(() => {
     if (application?.actionHistory && application.actionHistory.length > 0) {
@@ -34,12 +50,13 @@ const MinistryWelfareFields = forwardRef<MinistryWelfareFieldsHandle, any>(
   const handleSave = async (): Promise<boolean> => {
     try {
       setSaving(true);
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', application._id);
-      formData.append('policyType', policyType);
-      formData.append('welfareEligibility', welfareEligibility);
-      formData.append('eligibilityNote', eligibilityNote);
-      if (policyFile) formData.append('policyDocument', policyFile);
+      formData.append('policyType', current.policyType);
+      formData.append('welfareEligibility', current.welfareEligibility);
+      formData.append('eligibilityNote', current.eligibilityNote);
+      if (current.policyFile) formData.append('policyDocument', current.policyFile);
 
       const response = await fetch('/api/role-data/ministrywelfare/save', {
         method: 'POST',
@@ -63,13 +80,14 @@ const MinistryWelfareFields = forwardRef<MinistryWelfareFieldsHandle, any>(
   useImperativeHandle(ref, () => ({
     save: handleSave,
     getFormData: (applicationId: string) => {
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', applicationId);
       formData.append('role', 'ministrywelfare');
-      formData.append('policyType', policyType);
-      formData.append('welfareEligibility', welfareEligibility);
-      formData.append('eligibilityNote', eligibilityNote);
-      if (policyFile) formData.append('policyDocument', policyFile);
+      formData.append('policyType', current.policyType);
+      formData.append('welfareEligibility', current.welfareEligibility);
+      formData.append('eligibilityNote', current.eligibilityNote);
+      if (current.policyFile) formData.append('policyDocument', current.policyFile);
       return formData;
     },
   }));
@@ -100,7 +118,7 @@ const MinistryWelfareFields = forwardRef<MinistryWelfareFieldsHandle, any>(
         </label>
         <input
           type="file"
-          accept=".pdf"
+          accept=".pdf,.html"
           onChange={(e) => setPolicyFile(e.target.files?.[0] || null)}
           className="w-full px-4 py-3 bg-slate-900/50 border border-pink-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-pink-500/20 file:text-pink-200"
         />

@@ -3,6 +3,8 @@ import { apiCall } from '@/lib/fabric-api';
 import connectDB from '@/lib/db/connect';
 import Official from '@/lib/models/Official';
 import Session from '@/lib/models/Session';
+import LandRequest from '@/lib/models/LandRequest';
+import { getAssignedStatusesForRole } from '@/lib/utils/workflow';
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,31 +35,53 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Official not found' }, { status: 404 });
     }
 
-    // Get official ID from user (official object)
-    // We don't really use officialIdStr for filtering yet, as the API returns ALL apps
-    // But we might want to filter stats based on this later if needed.
-    // For now, calculating generic stats or stats relevant to the role.
-    const officialIdStr = official._id.toString();
+    const userRole = (official.designation || '').toLowerCase().trim();
+    const targetStatuses = getAssignedStatusesForRole(userRole);
 
-    // Get all applications from fabric-api
-    const result = await apiCall('/api/land/applications', {}, req);
+    // Fetch counts from MongoDB
+    const assignedFilter = {
+      status: { $in: targetStatuses.map(s => new RegExp(`^${s}$`, 'i')) }
+    };
 
-    if (!result.success) {
-      return NextResponse.json(
-        { error: 'Failed to fetch applications' },
-        { status: 500 }
-      );
+    const [totalMongo, pendingMongo, approvedMongo, rejectedMongo] = await Promise.all([
+      LandRequest.countDocuments(),
+      LandRequest.countDocuments(assignedFilter),
+      LandRequest.countDocuments({ status: { $in: ['approved', 'completed'] } }),
+      LandRequest.countDocuments({ status: 'rejected' }),
+    ]);
+
+    let total = totalMongo;
+    let pending = pendingMongo;
+    let approved = approvedMongo;
+    let rejected = rejectedMongo;
+
+    // Also consult Fabric API if available
+    try {
+      const result = await apiCall('/api/land/applications', {}, req);
+      if (result && result.success && Array.isArray(result.data) && result.data.length > 0) {
+        const apps = result.data.map((item: any) => item.Record || item);
+        total = Math.max(totalMongo, apps.length);
+
+        const fabricPending = apps.filter((app: any) => {
+          const s = (app.status || '').toLowerCase();
+          return targetStatuses.some(ts => s === ts.toLowerCase() || s.includes(ts.toLowerCase()));
+        }).length;
+
+        if (fabricPending > pending) {
+          pending = fabricPending;
+        }
+
+        const fabricApproved = apps.filter((app: any) => ['approved', 'completed'].includes((app.status || '').toLowerCase())).length;
+        if (fabricApproved > approved) approved = fabricApproved;
+
+        const fabricRejected = apps.filter((app: any) => (app.status || '').toLowerCase() === 'rejected').length;
+        if (fabricRejected > rejected) rejected = fabricRejected;
+      }
+    } catch (fabricErr) {
+      console.warn('[Stats] Fabric stats fetch failed, relying on MongoDB stats:', fabricErr);
     }
 
-    const allApplications = result.data || [];
-
-    // Calculate stats based on applications assigned to this official
-    const total = allApplications.length;
-    const pending = allApplications.filter((app: any) => app.status === 'pending').length;
-    const approved = allApplications.filter((app: any) => app.status === 'approved').length;
-    const rejected = allApplications.filter((app: any) => app.status === 'rejected').length;
-
-    console.log(`[Stats] Calculated - Total: ${total}, Pending: ${pending}, Approved: ${approved}, Rejected: ${rejected}`);
+    console.log(`[Stats] Calculated for ${official.username} (${userRole}) - Total: ${total}, Pending: ${pending}, Approved: ${approved}, Rejected: ${rejected}`);
 
     return NextResponse.json({
       success: true,

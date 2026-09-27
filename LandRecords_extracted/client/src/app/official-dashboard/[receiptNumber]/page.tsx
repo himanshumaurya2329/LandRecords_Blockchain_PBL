@@ -19,6 +19,7 @@ import DigiLockerRequestPanel from '@/components/DigiLockerRequestPanel';
 import OCRAnalysisPanel from '@/components/OCRAnalysisPanel';
 import AITrustScore from '@/components/AITrustScore';
 import DIDDisplay from '@/components/DIDDisplay';
+import { getAssignedStatusesForRole } from '@/lib/utils/workflow';
 
 interface Official {
   _id?: string;
@@ -122,37 +123,15 @@ export default function ApplicationDetailsPage() {
 
   useEffect(() => {
     if (official && application) {
-      // Map application status to required role
-      const statusToRoleMap: Record<string, string[]> = {
-        'submitted': ['clerk'],
-        'with_clerk': ['clerk'],
-        'with_superintendent': ['superintendent'],
-        'with_project_officer': ['project_officer', 'projectofficer'],
-        'with_mro': ['mro'],
-        'with_surveyor': ['surveyor'],
-        'with_revenue_inspector': ['revenue_inspector', 'revenueinspector'],
-        'with_vro': ['vro'],
-        'with_revenue_dept': ['revenue_dept_officer', 'revenuedeptofficer', 'revenue_department_officer'],
-        'with_joint_collector': ['joint_collector', 'jointcollector'],
-        'with_collector': ['district_collector', 'districtcollector', 'collector'],
-        'with_ministry_welfare': ['ministry_welfare', 'ministrywelfare', 'ministry_of_welfare']
-      };
-
-      const currentStatus = application.status?.toLowerCase() || '';
-      const officialDesignation = official.designation?.toLowerCase().replace(/\s+/g, '').replace(/_/g, '') || '';
-
-      const allowedRoles = statusToRoleMap[currentStatus] || [];
-      const assigned = allowedRoles.some(role => {
-        const normalizedRole = role.replace(/\s+/g, '').replace(/_/g, '');
-        const normalizedOfficialRole = official.designation.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
-        return normalizedOfficialRole.includes(normalizedRole) || normalizedRole.includes(normalizedOfficialRole);
-      });
+      const assignedStatuses = getAssignedStatusesForRole(official.designation);
+      const currentStatus = (application.status || '').toLowerCase().trim();
+      const assigned = assignedStatuses.some(s => s.toLowerCase() === currentStatus);
 
       console.log('Assignment check:', {
         applicationStatus: currentStatus,
-        officialDesignation: officialDesignation,
-        allowedRoles: allowedRoles,
-        assigned: assigned
+        officialDesignation: official.designation,
+        assignedStatuses,
+        assigned
       });
 
       setIsAssigned(assigned);
@@ -160,51 +139,7 @@ export default function ApplicationDetailsPage() {
   }, [official, application]);
 
   const handleAction = async (action: 'approve' | 'reject' | 'forward', remarks: string) => {
-    try {
-      // Save all role-specific data before proceeding with action
-      if (surveyorFieldsRef.current) {
-        await surveyorFieldsRef.current.save();
-      }
-      if (clerkFieldsRef.current) {
-        await clerkFieldsRef.current.save();
-      }
-      if (superintendentFieldsRef.current) {
-        await superintendentFieldsRef.current.save();
-      }
-      if (projectOfficerFieldsRef.current) {
-        await projectOfficerFieldsRef.current.save();
-      }
-      if (revenueInspectorFieldsRef.current) {
-        await revenueInspectorFieldsRef.current.save();
-      }
-      if (vroFieldsRef.current) {
-        await vroFieldsRef.current.save();
-      }
-      if (revenueDeptOfficerFieldsRef.current) {
-        await revenueDeptOfficerFieldsRef.current.save();
-      }
-      if (jointCollectorFieldsRef.current) {
-        await jointCollectorFieldsRef.current.save();
-      }
-      if (districtCollectorFieldsRef.current) {
-        await districtCollectorFieldsRef.current.save();
-      }
-      if (ministryWelfareFieldsRef.current) {
-        await ministryWelfareFieldsRef.current.save();
-      }
-      if (mroFieldsRef.current) {
-        await mroFieldsRef.current.save();
-      }
-
-      // Wait a moment for any async operations to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Now proceed with the action
-      proceedWithAction(action, remarks);
-    } catch (error) {
-      console.error('Error before action:', error);
-      proceedWithAction(action, remarks);
-    }
+    proceedWithAction(action, remarks);
   };
 
   const proceedWithAction = async (action: 'approve' | 'reject' | 'forward', remarks: string) => {

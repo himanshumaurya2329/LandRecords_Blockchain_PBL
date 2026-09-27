@@ -8,6 +8,7 @@ import {
   FaUserTie, FaBuilding, FaShieldAlt, FaCrown, FaBriefcase
 } from 'react-icons/fa';
 import Link from 'next/link';
+import { getAssignedStatusesForRole } from '@/lib/utils/workflow';
 
 // Role configurations
 const ROLE_CONFIG: Record<string, {
@@ -395,80 +396,10 @@ export default function OfficialDashboard() {
   };
 
   const isAssignedToMe = (app: Application) => {
-    if (!official) {
-      console.log('[isAssignedToMe] No official found');
-      return false;
-    }
-
-    console.log('[isAssignedToMe] Checking application:', {
-      receiptNumber: app.receiptNumber,
-      currentlyWith: app.currentlyWith,
-      officialId: official._id,
-      designation: official.designation,
-      appStatus: app.status,
-      appCurrentStage: app.currentStage,
-    });
-
-    // First priority: Check if currentlyWith matches the official's ID
-    if (app.currentlyWith && official._id) {
-      const matches = app.currentlyWith === official._id.toString();
-      console.log('[isAssignedToMe] ID comparison:', {
-        currentlyWith: app.currentlyWith,
-        officialId: official._id.toString(),
-        matches,
-      });
-      if (matches) return true;
-    }
-
-    // Normalize designation (handle variations like project_officer, projectofficer, etc.)
-    const designation = official.designation.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
-
-    // Second priority: Check if currentStage matches the official's designation
-    if (app.currentStage) {
-      const normalizedStage = app.currentStage.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
-      if (normalizedStage === designation) {
-        console.log('[isAssignedToMe] Matched via currentStage');
-        return true;
-      }
-    }
-
-    // Third priority: Check status format (with_<role>)
-    const statusMap: Record<string, string> = {
-      'clerk': 'with_clerk',
-      'superintendent': 'with_superintendent',
-      'projectofficer': 'with_project_officer',
-      'project_officer': 'with_project_officer',
-      'mro': 'with_mro',
-      'surveyor': 'with_surveyor',
-      'revenueinspector': 'with_revenue_inspector',
-      'vro': 'with_vro',
-      'revenuedeptofficer': 'with_revenue_dept',
-      'jointcollector': 'with_joint_collector',
-      'districtcollector': 'with_collector',
-      'ministrywelfare': 'with_ministry_welfare',
-    };
-
-    const expectedStatus = statusMap[designation];
-    if (app.status === expectedStatus) {
-      console.log('[isAssignedToMe] Matched via status format');
-      return true;
-    }
-
-    // Initial State special case for Clerk
-    if (designation === 'clerk' && app.status === 'submitted') {
-      console.log('[isAssignedToMe] Matched via initial submitted state for clerk');
-      return true;
-    }
-
-    // Last priority: Check if status contains the designation (e.g., "pending_superintendent_review")
-    const normalizedStatus = app.status.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
-    if (normalizedStatus.includes(designation)) {
-      console.log('[isAssignedToMe] Matched via status contains designation');
-      return true;
-    }
-
-    console.log('[isAssignedToMe] No match found');
-    return false;
+    if (!official) return false;
+    const assignedStatuses = getAssignedStatusesForRole(official.designation);
+    const currentStatus = (app.status || '').toLowerCase().trim();
+    return assignedStatuses.some(s => s.toLowerCase() === currentStatus);
   };
 
   if (loading || !official) {

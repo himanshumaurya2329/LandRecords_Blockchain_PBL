@@ -31,6 +31,13 @@ class FabricClient {
      */
     async connect(username) {
         try {
+            if (this.gateways.has(username) && this.contracts.has(username)) {
+                return {
+                    gateway: this.gateways.get(username),
+                    contract: this.contracts.get(username)
+                };
+            }
+
             const org = this.getOrgForUser(username);
             if (!org) {
                 throw new Error(`Unknown user: ${username}`);

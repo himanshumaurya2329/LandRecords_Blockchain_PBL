@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { FaHome } from 'react-icons/fa';
 
 export interface VROFieldsHandle {
@@ -19,6 +19,22 @@ const VROFields = forwardRef<VROFieldsHandle, any>(
   });
   const [confirmationFile, setConfirmationFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
+
+  const latestDataRef = useRef({
+    possessionVerified,
+    possessionRemarks,
+    documentConfirmed,
+    confirmationFile,
+  });
+
+  useEffect(() => {
+    latestDataRef.current = {
+      possessionVerified,
+      possessionRemarks,
+      documentConfirmed,
+      confirmationFile,
+    };
+  }, [possessionVerified, possessionRemarks, documentConfirmed, confirmationFile]);
 
   useEffect(() => {
     if (application?.actionHistory && application.actionHistory.length > 0) {
@@ -67,16 +83,17 @@ const VROFields = forwardRef<VROFieldsHandle, any>(
   useImperativeHandle(ref, () => ({
     save: handleSave,
     getFormData: (applicationId: string) => {
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', applicationId);
       formData.append('role', 'vro');
-      formData.append('possessionVerified', possessionVerified);
-      formData.append('possessionRemarks', possessionRemarks);
-      formData.append('documentConfirmed', JSON.stringify(documentConfirmed));
-      if (confirmationFile) formData.append('confirmationReport', confirmationFile);
+      formData.append('possessionVerified', current.possessionVerified);
+      formData.append('possessionRemarks', current.possessionRemarks);
+      formData.append('documentConfirmed', JSON.stringify(current.documentConfirmed));
+      if (current.confirmationFile) formData.append('confirmationReport', current.confirmationFile);
       return formData;
     },
-  }));
+  }), [possessionVerified, possessionRemarks, documentConfirmed, confirmationFile]);
 
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-green-500/20 p-6 mb-6">

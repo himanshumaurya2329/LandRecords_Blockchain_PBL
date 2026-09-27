@@ -10,7 +10,7 @@ export FABRIC_CFG_PATH="$SCRIPT_DIR/fabric-samples/config/"
 
 # Restart existing network (don't recreate - just start stopped containers)
 docker start peer0.org1.example.com peer0.org2.example.com peer0.org3.example.com 2>/dev/null
-docker start orderer.example.com 2>/dev/null
+docker start orderer.example.com orderer2.example.com orderer3.example.com 2>/dev/null
 docker start couchdb0 couchdb1 couchdb4 2>/dev/null
 docker start ca_org1 ca_org2 ca_org3 ca_orderer 2>/dev/null
 
@@ -31,4 +31,7 @@ for org in org1 org2 org3; do
     cd "$TEST_NETWORK_DIR" || exit 1
   fi
 done
+if [ -f "$SCRIPT_DIR/generate_admin_certs.sh" ]; then
+  bash "$SCRIPT_DIR/generate_admin_certs.sh" >/dev/null 2>&1 || true
+fi
 echo "Certificate symlinks verified and linked dynamically!"

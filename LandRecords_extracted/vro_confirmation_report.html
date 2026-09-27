@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VRO Physical Possession & Confirmation Report - SY-5432/A</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      padding: 16mm;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 3px double #15803d;
+      position: relative;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #15803d;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .emblem {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+    .header h1 {
+      font-size: 19px;
+      color: #15803d;
+      letter-spacing: 0.8px;
+      font-weight: 800;
+    }
+    .header h2 {
+      font-size: 13px;
+      color: #334155;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .header h3 {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 4px 14px;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+    .meta-table th, .meta-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+    }
+    .meta-table th {
+      background-color: #f8fafc;
+      color: #334155;
+      text-align: left;
+      width: 25%;
+    }
+    .meta-table td {
+      color: #0f172a;
+      font-weight: 600;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #166534;
+      border-bottom: 1.5px solid #86efac;
+      padding-bottom: 4px;
+      margin: 14px 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+    }
+    .card {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 10px;
+      background: #fafafa;
+    }
+    .card strong {
+      color: #1e293b;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #dcfce7;
+      color: #15803d;
+      border-radius: 4px;
+      font-size: 10.5px;
+      font-weight: 700;
+      border: 1px solid #86efac;
+    }
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 14px;
+      font-size: 11.5px;
+    }
+    .doc-table th {
+      background: #15803d;
+      color: white;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    .doc-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+    }
+    .witness-box {
+      border: 1px dashed #64748b;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .remarks-box {
+      border: 1px solid #16a34a;
+      background: #f0fdf4;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      margin-bottom: 18px;
+      line-height: 1.55;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .stamp {
+      border: 2px solid #15803d;
+      color: #15803d;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      transform: rotate(-2deg);
+    }
+    .sign-block {
+      text-align: right;
+      font-size: 11.5px;
+    }
+    .sign-img {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 22px;
+      color: #15803d;
+      margin-bottom: 2px;
+    }
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: #15803d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(21,128,61,0.3);
+      z-index: 100;
+    }
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+      }
+      .sheet {
+        box-shadow: none;
+        border: 2px solid #15803d;
+        margin: 0;
+        width: 100%;
+        min-height: auto;
+      }
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+  <div class="sheet">
+    <div class="header">
+      <div class="emblem">🏛️</div>
+      <h1>GOVERNMENT OF UTTAR PRADESH</h1>
+      <h2>OFFICE OF THE VILLAGE REVENUE OFFICER (VRO)</h2>
+      <h3>Tehsil: Varanasi Sadar | Sub-Division: Sigra | District: Varanasi</h3>
+      <div class="badge">PHYSICAL POSSESSION & LOCAL-LEVEL DOCUMENT CONFIRMATION REPORT</div>
+    </div>
+
+    <!-- Application Meta Table -->
+    <table class="meta-table">
+      <tr>
+        <th>Application Receipt No.</th>
+        <td>APP-B04DBF06297D42D5</td>
+        <th>Survey / Plot Number</th>
+        <td>SY-5432/A</td>
+      </tr>
+      <tr>
+        <th>Applicant Full Name</th>
+        <td>Himanshu Kumar Maurya</td>
+        <th>Total Land Area</th>
+        <td>250 Sq. Meters (Continuous)</td>
+      </tr>
+      <tr>
+        <th>Aadhaar Number</th>
+        <td>XXXXXXXX9876 (Verified)</td>
+        <th>Locality / Mauza</th>
+        <td>Sigra, Varanasi, UP - 221010</td>
+      </tr>
+      <tr>
+        <th>Verification Date</th>
+        <td>28/09/2026</td>
+        <th>VRO Officer ID</th>
+        <td>OFF-DTAOB6 (vro1 Official)</td>
+      </tr>
+    </table>
+
+    <!-- Section 1: Physical Possession -->
+    <div class="section-title">
+      <span>🏡</span> 1. Physical Land Possession Verification Findings
+    </div>
+
+    <div class="info-grid">
+      <div class="card">
+        <strong>Actual Possession Status:</strong>
+        <span class="status-pill">✅ CONFIRMED - In Actual Physical Possession</span>
+        <p style="margin-top: 4px; color: #475569;">Applicant resides in the locality and maintains clear, unobstructed physical custody of the entire 250 sq m plot.</p>
+      </div>
+
+      <div class="card">
+        <strong>Encroachment / Dispute Status:</strong>
+        <span class="status-pill" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc;">✓ ZERO DISPUTES REPORTED</span>
+        <p style="margin-top: 4px; color: #475569;">No ongoing civil litigation, injunction, or third-party tenancy claim registered in Village Revenue Khatauni records.</p>
+      </div>
+    </div>
+
+    <!-- Section 2: Local Document Confirmation -->
+    <div class="section-title">
+      <span>📑</span> 2. Local-Level Document Examination & Verification
+    </div>
+
+    <table class="doc-table">
+      <thead>
+        <tr>
+          <th>Document Type</th>
+          <th>Document / Card No.</th>
+          <th>Issuing Authority</th>
+          <th>Verification Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ration Card (NFSA)</strong></td>
+          <td><code>UP-VAR-09824151-A</code></td>
+          <td>Food & Civil Supplies Dept, UP</td>
+          <td><span class="status-pill">✓ Verified Active</span></td>
+        </tr>
+        <tr>
+          <td><strong>Caste Certificate</strong></td>
+          <td><code>CC-UP-2022-882103</code></td>
+          <td>Tehsildar, Varanasi Sadar</td>
+          <td><span class="status-pill">✓ Verified Authentic</span></td>
+        </tr>
+        <tr>
+          <td><strong>Residence / Domicile Proof</strong></td>
+          <td><code>DOM-VAR-2021-99214</code></td>
+          <td>Sub-Divisional Magistrate (SDM)</td>
+          <td><span class="status-pill">✓ Verified Authentic</span></td>
+        </tr>
+        <tr>
+          <td><strong>Municipal Tax & Khatauni Entry</strong></td>
+          <td><code>KHATAUNI NO: 00412/A</code></td>
+          <td>Revenue Department, Varanasi</td>
+          <td><span class="status-pill">✓ Name Verified</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Section 3: Local Witnesses Statements -->
+    <div class="section-title">
+      <span>👥</span> 3. Boundary Neighbors & Witness Attestations
+    </div>
+
+    <div class="witness-box">
+      <strong>On-Site Witness Inquiry:</strong><br>
+      • <strong>Witness 1 (East Neighbor):</strong> Ramesh Chandra (Plot SY-5431) — Confirmed applicant's peaceful possession and boundary alignment without any encroachment.<br>
+      • <strong>Witness 2 (Ward Representative):</strong> Suresh Yadav (Local Ward Member, Sigra) — Attested identity of applicant Himanshu Kumar Maurya and residence history exceeding 15 years in Varanasi.
+    </div>
+
+    <!-- Section 4: Final VRO Recommendation -->
+    <div class="remarks-box">
+      <strong>VRO Statutory Recommendation & Order:</strong><br>
+      "I have personally visited Plot <strong>SY-5432/A</strong> in Mauza Sigra, examined physical stone boundary markers, verified revenue records against applicant documents, and found no legal or physical impediment. All 3 local-level documents (Ration Card, Caste Certificate, Residence Proof) stand fully authenticated. Physical possession of <strong>250 sq. meters</strong> is peaceful and valid. This application is strongly recommended to the Revenue Inspector & MRO for formal approval and title conveyance."
+    </div>
+
+    <!-- Footer with Seals -->
+    <div class="footer">
+      <div class="stamp">
+        LOCAL VERIFICATION PASSED<br>
+        VILLAGE REVENUE OFFICE<br>
+        SIGRA, VARANASI
+      </div>
+
+      <div style="font-size: 11px; color: #64748b; text-align: center;">
+        <div>[Digital Ledger Anchor]</div>
+        <div style="font-family: monospace; font-size: 9px;">VRO-CONFIRMATION-UP-VAR-1790531415</div>
+      </div>
+
+      <div class="sign-block">
+        <div class="sign-img">M. K. Tripathi</div>
+        <strong>Village Revenue Officer (VRO)</strong><br>
+        Circle No. 4, Sigra Division<br>
+        Tehsil Varanasi Sadar, Uttar Pradesh
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

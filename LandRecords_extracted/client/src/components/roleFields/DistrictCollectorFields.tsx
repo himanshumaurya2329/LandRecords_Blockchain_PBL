@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { FaCrown, FaUpload } from 'react-icons/fa';
 
 export interface DistrictCollectorFieldsHandle {
@@ -15,6 +15,22 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
   const [officialOrderFile, setOfficialOrderFile] = useState<File | null>(null);
   const [orderType, setOrderType] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const latestDataRef = useRef({
+    authorization,
+    authorizationComment,
+    officialOrderFile,
+    orderType,
+  });
+
+  useEffect(() => {
+    latestDataRef.current = {
+      authorization,
+      authorizationComment,
+      officialOrderFile,
+      orderType,
+    };
+  });
 
   useEffect(() => {
     if (application?.actionHistory && application.actionHistory.length > 0) {
@@ -34,12 +50,13 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
   const handleSave = async (): Promise<boolean> => {
     try {
       setSaving(true);
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', application._id);
-      formData.append('authorization', authorization);
-      formData.append('authorizationComment', authorizationComment);
-      formData.append('orderType', orderType);
-      if (officialOrderFile) formData.append('officialOrder', officialOrderFile);
+      formData.append('authorization', current.authorization);
+      formData.append('authorizationComment', current.authorizationComment);
+      formData.append('orderType', current.orderType);
+      if (current.officialOrderFile) formData.append('officialOrder', current.officialOrderFile);
 
       const response = await fetch('/api/role-data/districtcollector/save', {
         method: 'POST',
@@ -63,13 +80,14 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
   useImperativeHandle(ref, () => ({
     save: handleSave,
     getFormData: (applicationId: string) => {
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', applicationId);
       formData.append('role', 'districtcollector');
-      formData.append('authorization', authorization);
-      formData.append('authorizationComment', authorizationComment);
-      formData.append('orderType', orderType);
-      if (officialOrderFile) formData.append('officialOrder', officialOrderFile);
+      formData.append('authorization', current.authorization);
+      formData.append('authorizationComment', current.authorizationComment);
+      formData.append('orderType', current.orderType);
+      if (current.officialOrderFile) formData.append('officialOrder', current.officialOrderFile);
       return formData;
     },
   }));

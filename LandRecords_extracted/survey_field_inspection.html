@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Field Survey Inspection & Site Photos - SY-5432/A</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      padding: 16mm;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 3px double #0d9488;
+      position: relative;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #0d9488;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .emblem {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+    .header h1 {
+      font-size: 19px;
+      color: #0f766e;
+      letter-spacing: 0.8px;
+      font-weight: 800;
+    }
+    .header h2 {
+      font-size: 13px;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 4px 14px;
+      background: #ccfbf1;
+      color: #115e59;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+    .meta-table th, .meta-table td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 10px;
+    }
+    .meta-table th {
+      background-color: #f8fafc;
+      color: #334155;
+      text-align: left;
+      width: 25%;
+    }
+    .meta-table td {
+      color: #0f172a;
+      font-weight: 600;
+    }
+    .photos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .photo-card {
+      border: 1px solid #94a3b8;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+    .photo-canvas {
+      width: 100%;
+      height: 170px;
+      background: #e2e8f0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-caption {
+      padding: 8px;
+      font-size: 11px;
+      background: white;
+      border-top: 1px solid #cbd5e1;
+    }
+    .caption-title {
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 2px;
+    }
+    .caption-meta {
+      color: #64748b;
+      font-size: 10px;
+      font-family: monospace;
+    }
+    .checklist-box {
+      border: 1px solid #cbd5e1;
+      background: #fafafa;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 11.5px;
+    }
+    .checklist-box h3 {
+      font-size: 12px;
+      color: #0f766e;
+      margin-bottom: 6px;
+    }
+    .checklist-items {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #334155;
+    }
+    .check-icon {
+      color: #16a34a;
+      font-weight: bold;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .stamp {
+      border: 2px solid #0d9488;
+      color: #0d9488;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transform: rotate(-2deg);
+    }
+    .sign-block {
+      text-align: right;
+      font-size: 11.5px;
+    }
+    .sign-img {
+      font-family: 'Brush Script MT', cursive, sans-serif;
+      font-size: 22px;
+      color: #0f766e;
+      margin-bottom: 2px;
+    }
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: #0d9488;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(13,148,136,0.3);
+      z-index: 100;
+    }
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+      }
+      .sheet {
+        box-shadow: none;
+        border: 2px solid #0d9488;
+        margin: 0;
+        width: 100%;
+        min-height: auto;
+      }
+      .print-btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+  <div class="sheet">
+    <div class="header">
+      <div class="emblem">🏛️</div>
+      <h1>GOVERNMENT OF UTTAR PRADESH</h1>
+      <h2>REVENUE & SURVEY DEPARTMENT - FIELD VERIFICATION WING</h2>
+      <div class="badge">ON-SITE GEOTAGGED FIELD INSPECTION & DEMARCATION REPORT</div>
+    </div>
+
+    <table class="meta-table">
+      <tr>
+        <th>Application ID</th>
+        <td>APP-B04DBF06297D42D5</td>
+        <th>Survey Number</th>
+        <td>SY-5432/A</td>
+      </tr>
+      <tr>
+        <th>Applicant Name</th>
+        <td>Himanshu Kumar Maurya</td>
+        <th>Area Confirmed</th>
+        <td>250 Sq. Meters</td>
+      </tr>
+      <tr>
+        <th>Location</th>
+        <td>Sigra, Varanasi, UP (221010)</td>
+        <th>Inspection Time</th>
+        <td>28-Sep-2026 11:30 AM IST</td>
+      </tr>
+      <tr>
+        <th>Surveyor Officer</th>
+        <td>surveyor1 Official (OFF-DTAOB6)</td>
+        <th>Weather / Visibility</th>
+        <td>Clear Sunny, Accuracy &lt; 0.2m</td>
+      </tr>
+    </table>
+
+    <!-- 4 Geotagged Field Photo Cards -->
+    <div class="photos-grid">
+      <!-- Photo 1: North-West Corner SP-01 -->
+      <div class="photo-card">
+        <div class="photo-canvas">
+          <svg width="100%" height="100%" viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#bae6fd"/>
+            <rect y="80" width="100%" height="90" fill="#a7f3d0"/>
+            <!-- Road -->
+            <polygon points="0,65 280,65 280,110 0,110" fill="#94a3b8"/>
+            <line x1="0" y1="87" x2="280" y2="87" stroke="white" stroke-dasharray="8,6" stroke-width="2"/>
+            <!-- Stone Pillar -->
+            <rect x="125" y="60" width="30" height="70" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+            <text x="140" y="85" text-anchor="middle" font-size="8" font-weight="900" fill="#ef4444">SP-01</text>
+            <text x="140" y="100" text-anchor="middle" font-size="7" font-weight="700" fill="#0f172a">SY-5432/A</text>
+            <circle cx="140" cy="50" r="12" fill="#ef4444" opacity="0.2"/>
+            <circle cx="140" cy="50" r="4" fill="#ef4444"/>
+            <!-- Geotag watermark -->
+            <rect x="5" y="135" width="270" height="30" fill="rgba(0,0,0,0.7)" rx="4"/>
+            <text x="12" y="147" font-size="9" font-family="monospace" fill="#38bdf8">LAT: 25.317600° N | LONG: 82.987500° E</text>
+            <text x="12" y="159" font-size="8" font-family="monospace" fill="#f8fafc">TIME: 2026-09-28 11:32:15 IST | CORNER: A</text>
+          </svg>
+        </div>
+        <div class="photo-caption">
+          <div class="caption-title">Point A: North-West Corner Marker (SP-01)</div>
+          <div class="caption-meta">Facing 30ft Public Road. Stone demarcation verified.</div>
+        </div>
+      </div>
+
+      <!-- Photo 2: North-East Corner SP-02 -->
+      <div class="photo-card">
+        <div class="photo-canvas">
+          <svg width="100%" height="100%" viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#bae6fd"/>
+            <rect y="70" width="100%" height="100%" fill="#bbf7d0"/>
+            <!-- Plot boundary fence -->
+            <line x1="20" y1="95" x2="260" y2="95" stroke="#64748b" stroke-width="2"/>
+            <rect x="130" y="55" width="28" height="65" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+            <text x="144" y="80" text-anchor="middle" font-size="8" font-weight="900" fill="#ef4444">SP-02</text>
+            <!-- DGPS Tripod Stand -->
+            <line x1="80" y1="120" x2="95" y2="60" stroke="#f59e0b" stroke-width="3"/>
+            <line x1="110" y1="120" x2="95" y2="60" stroke="#f59e0b" stroke-width="3"/>
+            <circle cx="95" cy="55" r="7" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+            <!-- Geotag watermark -->
+            <rect x="5" y="135" width="270" height="30" fill="rgba(0,0,0,0.7)" rx="4"/>
+            <text x="12" y="147" font-size="9" font-family="monospace" fill="#38bdf8">LAT: 25.318000° N | LONG: 82.987500° E</text>
+            <text x="12" y="159" font-size="8" font-family="monospace" fill="#f8fafc">TIME: 2026-09-28 11:37:40 IST | CORNER: B</text>
+          </svg>
+        </div>
+        <div class="photo-caption">
+          <div class="caption-title">Point B: North-East Corner Marker (SP-02)</div>
+          <div class="caption-meta">DGPS device reading confirmed. Boundary clear.</div>
+        </div>
+      </div>
+
+      <!-- Photo 3: South-East Corner SP-03 -->
+      <div class="photo-card">
+        <div class="photo-canvas">
+          <svg width="100%" height="100%" viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#e0f2fe"/>
+            <rect y="60" width="100%" height="110" fill="#86efac"/>
+            <rect x="125" y="60" width="28" height="65" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+            <text x="139" y="85" text-anchor="middle" font-size="8" font-weight="900" fill="#ef4444">SP-03</text>
+            <!-- Trees/Vegetation -->
+            <circle cx="50" cy="80" r="22" fill="#15803d" opacity="0.8"/>
+            <circle cx="230" cy="75" r="26" fill="#15803d" opacity="0.8"/>
+            <!-- Geotag watermark -->
+            <rect x="5" y="135" width="270" height="30" fill="rgba(0,0,0,0.7)" rx="4"/>
+            <text x="12" y="147" font-size="9" font-family="monospace" fill="#38bdf8">LAT: 25.318000° N | LONG: 82.988000° E</text>
+            <text x="12" y="159" font-size="8" font-family="monospace" fill="#f8fafc">TIME: 2026-09-28 11:42:05 IST | CORNER: C</text>
+          </svg>
+        </div>
+        <div class="photo-caption">
+          <div class="caption-title">Point C: South-East Corner Marker (SP-03)</div>
+          <div class="caption-meta">Adjacent to Plot SY-5431 boundary line.</div>
+        </div>
+      </div>
+
+      <!-- Photo 4: South-West Corner SP-04 -->
+      <div class="photo-card">
+        <div class="photo-canvas">
+          <svg width="100%" height="100%" viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#e0f2fe"/>
+            <rect y="60" width="100%" height="110" fill="#86efac"/>
+            <rect x="125" y="60" width="28" height="65" fill="#f8fafc" stroke="#475569" stroke-width="2"/>
+            <text x="139" y="85" text-anchor="middle" font-size="8" font-weight="900" fill="#ef4444">SP-04</text>
+            <!-- Water canal buffer line -->
+            <line x1="0" y1="125" x2="280" y2="125" stroke="#0284c7" stroke-width="4"/>
+            <!-- Geotag watermark -->
+            <rect x="5" y="135" width="270" height="30" fill="rgba(0,0,0,0.7)" rx="4"/>
+            <text x="12" y="147" font-size="9" font-family="monospace" fill="#38bdf8">LAT: 25.317600° N | LONG: 82.988000° E</text>
+            <text x="12" y="159" font-size="8" font-family="monospace" fill="#f8fafc">TIME: 2026-09-28 11:46:18 IST | CORNER: D</text>
+          </svg>
+        </div>
+        <div class="photo-caption">
+          <div class="caption-title">Point D: South-West Corner Marker (SP-04)</div>
+          <div class="caption-meta">Rear boundary buffer confirmed. No encroachment.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- On-Site Verification Checklist -->
+    <div class="checklist-box">
+      <h3>On-Site Surveyor Verification Checklist</h3>
+      <div class="checklist-items">
+        <div class="item"><span class="check-icon">✓</span> Physical possession confirmed with applicant</div>
+        <div class="item"><span class="check-icon">✓</span> 4 Concrete demarcation corner pillars established</div>
+        <div class="item"><span class="check-icon">✓</span> DGPS precision calibration within standard &lt; 0.2m</div>
+        <div class="item"><span class="check-icon">✓</span> No government land or forest reserve overlap</div>
+        <div class="item"><span class="check-icon">✓</span> 30ft public road connectivity verified</div>
+        <div class="item"><span class="check-icon">✓</span> Adjacent landholder boundaries cross-verified</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="stamp">
+        FIELD INSPECTION PASSED<br>
+        GEO-TAG CERTIFIED<br>
+        DISTRICT VARANASI
+      </div>
+
+      <div style="font-size: 11px; color: #64748b; text-align: center;">
+        <div>[Tamper-Proof Audit Record]</div>
+        <div style="font-family: monospace; font-size: 9px;">TXN: 1790531415-dgps-varanasi-up</div>
+      </div>
+
+      <div class="sign-block">
+        <div class="sign-img">R. K. Sharma</div>
+        <strong>Authorized Field Surveyor</strong><br>
+        Directorate of Land Records & Survey<br>
+        Government of Uttar Pradesh
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

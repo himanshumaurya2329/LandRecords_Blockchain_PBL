@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { FaCheckCircle, FaFileAlt } from 'react-icons/fa';
 
 export interface SuperintendentFieldsHandle {
@@ -20,6 +20,20 @@ const SuperintendentFields = forwardRef<SuperintendentFieldsHandle, { applicatio
   const [verificationComments, setVerificationComments] = useState('');
   const [landRecordCheck, setLandRecordCheck] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const latestDataRef = useRef({
+    documentChecklist,
+    verificationComments,
+    landRecordCheck,
+  });
+
+  useEffect(() => {
+    latestDataRef.current = {
+      documentChecklist,
+      verificationComments,
+      landRecordCheck,
+    };
+  }, [documentChecklist, verificationComments, landRecordCheck]);
 
   useEffect(() => {
     if (application?.actionHistory && application.actionHistory.length > 0) {
@@ -67,15 +81,16 @@ const SuperintendentFields = forwardRef<SuperintendentFieldsHandle, { applicatio
   useImperativeHandle(ref, () => ({
     save: handleSave,
     getFormData: (applicationId: string) => {
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', applicationId);
       formData.append('role', 'superintendent');
-      formData.append('documentChecklist', JSON.stringify(documentChecklist));
-      formData.append('verificationComments', verificationComments);
-      formData.append('landRecordCheck', landRecordCheck);
+      formData.append('documentChecklist', JSON.stringify(current.documentChecklist));
+      formData.append('verificationComments', current.verificationComments);
+      formData.append('landRecordCheck', current.landRecordCheck);
       return formData;
     },
-  }));
+  }), [documentChecklist, verificationComments, landRecordCheck]);
 
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-cyan-500/20 p-6 mb-6">

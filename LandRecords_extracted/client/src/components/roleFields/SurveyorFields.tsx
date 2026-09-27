@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { FaMapMarkedAlt } from 'react-icons/fa';
 
 export interface SurveyorFieldsHandle {
@@ -19,6 +19,30 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
   const [measuredArea, setMeasuredArea] = useState('');
   const [surveyRemarks, setSurveyRemarks] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const latestDataRef = useRef({
+    pointA,
+    pointB,
+    pointC,
+    pointD,
+    measuredArea,
+    surveyRemarks,
+    boundaryMapFile,
+    fieldPhotos,
+  });
+
+  useEffect(() => {
+    latestDataRef.current = {
+      pointA,
+      pointB,
+      pointC,
+      pointD,
+      measuredArea,
+      surveyRemarks,
+      boundaryMapFile,
+      fieldPhotos,
+    };
+  }, [pointA, pointB, pointC, pointD, measuredArea, surveyRemarks, boundaryMapFile, fieldPhotos]);
 
   // Load saved survey data from actionHistory on mount
   useEffect(() => {
@@ -90,33 +114,34 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
   useImperativeHandle(ref, () => ({
     save: handleSave,
     getFormData: (applicationId: string) => {
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', applicationId);
       formData.append('role', 'surveyor');
       
       // Add GPS coordinates
-      formData.append('pointA', JSON.stringify(pointA));
-      formData.append('pointB', JSON.stringify(pointB));
-      formData.append('pointC', JSON.stringify(pointC));
-      formData.append('pointD', JSON.stringify(pointD));
-      formData.append('measuredArea', measuredArea);
-      formData.append('surveyRemarks', surveyRemarks);
+      formData.append('pointA', JSON.stringify(current.pointA));
+      formData.append('pointB', JSON.stringify(current.pointB));
+      formData.append('pointC', JSON.stringify(current.pointC));
+      formData.append('pointD', JSON.stringify(current.pointD));
+      formData.append('measuredArea', current.measuredArea);
+      formData.append('surveyRemarks', current.surveyRemarks);
       
       // Add boundary map file
-      if (boundaryMapFile) {
-        formData.append('boundaryMap', boundaryMapFile);
+      if (current.boundaryMapFile) {
+        formData.append('boundaryMap', current.boundaryMapFile);
       }
       
       // Add field photos
-      if (fieldPhotos) {
-        Array.from(fieldPhotos).forEach((photo, index) => {
+      if (current.fieldPhotos) {
+        Array.from(current.fieldPhotos).forEach((photo, index) => {
           formData.append(`fieldPhoto${index}`, photo);
         });
       }
       
       return formData;
     },
-  }));
+  }), [pointA, pointB, pointC, pointD, measuredArea, surveyRemarks, boundaryMapFile, fieldPhotos]);
 
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-orange-500/20 p-6 mb-6">

@@ -230,36 +230,61 @@ export async function GET(req: NextRequest) {
 </html>
     `;
 
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--no-first-run',
-                '--no-zygote',
-                '--single-process',
-                '--disable-gpu'
-            ]
-        });
+        try {
+            const browser = await puppeteer.launch({
+                headless: true,
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--single-process',
+                    '--disable-gpu'
+                ]
+            });
 
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: 'load' });
-        const pdfBuffer = await page.pdf({
-            format: 'A4',
-            margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' },
-            printBackground: true
-        });
+            const page = await browser.newPage();
+            await page.setContent(html, { waitUntil: 'load' });
+            const pdfBuffer = await page.pdf({
+                format: 'A4',
+                margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' },
+                printBackground: true
+            });
 
-        await browser.close();
+            await browser.close();
 
-        return new NextResponse(Buffer.from(pdfBuffer), {
-            headers: {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="E-Land-Receipt-${landRequest.receiptNumber}.pdf"`,
-            },
-        });
+            return new NextResponse(Buffer.from(pdfBuffer), {
+                headers: {
+                    'Content-Type': 'application/pdf',
+                    'Content-Disposition': `attachment; filename="E-Land-Receipt-${landRequest.receiptNumber}.pdf"`,
+                },
+            });
+        } catch (puppeteerError) {
+            console.log('Puppeteer PDF generation not available, returning printable HTML:', puppeteerError instanceof Error ? puppeteerError.message : puppeteerError);
+            const printableHtml = html.replace('</body>', `
+              <div style="position:fixed;top:10px;right:10px;z-index:99999;" class="no-print">
+                <button onclick="window.print()" style="padding:10px 18px;background:#2563eb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+                  🖨️ Print / Save as PDF
+                </button>
+              </div>
+              <style>
+                @media print { .no-print { display: none !important; } }
+              </style>
+              <script>
+                window.onload = function() {
+                  setTimeout(function() { window.print(); }, 500);
+                };
+              </script>
+            </body>`);
+            return new NextResponse(printableHtml, {
+                headers: {
+                    'Content-Type': 'text/html; charset=utf-8',
+                    'Content-Disposition': `inline; filename="E-Land-Receipt-${landRequest.receiptNumber}.html"`,
+                },
+            });
+        }
     } catch (error) {
         console.error('Error generating PDF:', error);
         return NextResponse.json(

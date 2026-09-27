@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/db/connect';
-import Official, { DESIGNATIONS } from '@/lib/models/Official';
+import Official from '@/lib/models/Official';
+import { DESIGNATIONS } from '@/lib/constants';
 import bcryptjs from 'bcryptjs';
 import { generateOTP, storeOTP, verifyOTP } from '@/lib/utils/otp';
 import { sendOTPEmail } from '@/lib/utils/email';

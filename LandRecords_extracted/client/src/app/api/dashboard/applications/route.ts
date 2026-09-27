@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import connectDB from '@/lib/db/connect';
 import Official from '@/lib/models/Official';
 import LandRequest from '@/lib/models/LandRequest';
+import { getAssignedStatusesForRole } from '@/lib/utils/workflow';
 
 export async function GET(req: NextRequest) {
   try {
@@ -82,47 +83,20 @@ export async function GET(req: NextRequest) {
       org: official.department
     };
 
-    // Fetch applications from MongoDB
+    // Fetch applications from MongoDB strictly assigned to this official's role
+    const userRole = (currentUser.role || '').toLowerCase().trim();
+    const normalizedRole = userRole.replace(/[\s_-]/g, '');
     let applications;
-    const userRole = currentUser.role;
-    switch (userRole) {
-      case 'clerk':
-      case 'superintendent':
-        // Registration department - handle initial applications
-        applications = await LandRequest.find({
-          status: { $in: ['submitted', 'with_clerk', 'with_superintendent'] }
-        }).sort({ createdAt: -1 });
-        break;
 
-      case 'mro':
-      case 'vro':
-      case 'revenue_officer':
-      case 'revenue_dept':
-        // Revenue department - handle verification
-        applications = await LandRequest.find({
-          status: { $in: ['with_mro', 'with_vro', 'with_revenue_officer', 'with_revenue_dept'] }
-        }).sort({ createdAt: -1 });
-        break;
-
-      case 'surveyor':
-        // Survey department - handle survey reports
-        applications = await LandRequest.find({
-          status: 'with_surveyor'
-        }).sort({ createdAt: -1 });
-        break;
-
-      case 'joint_collector':
-      case 'collector':
-      case 'mw':
-        // Collector department - final approval
-        applications = await LandRequest.find({
-          status: { $in: ['with_jointcollector', 'with_districtcollector', 'with_ministrywelfare'] }
-        }).sort({ createdAt: -1 });
-        break;
-
-      default:
-        // Admin or unknown role - see all applications
-        applications = await LandRequest.find().sort({ createdAt: -1 });
+    if (normalizedRole === 'admin') {
+      // Admin sees all applications
+      applications = await LandRequest.find().sort({ createdAt: -1 });
+    } else {
+      const assignedStatuses = getAssignedStatusesForRole(userRole);
+      const regexPatterns = assignedStatuses.map(s => new RegExp(`^${s}$`, 'i'));
+      applications = await LandRequest.find({
+        status: { $in: regexPatterns }
+      }).sort({ createdAt: -1 });
     }
 
     // Format applications for dashboard using expected field names

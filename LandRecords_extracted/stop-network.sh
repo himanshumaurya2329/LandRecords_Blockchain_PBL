@@ -16,6 +16,8 @@ docker stop \
   peer0.org2.example.com \
   peer0.org3.example.com \
   orderer.example.com \
+  orderer2.example.com \
+  orderer3.example.com \
   couchdb0 couchdb1 couchdb4 \
   ca_org1 ca_org2 ca_org3 ca_orderer \
   $(docker ps -q --filter "name=dev-peer") 2>/dev/null || true

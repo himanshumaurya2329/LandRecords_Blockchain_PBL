@@ -383,21 +383,15 @@ export default function UserDashboard() {
     const request = requests.find(r => r.receiptNumber === receiptNumber);
     console.log('handleViewPatta called for:', receiptNumber, 'status:', request?.status, 'pattaHash:', request?.pattaHash);
 
-    // If pattaHash is available (Ministry of Welfare approved), open from IPFS
+    // If pattaHash is available (Ministry of Welfare approved), open directly in new tab
     if (request?.pattaHash) {
-      const documentUrl = `/api/documents/view?hash=${request.pattaHash}&print=true`;
-      // For PDF download, create a temporary link and trigger download
-      const link = document.createElement('a');
-      link.href = documentUrl;
-      link.download = `patta-${request.certificateNumber || request.receiptNumber}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const documentUrl = `/api/documents/view?hash=${encodeURIComponent(request.pattaHash)}`;
+      window.open(documentUrl, '_blank');
       return;
     }
 
-    // If status is completed but no pattaHash, try to generate Patta on-demand
-    if (request?.status === 'completed') {
+    // If status is completed or approved but no pattaHash, try to generate Patta on-demand
+    if (request?.status === 'completed' || request?.status === 'approved') {
       try {
         console.log('Generating Patta on-demand for:', receiptNumber);
         const response = await fetch('/api/patta/generate', {
@@ -410,13 +404,15 @@ export default function UserDashboard() {
           const data = await response.json();
           console.log('Patta generated:', data);
 
-          // Fetch fresh data instead of relying on state update
+          if (data.ipfsHash) {
+            window.open(`/api/documents/view?hash=${encodeURIComponent(data.ipfsHash)}`, '_blank');
+            return;
+          }
+
+          // Fetch fresh data
           const freshResponse = await fetch(
             `/api/land-requests/by-email?email=${userData?.email}`,
-            {
-              credentials: 'include',
-              cache: 'no-store',
-            }
+            { credentials: 'include', cache: 'no-store' }
           );
 
           if (freshResponse.ok) {
@@ -424,8 +420,7 @@ export default function UserDashboard() {
             const updatedRequest = freshData.requests?.find((r: any) => r.receiptNumber === receiptNumber);
 
             if (updatedRequest?.pattaHash) {
-              const documentUrl = `/api/documents/view?hash=${updatedRequest.pattaHash}`;
-              window.open(documentUrl, '_blank');
+              window.open(`/api/documents/view?hash=${encodeURIComponent(updatedRequest.pattaHash)}`, '_blank');
               return;
             }
           }
@@ -437,69 +432,23 @@ export default function UserDashboard() {
       }
     }
 
-    // Also try for approved status as fallback
-    if (request?.status === 'approved' && !request?.pattaHash) {
-      try {
-        console.log('Generating Patta on-demand for approved application:', receiptNumber);
-        const response = await fetch('/api/patta/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ applicationId: request._id }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Patta generated for approved application:', data);
-
-          // Fetch fresh data
-          const freshResponse = await fetch(
-            `/api/land-requests/by-email?email=${userData?.email}`,
-            {
-              credentials: 'include',
-              cache: 'no-store',
-            }
-          );
-
-          if (freshResponse.ok) {
-            const freshData = await freshResponse.json();
-            const updatedRequest = freshData.requests?.find((r: any) => r.receiptNumber === receiptNumber);
-
-            if (updatedRequest?.pattaHash) {
-              const documentUrl = `/api/documents/view?hash=${updatedRequest.pattaHash}`;
-              window.open(documentUrl, '_blank');
-              return;
-            }
-          }
-        } else {
-          console.error('Failed to generate Patta for approved application:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error generating Patta for approved application:', error);
-      }
-    }
-
     // Fallback: Generate PDF view
     window.open(`/api/land-requests/generate-pdf?receipt=${receiptNumber}`, '_blank');
   };
 
   const handleDownloadPatta = async (receiptNumber: string) => {
     const request = requests.find(r => r.receiptNumber === receiptNumber);
+    console.log('handleDownloadPatta called for:', receiptNumber, 'pattaHash:', request?.pattaHash);
 
-    // If pattaHash is available (Ministry of Welfare approved), open in new window with print dialog
+    // If pattaHash is available, open with download=pdf to trigger auto-download
     if (request?.pattaHash) {
-      const documentUrl = `/api/documents/view?hash=${request.pattaHash}&print=true`;
-      // For PDF download, create a temporary link and trigger download
-      const link = document.createElement('a');
-      link.href = documentUrl;
-      link.download = `patta-${request.certificateNumber || request.receiptNumber}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const documentUrl = `/api/documents/view?hash=${encodeURIComponent(request.pattaHash)}&download=pdf`;
+      window.open(documentUrl, '_blank');
       return;
     }
 
-    // If status is completed but no pattaHash, try to generate Patta on-demand
-    if (request?.status === 'completed') {
+    // If status is completed or approved but no pattaHash, try to generate Patta on-demand
+    if (request?.status === 'completed' || request?.status === 'approved') {
       try {
         console.log('Generating Patta on-demand for download:', receiptNumber);
         const response = await fetch('/api/patta/generate', {
@@ -512,13 +461,15 @@ export default function UserDashboard() {
           const data = await response.json();
           console.log('Patta generated for download:', data);
 
-          // Fetch fresh data instead of relying on state update
+          if (data.ipfsHash) {
+            window.open(`/api/documents/view?hash=${encodeURIComponent(data.ipfsHash)}&download=pdf`, '_blank');
+            return;
+          }
+
+          // Fetch fresh data
           const freshResponse = await fetch(
             `/api/land-requests/by-email?email=${userData?.email}`,
-            {
-              credentials: 'include',
-              cache: 'no-store',
-            }
+            { credentials: 'include', cache: 'no-store' }
           );
 
           if (freshResponse.ok) {
@@ -526,8 +477,7 @@ export default function UserDashboard() {
             const updatedRequest = freshData.requests?.find((r: any) => r.receiptNumber === receiptNumber);
 
             if (updatedRequest?.pattaHash) {
-              const documentUrl = `/api/documents/view?hash=${updatedRequest.pattaHash}&print=true`;
-              window.open(documentUrl, '_blank');
+              window.open(`/api/documents/view?hash=${encodeURIComponent(updatedRequest.pattaHash)}&download=pdf`, '_blank');
               return;
             }
           }
@@ -536,47 +486,6 @@ export default function UserDashboard() {
         }
       } catch (error) {
         console.error('Error generating Patta for download:', error);
-      }
-    }
-
-    // Also try for approved status as fallback
-    if (request?.status === 'approved' && !request?.pattaHash) {
-      try {
-        console.log('Generating Patta on-demand for approved application download:', receiptNumber);
-        const response = await fetch('/api/patta/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ applicationId: request._id }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Patta generated for approved application download:', data);
-
-          // Fetch fresh data
-          const freshResponse = await fetch(
-            `/api/land-requests/by-email?email=${userData?.email}`,
-            {
-              credentials: 'include',
-              cache: 'no-store',
-            }
-          );
-
-          if (freshResponse.ok) {
-            const freshData = await freshResponse.json();
-            const updatedRequest = freshData.requests?.find((r: any) => r.receiptNumber === receiptNumber);
-
-            if (updatedRequest?.pattaHash) {
-              const documentUrl = `/api/documents/view?hash=${updatedRequest.pattaHash}&print=true`;
-              window.open(documentUrl, '_blank');
-              return;
-            }
-          }
-        } else {
-          console.error('Failed to generate Patta for approved application download:', await response.text());
-        }
-      } catch (error) {
-        console.error('Error generating Patta for approved application download:', error);
       }
     }
 

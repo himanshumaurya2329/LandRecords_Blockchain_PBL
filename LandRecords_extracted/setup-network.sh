@@ -242,6 +242,12 @@ main() {
     fi
     cd "${PROJECT_ROOT}" || exit 1
 
+    # Ensure Cryptogen-compatible Admin certs for Fabric API
+    if [ -f "${PROJECT_ROOT}/generate_admin_certs.sh" ]; then
+        print_status "Generating cryptogen-compatible Admin certificates..."
+        bash "${PROJECT_ROOT}/generate_admin_certs.sh"
+    fi
+
     print_header "=========================================="
     print_status "Network setup completed successfully!"
     print_header "=========================================="

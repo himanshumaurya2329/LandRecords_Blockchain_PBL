@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { FaClipboardList } from 'react-icons/fa';
 
 export interface ClerkFieldsHandle {
@@ -19,6 +19,20 @@ const ClerkFields = forwardRef<ClerkFieldsHandle, { application: any; onUpdate: 
   });
   const [intakeNotes, setIntakeNotes] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const latestDataRef = useRef({
+    documentIntakeStatus,
+    initialVerificationChecklist,
+    intakeNotes,
+  });
+
+  useEffect(() => {
+    latestDataRef.current = {
+      documentIntakeStatus,
+      initialVerificationChecklist,
+      intakeNotes,
+    };
+  }, [documentIntakeStatus, initialVerificationChecklist, intakeNotes]);
 
   useEffect(() => {
     if (application?.actionHistory && application.actionHistory.length > 0) {
@@ -68,15 +82,16 @@ const ClerkFields = forwardRef<ClerkFieldsHandle, { application: any; onUpdate: 
   useImperativeHandle(ref, () => ({
     save: handleSave,
     getFormData: (applicationId: string) => {
+      const current = latestDataRef.current;
       const formData = new FormData();
       formData.append('applicationId', applicationId);
       formData.append('role', 'clerk');
-      formData.append('documentIntakeStatus', documentIntakeStatus);
-      formData.append('initialVerificationChecklist', JSON.stringify(initialVerificationChecklist));
-      formData.append('intakeNotes', intakeNotes);
+      formData.append('documentIntakeStatus', current.documentIntakeStatus);
+      formData.append('initialVerificationChecklist', JSON.stringify(current.initialVerificationChecklist));
+      formData.append('intakeNotes', current.intakeNotes);
       return formData;
     },
-  }));
+  }), [documentIntakeStatus, initialVerificationChecklist, intakeNotes]);
 
   return (
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-sky-500/20 p-6 mb-6">
