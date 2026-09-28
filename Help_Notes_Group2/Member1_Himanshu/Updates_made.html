@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member 1 to Member 2 and 3 Handoff - Joint Ownership Chaincode</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    :root {
+      --bg-primary: #0a0f1e;
+      --bg-card: #111827;
+      --bg-card2: #1a2236;
+      --bg-code: #0d1117;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-cyan: #06b6d4;
+      --accent-pink: #ec4899;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #1e293b;
+      --border-glow: rgba(59, 130, 246, 0.3);
+      --tag-new: rgba(16, 185, 129, 0.15);
+      --tag-mod: rgba(245, 158, 11, 0.15);
+      --tag-guard: rgba(239, 68, 68, 0.15);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0a0f1e 0%, #0f1f3d 50%, #0a0f1e 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 40px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 70%);
+    }
+    .hero-inner { max-width: 960px; margin: 0 auto; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 100px; padding: 6px 16px; font-size: 12px;
+      font-weight: 600; color: var(--accent-blue); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero-badge .dot { width: 7px; height: 7px; background: var(--accent-blue); border-radius: 50%; }
+    .hero h1 {
+      font-size: clamp(26px, 4vw, 40px); font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, #93c5fd 60%, #8b5cf6 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1.15; margin-bottom: 16px;
+    }
+    .hero-sub { font-size: 15px; color: var(--text-secondary); max-width: 680px; margin-bottom: 28px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 14px; }
+    .meta-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 14px; font-size: 13px;
+    }
+    .meta-pill .label { color: var(--text-muted); }
+    .meta-pill .value { color: var(--text-primary); font-weight: 600; }
+    .toc-bar {
+      background: var(--bg-card); border-bottom: 1px solid var(--border);
+      padding: 0 40px; position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 4px; overflow-x: auto;
+    }
+    .toc-link {
+      display: flex; align-items: center; gap: 6px;
+      padding: 14px 12px; font-size: 13px; font-weight: 500;
+      color: var(--text-muted); text-decoration: none; white-space: nowrap;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+    }
+    .toc-link:hover { color: var(--text-primary); border-bottom-color: var(--accent-blue); }
+    .container { max-width: 960px; margin: 0 auto; padding: 48px 40px; }
+    section { margin-bottom: 64px; }
+    section h2 {
+      font-size: 22px; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px 28px; margin-bottom: 20px;
+    }
+    .card-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .card-title {
+      font-size: 16px; font-weight: 700; color: var(--text-primary);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .card-title code {
+      font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--accent-cyan);
+      background: rgba(6,182,212,0.1); border-radius: 6px; padding: 2px 8px;
+    }
+    .tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      border-radius: 100px; padding: 3px 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .tag-new { background: var(--tag-new); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.3); }
+    .tag-mod { background: var(--tag-mod); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.3); }
+    .tag-guard { background: var(--tag-guard); color: var(--accent-red); border: 1px solid rgba(239,68,68,0.3); }
+    .tag-org3 { background: rgba(236,72,153,0.1); color: var(--accent-pink); border: 1px solid rgba(236,72,153,0.3); }
+    .code-block {
+      background: var(--bg-code); border: 1px solid #21262d;
+      border-radius: 10px; overflow: hidden; margin: 14px 0;
+    }
+    .code-block .cb-header {
+      background: #161b22; border-bottom: 1px solid #21262d;
+      padding: 8px 14px; font-size: 12px; color: var(--text-muted);
+      display: flex; justify-content: space-between;
+    }
+    .code-block pre {
+      padding: 16px 20px; overflow-x: auto; font-size: 13px;
+      font-family: 'JetBrains Mono', monospace; line-height: 1.6; color: #e6edf3;
+    }
+    .info-box {
+      border-radius: 10px; padding: 16px 20px; margin: 16px 0;
+      display: flex; gap: 14px; align-items: flex-start; font-size: 14px;
+    }
+    .ib-green { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
+    .ib-blue { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); color: #93c5fd; }
+    .ib-orange { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: #fcd34d; }
+    .ib-red { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+    .param-table, .sum-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+    .param-table th, .sum-table th {
+      text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; color: var(--text-muted);
+      background: var(--bg-code); border-bottom: 1px solid var(--border);
+    }
+    .param-table td, .sum-table td {
+      padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-secondary);
+    }
+    .checklist { list-style: none; margin: 12px 0; }
+    .checklist li {
+      display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 14px; color: var(--text-secondary);
+    }
+    footer {
+      border-top: 1px solid var(--border); margin-top: 40px;
+      padding: 30px 40px; text-align: center; font-size: 13px; color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge"><span class="dot"></span> Member 1 to Member 2 and 3 | Chaincode Handoff Document</div>
+    <h1>Joint Ownership - Chaincode Update<br>Complete Handoff for Next Members</h1>
+    <p class="hero-sub">
+      This document explains every chaincode change in <code style="color:#38bdf8;">land-registration-contract.js</code> by Member 1. Member 2 (API) and Member 3 (UI) can directly follow this guide to build their respective modules.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-pill"><span class="label">Target File:</span> <span class="value">chaincode/.../land-registration-contract.js</span></div>
+      <div class="meta-pill"><span class="label">Modified Functions:</span> <span class="value">2 (createApplication, forwardApplication)</span></div>
+      <div class="meta-pill"><span class="label">New Functions:</span> <span class="value">5 Functions Added</span></div>
+      <div class="meta-pill"><span class="label">Unit Tests:</span> <span class="value" style="color:#4ade80;">32 / 32 Passed (100%)</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="toc-bar">
+  <a class="toc-link" href="#summary">Summary</a>
+  <a class="toc-link" href="#schema">Data Schema</a>
+  <a class="toc-link" href="#modified-fns">Modified Functions</a>
+  <a class="toc-link" href="#new-fns">New Functions</a>
+  <a class="toc-link" href="#member2">Member 2 (API) Guide</a>
+  <a class="toc-link" href="#member3">Member 3 (UI) Guide</a>
+  <a class="toc-link" href="#verification">Test Report</a>
+</nav>
+
+<div class="container">
+
+  <section id="summary">
+    <h2>1. Summary of Changes</h2>
+    <div class="info-box ib-green">
+      <div>
+        <strong>100% Backward Compatible</strong><br>
+        Single-owner applications work exactly as before without any disruption. If <code>ownershipType</code> is omitted or set to <code>'single'</code>, it bypasses joint consent gates and executes the original single-owner flow.
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="sum-table">
+        <thead>
+          <tr>
+            <th>Function</th>
+            <th>Type</th>
+            <th>Authorized Caller</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>createApplication</code></td>
+            <td><span class="tag tag-mod">Modified</span></td>
+            <td>Org1 (Applicant/Admin)</td>
+            <td>Accepts <code>ownershipType: 'joint'</code> and validates <code>owners[]</code> (2-5 owners, shares sum to 100%, each >= 1%).</td>
+          </tr>
+          <tr>
+            <td><code>forwardApplication</code></td>
+            <td><span class="tag tag-guard">Guarded</span></td>
+            <td>All Orgs (Clerk, MRO, etc.)</td>
+            <td>Added 2 strict guards: blocks if <code>isDisputed === true</code> (frozen) or if <code>allConsentsGiven !== true</code>.</td>
+          </tr>
+          <tr>
+            <td><code>addCoOwnerConsent</code></td>
+            <td><span class="tag tag-new">New</span></td>
+            <td>Listed Co-Owners</td>
+            <td>Allows each co-owner to record their digital consent. When all approve, <code>allConsentsGiven</code> turns true.</td>
+          </tr>
+          <tr>
+            <td><code>raiseOwnershipDispute</code></td>
+            <td><span class="tag tag-new">New</span></td>
+            <td>Listed Co-Owners</td>
+            <td>Any co-owner can raise a dispute (e.g., share discrepancy). Sets <code>isDisputed = true</code> and freezes the application.</td>
+          </tr>
+          <tr>
+            <td><code>resolveOwnershipDispute</code></td>
+            <td><span class="tag tag-new">New</span></td>
+            <td><span class="tag tag-org3">Org3 (Collectorate)</span></td>
+            <td>Collector can either <strong>rectify_shares</strong> (updates shares inline and unfreezes) or <strong>reject</strong> (permanently terminates).</td>
+          </tr>
+          <tr>
+            <td><code>transferOwnershipShare</code></td>
+            <td><span class="tag tag-new">New</span></td>
+            <td>Co-Owner (Seller)</td>
+            <td>Allows post-registration share transfers to existing co-owners or new third-party buyers (with co-owner NOC verification).</td>
+          </tr>
+          <tr>
+            <td><code>getOwnershipDetails</code></td>
+            <td><span class="tag tag-new">New</span></td>
+            <td>Public / All (Query)</td>
+            <td>Read-only breakdown of shares, consent statuses, dispute details, and UI flags (e.g. <code>canBeForwarded</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="schema">
+    <h2>2. Data Schema Changes</h2>
+    <p>The on-chain application object now contains these top-level properties:</p>
+    <div class="code-block">
+      <div class="cb-header"><span>Application State Schema (JSON)</span><span>lib/land-registration-contract.js</span></div>
+      <pre><code>{
+  "applicationId": "APP-101",
+  "userData": "&lt;AES-256 Encrypted Profile Data&gt;",
+  "status": "submitted",
+
+  // --- NEW JOINT OWNERSHIP FIELDS ---
+  "ownershipType": "joint", // 'single' | 'joint'
+  "owners": [
+    {
+      "ownerId": "OWNER-01",
+      "name": "Ramesh Sharma",
+      "aadhar": "1234-5678-9012",
+      "sharePercent": 60,
+      "consentStatus": "pending", // 'pending' | 'approved'
+      "consentTimestamp": null,
+      "consentRemarks": ""
+    },
+    {
+      "ownerId": "OWNER-02",
+      "name": "Suresh Sharma",
+      "aadhar": "9876-5432-1098",
+      "sharePercent": 40,
+      "consentStatus": "pending",
+      "consentTimestamp": null,
+      "consentRemarks": ""
+    }
+  ],
+  "allConsentsGiven": false, // true for single-owner; flips to true in joint when all consent
+  "isDisputed": false,       // true when frozen due to active dispute
+  "disputeDetails": null      // { raisedBy, reason, timestamp, resolvedAt, resolvedBy, resolution, action, orderNumber }
+}</code></pre>
+    </div>
+  </section>
+
+  <section id="modified-fns">
+    <h2>3. Modified Functions in Detail</h2>
+    
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><code>createApplication(ctx, applicationId)</code></div>
+        <span class="tag tag-mod">Modified</span>
+      </div>
+      <p>Data is passed via Transient Map under key <code>userData</code>:</p>
+      <div class="code-block">
+        <div class="cb-header"><span>Transient Map Payload</span><span>JSON</span></div>
+        <pre><code>{
+  "fullName": "Ramesh Sharma",
+  "ownershipType": "joint", // omit or set 'single' for single owner
+  "owners": [
+    { "ownerId": "USR-1", "name": "Ramesh Sharma", "aadhar": "...", "sharePercent": 50 },
+    { "ownerId": "USR-2", "name": "Suresh Sharma", "aadhar": "...", "sharePercent": 50 }
+  ]
+}</code></pre>
+      </div>
+      <ul class="checklist">
+        <li><strong>Enforced Rules:</strong> Min 2, max 5 co-owners.</li>
+        <li><strong>Share Rule:</strong> Sum of <code>sharePercent</code> must equal 100% exactly (with 0.01 tolerance).</li>
+        <li><strong>Minimum Share:</strong> Each co-owner must hold at least 1.0% share.</li>
+        <li><strong>Uniqueness:</strong> No duplicate <code>ownerId</code> values allowed.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><code>forwardApplication(ctx, applicationId, forwardDataStr)</code></div>
+        <span class="tag tag-guard">2 Guards Added</span>
+      </div>
+      <p>Before advancing the stage in the multi-org workflow, the chaincode checks:</p>
+      <ul class="checklist">
+        <li><strong>Guard 1 (Dispute Freeze):</strong> If <code>application.isDisputed === true</code>, throws <em>"Application is FROZEN due to an active ownership dispute"</em>.</li>
+        <li><strong>Guard 2 (Consent Gate):</strong> If <code>application.ownershipType === 'joint' &amp;&amp; !application.allConsentsGiven</code>, throws <em>"Cannot forward: Not all co-owners have given digital consent"</em>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="new-fns">
+    <h2>4. The 5 New Chaincode Functions</h2>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">1. <code>addCoOwnerConsent(ctx, applicationId, ownerId, consentDataStr)</code></div>
+        <span class="tag tag-new">New Function</span>
+      </div>
+      <p>Called by a co-owner to submit digital consent.</p>
+      <table class="param-table">
+        <tr><th>Name</th><th>Type</th><th>Example</th></tr>
+        <tr><td><code>applicationId</code></td><td>string</td><td>"APP-101"</td></tr>
+        <tr><td><code>ownerId</code></td><td>string</td><td>"OWNER-02"</td></tr>
+        <tr><td><code>consentDataStr</code></td><td>JSON string</td><td><code>{"remarks": "I consent to 40% share"}</code></td></tr>
+      </table>
+      <p><strong>Behavior:</strong> Marks the owner's status as <code>approved</code>. If all co-owners have approved, sets <code>allConsentsGiven = true</code>, immediately unlocking forwarding.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">2. <code>raiseOwnershipDispute(ctx, applicationId, raisedBy, reason)</code></div>
+        <span class="tag tag-new">New Function</span>
+      </div>
+      <p>Raised by any listed co-owner if share allocation or terms are incorrect.</p>
+      <p><strong>Parameters:</strong> <code>applicationId</code>, <code>raisedBy</code> (ownerId), <code>reason</code> (string).</p>
+      <p><strong>Behavior:</strong> Sets <code>isDisputed = true</code> and populates <code>disputeDetails</code>. Freezes application flow until Org3 resolves it.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">3. <code>resolveOwnershipDispute(ctx, applicationId, resolutionDataStr)</code></div>
+        <span class="tag tag-org3">Org3 Collector Only</span>
+      </div>
+      <p>Only identities with MSP <code>Org3MSP</code> can invoke this function.</p>
+      <p><strong>Option A: Rectify Shares (In-line Correction):</strong></p>
+      <div class="code-block">
+        <pre><code>{
+  "action": "rectify_shares",
+  "decision": "Collector order: adjusted Suresh to 50%",
+  "orderNumber": "DC/ORDER/2026/88",
+  "updatedOwners": [
+    { "ownerId": "OWNER-01", "sharePercent": 50 },
+    { "ownerId": "OWNER-02", "sharePercent": 50 }
+  ]
+}</code></pre>
+      </div>
+      <p>Updates the shares in-place, validates that new sum is 100%, unfreezes the application (<code>isDisputed = false</code>), and records a full audit log in history.</p>
+
+      <p><strong>Option B: Reject (Permanent Termination):</strong></p>
+      <div class="code-block">
+        <pre><code>{
+  "action": "reject",
+  "decision": "Fraudulent share submission proven. Application rejected.",
+  "orderNumber": "DC/ORDER/2026/89"
+}</code></pre>
+      </div>
+      <p>Sets <code>status = 'rejected'</code> and clears dispute freeze. A fresh application must be filed.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">4. <code>transferOwnershipShare(ctx, applicationId, fromOwnerId, toOwnerId, sharePercentStr, newOwnerDataStr)</code></div>
+        <span class="tag tag-new">New Function</span>
+      </div>
+      <p>Transfers partial or full share post-registration (when <code>status === 'completed'</code>).</p>
+      <ul class="checklist">
+        <li><strong>Transfer to existing co-owner:</strong> Pass <code>newOwnerDataStr = '{}'</code>. Shares adjust between the two.</li>
+        <li><strong>Transfer to new third-party buyer:</strong> Pass <code>newOwnerDataStr = { "name": "...", "aadhar": "...", "nocApprovals": ["O2", "O3"] }</code>. Requires NOC approval from all remaining co-owners.</li>
+        <li>If seller's share drops to 0%, they are cleanly removed from the <code>owners[]</code> array.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">5. <code>getOwnershipDetails(ctx, applicationId)</code></div>
+        <span class="tag tag-new">Read-Only Query</span>
+      </div>
+      <p>Returns complete ownership state, consent progress, dispute info, and helpful computed flags for UI like <code>canBeForwarded</code>.</p>
+    </div>
+  </section>
+
+  <section id="member2">
+    <h2>5. Instructions for Member 2 (API Layer)</h2>
+    <p>Member 2 should expose these REST endpoints in the Express server:</p>
+    <div class="card">
+      <table class="sum-table">
+        <thead>
+          <tr><th>Endpoint</th><th>HTTP</th><th>Chaincode Call</th><th>Key Payload</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/api/ownership/consent</code></td>
+            <td>POST</td>
+            <td><code>contract.submitTransaction('addCoOwnerConsent', appId, ownerId, JSON.stringify({remarks}))</code></td>
+            <td><code>{ applicationId, ownerId, remarks }</code></td>
+          </tr>
+          <tr>
+            <td><code>/api/ownership/dispute/raise</code></td>
+            <td>POST</td>
+            <td><code>contract.submitTransaction('raiseOwnershipDispute', appId, raisedBy, reason)</code></td>
+            <td><code>{ applicationId, raisedBy, reason }</code></td>
+          </tr>
+          <tr>
+            <td><code>/api/ownership/dispute/resolve</code></td>
+            <td>POST</td>
+            <td><code>org3Contract.submitTransaction('resolveOwnershipDispute', appId, JSON.stringify(resolutionData))</code></td>
+            <td><code>{ applicationId, action, decision, orderNumber, updatedOwners }</code></td>
+          </tr>
+          <tr>
+            <td><code>/api/ownership/transfer</code></td>
+            <td>POST</td>
+            <td><code>contract.submitTransaction('transferOwnershipShare', appId, fromId, toId, shareStr, JSON.stringify(newOwnerData))</code></td>
+            <td><code>{ applicationId, fromOwnerId, toOwnerId, sharePercent, newOwnerData }</code></td>
+          </tr>
+          <tr>
+            <td><code>/api/ownership/details/:applicationId</code></td>
+            <td>GET</td>
+            <td><code>contract.evaluateTransaction('getOwnershipDetails', req.params.applicationId)</code></td>
+            <td>URL param: <code>applicationId</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="member3">
+    <h2>6. Instructions for Member 3 (UI Layer)</h2>
+    <ul class="checklist">
+      <li><strong>Registration Form:</strong> Add radio toggle for Single vs Joint Ownership. If Joint, allow adding 2-5 co-owners with live share sum counter (must equal 100%).</li>
+      <li><strong>Application Timeline / Details:</strong> Show "Co-Owners and Share Allocation" card displaying each co-owner's share % and badge (Approved vs Pending Consent).</li>
+      <li><strong>Consent Action:</strong> For co-owner login, show "Grant Consent" button if their status is pending.</li>
+      <li><strong>Dispute Alert &amp; Button:</strong> Co-owners see "Raise Dispute" button. If an application is disputed, display a bold red warning banner: <em>"Application Frozen - Active Ownership Dispute"</em> and disable forward buttons.</li>
+      <li><strong>Collectorate View:</strong> In Collector/Org3 portal, show "Dispute Resolution" card with options: (1) Rectify Shares (with editable share inputs), (2) Reject Application.</li>
+      <li><strong>Share Transfer Portal:</strong> For completed land records, show "Transfer Share" modal prompting buyer details and co-owner NOC checks.</li>
+    </ul>
+  </section>
+
+  <section id="verification">
+    <h2>7. Test Verification Report</h2>
+    <div class="info-box ib-green">
+      <div>
+        <strong>All 32 Automated Unit Tests Passed:</strong><br>
+        Run script located at: <code>c:/Users/hmury/Desktop/LandRecords_PBL/LandRecords_extracted/chaincode/land-registration/lib/test_chaincode.js</code><br>
+        Execution command: <code>node test_chaincode.js</code>
+      </div>
+    </div>
+    <div class="card">
+      <table class="sum-table">
+        <thead>
+          <tr><th>Test Suite</th><th>Coverage</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Group 1: Backward Compatibility (Single Owner and Legacy)</td><td>Single owner creation, legacy forward without guards</td><td><span style="color:#4ade80;font-weight:700;">3 / 3 Passed</span></td></tr>
+          <tr><td>Group 2: createApplication Joint Validations</td><td>2-5 owners, 100% sum check, 1% min, duplicate ownerId rejection</td><td><span style="color:#4ade80;font-weight:700;">6 / 6 Passed</span></td></tr>
+          <tr><td>Group 3: addCoOwnerConsent</td><td>Pending decrement, allConsentsGiven flip, duplicate consent block</td><td><span style="color:#4ade80;font-weight:700;">4 / 4 Passed</span></td></tr>
+          <tr><td>Group 4: forwardApplication Guards</td><td>Blocked on pending consent, blocked on dispute freeze, pass when clear</td><td><span style="color:#4ade80;font-weight:700;">3 / 3 Passed</span></td></tr>
+          <tr><td>Group 5: raiseOwnershipDispute</td><td>Freeze state, non-owner block, double dispute block, empty reason block</td><td><span style="color:#4ade80;font-weight:700;">4 / 4 Passed</span></td></tr>
+          <tr><td>Group 6: resolveOwnershipDispute</td><td>Org3 permission check, rectify shares and unfreeze, reject path, invalid sum check</td><td><span style="color:#4ade80;font-weight:700;">4 / 4 Passed</span></td></tr>
+          <tr><td>Group 7: transferOwnershipShare</td><td>Rebalance existing, third-party buyer + NOC, completed state check, freeze check</td><td><span style="color:#4ade80;font-weight:700;">6 / 6 Passed</span></td></tr>
+          <tr><td>Group 8: getOwnershipDetails</td><td>Joint overview response, legacy default fallbacks</td><td><span style="color:#4ade80;font-weight:700;">2 / 2 Passed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  LandRecords PBL - Blockchain Layer Handoff | Group 2 | Member 1 &copy; 2026
+</footer>
+
+</body>
+</html>
