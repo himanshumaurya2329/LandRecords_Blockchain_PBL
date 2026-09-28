@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Member 1 Blueprint: Chaincode & Joint Ownership Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070d18;--bg2:#0d1726;--bg3:#142238;--bg4:#1b2d49;
+  --bdr:rgba(99,102,241,0.25);--bdr-l:rgba(99,102,241,0.12);
+  --ind:#6366f1;--ind-l:#818cf8;--ind-glow:rgba(99,102,241,0.35);
+  --em:#10b981;--em-l:#34d399;--em-bg:rgba(16,185,129,0.12);
+  --am:#f59e0b;--am-l:#fbbf24;--am-bg:rgba(245,158,11,0.12);
+  --ro:#f43f5e;--ro-l:#fb7185;--ro-bg:rgba(244,63,94,0.12);
+  --sk:#0ea5e9;--sk-l:#38bdf8;--sk-bg:rgba(14,165,233,0.12);
+  --vi:#8b5cf6;--vi-l:#a78bfa;--vi-bg:rgba(139,92,246,0.12);
+  --tx:#f1f5f9;--tm:#94a3b8;--td:#64748b;
+  --r:12px;--r2:18px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;line-height:1.75;overflow-x:hidden;padding-bottom:5rem}
+::-webkit-scrollbar{width:7px}::-webkit-scrollbar-thumb{background:var(--ind);border-radius:4px}
+code{background:rgba(99,102,241,0.15);color:var(--ind-l);padding:.15rem .5rem;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.85em;border:1px solid rgba(99,102,241,0.25)}
+a{color:var(--sk-l);text-decoration:none}a:hover{text-decoration:underline}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(7,13,24,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr-l);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:65px}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:800;font-size:.95rem;letter-spacing:-.01em}
+.nav-dot{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--ind),var(--em));display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 0 16px var(--ind-glow)}
+.nav-links{display:flex;gap:1.1rem;list-style:none}
+.nav-links a{color:var(--tm);font-size:.82rem;font-weight:600;transition:color .2s}
+.nav-links a:hover{color:var(--tx);text-decoration:none}
+@media(max-width:960px){.nav-links{display:none}}
+
+/* HERO */
+.hero{padding:125px 2rem 4rem;text-align:center;background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(99,102,241,.25),transparent 70%),radial-gradient(ellipse 50% 40% at 85% 85%,rgba(16,185,129,.12),transparent 65%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.35);padding:.35rem 1.1rem;border-radius:99px;font-size:.76rem;font-weight:700;color:var(--ind-l);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.4rem}
+h1{font-size:clamp(2.1rem,4.5vw,3.6rem);font-weight:900;line-height:1.15;background:linear-gradient(135deg,#ffffff 20%,var(--ind-l) 60%,var(--em-l) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.1rem}
+.hero-sub{font-size:1.05rem;color:var(--tm);max-width:760px;margin:0 auto 2rem}
+.hero-stats{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap}
+.sp{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:.75rem 1.4rem;text-align:center;min-width:130px}
+.sp .n{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--ind-l),var(--em-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sp .l{font-size:.72rem;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+
+/* CONTAINER */
+.container{max-width:1140px;margin:0 auto;padding:0 2rem}
+.section{padding:3.5rem 0}
+.sl{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ind-l);margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem}
+.st{font-size:clamp(1.5rem,3.2vw,2.2rem);font-weight:800;line-height:1.25;margin-bottom:.8rem}
+.sb{color:var(--tm);font-size:.95rem;max-width:800px;margin-bottom:1.5rem}
+hr.d{border:none;border-top:1px solid var(--bdr-l);margin:2rem 0}
+
+/* CARDS & GRIDS */
+.card{background:var(--bg2);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.6rem;position:relative;transition:transform .2s,border-color .2s;box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.card:hover{border-color:var(--bdr);transform:translateY(-2px)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:1.4rem}
+@media(max-width:800px){.two{grid-template-columns:1fr}}
+
+/* HIGHLIGHT BOXES */
+.alert{border-radius:var(--r);padding:1.1rem 1.3rem;display:flex;gap:.8rem;align-items:flex-start;margin:1rem 0}
+.alert.info{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25)}
+.alert.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25)}
+.alert.warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25)}
+.alert.danger{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.25)}
+.alert.sky{background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.25)}
+.a-ico{font-size:1.3rem;flex-shrink:0;margin-top:.1rem}
+.a-t{font-weight:700;font-size:.92rem;margin-bottom:.3rem}
+.alert.info .a-t{color:var(--ind-l)}.alert.ok .a-t{color:var(--em-l)}.alert.warn .a-t{color:var(--am-l)}.alert.danger .a-t{color:var(--ro-l)}.alert.sky .a-t{color:var(--sk-l)}
+.a-x{font-size:.86rem;color:var(--tx);line-height:1.7}
+
+/* CHAINCODE EXPLORATION CARDS */
+.cc-card{background:var(--bg2);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:1.6rem;margin-bottom:1.5rem;border-left:4px solid var(--ind)}
+.cc-card.mod{border-left-color:var(--am)}
+.cc-card.new{border-left-color:var(--em)}
+.cc-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.8rem;margin-bottom:1rem}
+.cc-title{font-family:'JetBrains Mono',monospace;font-size:1.05rem;font-weight:700;color:#fff}
+.cc-tag{padding:.2rem .65rem;border-radius:99px;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.cc-tag.existing{background:rgba(99,102,241,.15);color:var(--ind-l);border:1px solid rgba(99,102,241,.3)}
+.cc-tag.mod{background:rgba(245,158,11,.15);color:var(--am-l);border:1px solid rgba(245,158,11,.3)}
+.cc-tag.new{background:rgba(16,185,129,.15);color:var(--em-l);border:1px solid rgba(16,185,129,.3)}
+.cc-role-badge{font-size:.75rem;color:var(--tm);background:var(--bg3);padding:.25rem .7rem;border-radius:6px;font-weight:600}
+.hinglish-rule{background:var(--bg3);border:1px solid var(--bdr-l);border-radius:var(--r);padding:1rem 1.25rem;margin-top:.8rem}
+.hinglish-rule-label{font-size:.72rem;font-weight:800;color:var(--em-l);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+
+/* CODE BLOCKS */
+.cb{background:#0a0f18;border:1px solid var(--bdr-l);border-radius:var(--r);padding:1.25rem 1.4rem;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.85;color:#cbd5e1;margin:.9rem 0}
+.cb .cm{color:#64748b;font-style:italic}.cb .kw{color:#f43f5e;font-weight:600}.cb .fn{color:#a78bfa}.cb .str{color:#38bdf8}.cb .num{color:#fbbf24}.cb .cls{color:#34d399}.cb .op{color:#fb7185}
+.cb-header{background:var(--bg4);border:1px solid var(--bdr-l);border-bottom:none;border-radius:var(--r) var(--r) 0 0;padding:.6rem 1.2rem;display:flex;align-items:center;justify-content:space-between}
+.cb-header + .cb{border-radius:0 0 var(--r) var(--r);margin-top:0}
+.cb-title{font-size:.75rem;font-weight:700;color:var(--tx);font-family:'JetBrains Mono',monospace}
+
+/* WORKFLOW DIAGRAM */
+.flow{background:var(--bg2);border:1px solid var(--bdr-l);border-radius:var(--r2);padding:2rem;margin:1.8rem 0;overflow-x:auto}
+.flow-title{text-align:center;font-size:.82rem;font-weight:800;color:var(--tm);margin-bottom:1.8rem;letter-spacing:.08em;text-transform:uppercase}
+.flow-grid{display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:nowrap;min-width:860px}
+.fb{text-align:center;flex-shrink:0}
+.fbox{padding:.8rem 1rem;border-radius:12px;font-size:.76rem;font-weight:700;min-width:125px;max-width:140px;line-height:1.4}
+.fb1 .fbox{background:rgba(99,102,241,.15);border:2px solid rgba(99,102,241,.4);color:var(--ind-l)}
+.fb2 .fbox{background:rgba(16,185,129,.15);border:2px solid rgba(16,185,129,.4);color:var(--em-l)}
+.fb3 .fbox{background:rgba(245,158,11,.15);border:2px solid rgba(245,158,11,.4);color:var(--am-l)}
+.fb4 .fbox{background:rgba(14,165,233,.15);border:2px solid rgba(14,165,233,.4);color:var(--sk-l)}
+.fb5 .fbox{background:rgba(139,92,246,.15);border:2px solid rgba(139,92,246,.4);color:var(--vi-l)}
+.fb-sub{font-size:.65rem;color:var(--td);margin-top:.4rem;line-height:1.3}
+.farr{color:var(--td);font-size:1.4rem;flex-shrink:0}
+
+/* TABLE */
+.lt{width:100%;border-collapse:separate;border-spacing:0;margin:1.2rem 0;font-size:.85rem}
+.lt th{background:var(--bg3);color:var(--tm);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:.8rem 1.1rem;text-align:left}
+.lt th:first-child{border-radius:10px 0 0 10px}.lt th:last-child{border-radius:0 10px 10px 0}
+.lt td{padding:.9rem 1.1rem;border-bottom:1px solid var(--bdr-l);vertical-align:top}
+.lt tr:hover td{background:rgba(99,102,241,.03)}
+
+/* PILL TAGS */
+.pill{display:inline-block;padding:.15rem .55rem;border-radius:99px;font-size:.72rem;font-weight:700}
+.pill.ok{background:rgba(16,185,129,.15);color:var(--em-l);border:1px solid rgba(16,185,129,.3)}
+.pill.warn{background:rgba(245,158,11,.15);color:var(--am-l);border:1px solid rgba(245,158,11,.3)}
+.pill.info{background:rgba(99,102,241,.15);color:var(--ind-l);border:1px solid rgba(99,102,241,.3)}
+.pill.danger{background:rgba(244,63,94,.15);color:var(--ro-l);border:1px solid rgba(244,63,94,.3)}
+
+footer{background:var(--bg2);border-top:1px solid var(--bdr-l);padding:2.5rem 0;text-align:center;margin-top:3rem}
+footer p{font-size:.8rem;color:var(--td)}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="nav-brand"><div class="nav-dot">&#9881;</div> Member 1 Blueprint &middot; Joint Ownership Chaincode</div>
+<ul class="nav-links">
+<li><a href="#overview">Overview & Files</a></li>
+<li><a href="#current-chaincode">Current Chaincode (Hinglish)</a></li>
+<li><a href="#new-features">Joint Ownership Changes</a></li>
+<li><a href="#dispute">Dispute Mechanism</a></li>
+<li><a href="#impact">Crash Analysis</a></li>
+<li><a href="#implementation-plan">Execution Steps</a></li>
+<li><a href="#deep-doubts" style="color:var(--em-l);font-weight:700;">&#10067; Doubts & Answers</a></li>
+<li><a href="#ui-mapping" style="color:var(--sk-l);font-weight:700;">&#128421; UI Mapping</a></li>
+</ul>
+</nav>
+
+<header class="hero">
+<div class="badge">&#128640; Team Member 1 &middot; Blockchain & Chaincode Layer</div>
+<h1>Joint Land Ownership<br>Chaincode Architecture & Blueprint</h1>
+<p class="hero-sub">Ekdum simple Hinglish explanation of current chaincode, planned updates for joint co-ownership, dispute resolution workflow (Org3 Collectorate), and zero-downtime safety analysis.</p>
+<div class="hero-stats">
+<div class="sp"><div class="n">1</div><div class="l">Member 1 File</div></div>
+<div class="sp"><div class="n">11</div><div class="l">Current Functions</div></div>
+<div class="sp"><div class="n">5</div><div class="l">New Functions</div></div>
+<div class="sp"><div class="n">2</div><div class="l">Modified Functions</div></div>
+<div class="sp"><div class="n">0%</div><div class="l">Crash Risk</div></div>
+</div>
+</header>
+
+<div class="container">
+
+<!-- SECTION 1: OVERVIEW & FILE ROADMAP -->
+<section class="section" id="overview">
+<div class="sl">&#128194; Step 1: File Roadmap</div>
+<h2 class="st">Kaunsa Member Kaunsi File Me Kaam Karega?</h2>
+<p class="sb">Aapka role <strong>Member 1 (Blockchain / Chaincode Layer)</strong> hai. Saara core business logic smart contract me hoga. Sabhi members ki boundaries crystal clear hain:</p>
+
+<table class="lt">
+<thead>
+<tr>
+<th>Team Member</th>
+<th>Layer</th>
+<th>Target File(s)</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Member 1 (Aap)</strong></td>
+<td><span class="pill info">Blockchain Layer</span></td>
+<td><code>chaincode/land-registration/lib/land-registration-contract.js</code></td>
+<td>
+<strong>Smart Contract Core:</strong>
+<br/>&bull; <code>createApplication()</code> me <code>owners[]</code>, <code>ownershipType</code>, share % validation add karna.
+<br/>&bull; 5 new functions likhna (Consent, Share Transfer, Dispute Raise, Dispute Resolve, Ownership Query).
+<br/>&bull; <code>forwardApplication()</code> me dispute freeze & co-owner consent guard lagana.
+</td>
+</tr>
+<tr>
+<td><strong>Member 2</strong></td>
+<td><span class="pill ok">Backend API Layer</span></td>
+<td>
+<code>fabric-api/src/jointOwnershipRoutes.js</code> (New)<br/>
+<code>fabric-api/index.js</code> (Mount routes)<br/>
+<code>fabric-api/src/userOrgMap.js</code>
+</td>
+<td>
+<strong>REST API Endpoints:</strong>
+<br/>&bull; 6 new Express routes banayega jo aapke chaincode functions ko <code>fabricClient.js</code> ke through call karenge.
+<br/>&bull; Co-owners ke DigiLocker/JWT tokens manage karega.
+</td>
+</tr>
+<tr>
+<td><strong>Member 3</strong></td>
+<td><span class="pill warn">Frontend UI Layer</span></td>
+<td>
+<code>client/src/app/joint-application/page.tsx</code><br/>
+<code>client/src/app/consent-panel/page.tsx</code><br/>
+<code>client/src/app/ownership-dashboard/page.tsx</code><br/>
+<code>client/src/app/official-dashboard/page.tsx</code>
+</td>
+<td>
+<strong>User Interface:</strong>
+<br/>&bull; Multi-owner registration form (share % slider jo 100% validate kare).
+<br/>&bull; Co-owner consent approval panel & share distribution visual pie chart.
+<br/>&bull; Officials ko warning dikhana agar kisi co-owner ka consent pending ho.
+</td>
+</tr>
+</tbody>
+</table>
+
+<div class="alert ok">
+<span class="a-ico">&#128161;</span>
+<div>
+<div class="a-t">Member 1 ke liye Gold Standard Rule</div>
+<div class="a-x">Aapko <strong>sirf ek file</strong> modify karni hai: <code>LandRecords_extracted/chaincode/land-registration/lib/land-registration-contract.js</code>. Network ke Docker files, connection profiles, ya cryptography certificates ko touch karne ki zaroorat nahi hai!</div>
+</div>
+</div>
+</section>
+
+<hr class="d"/>
+
+<!-- SECTION 2: CURRENT CHAINCODE IN HINGLISH -->
+<section class="section" id="current-chaincode">
+<div class="sl">&#128220; Deep Dive: Current Chaincode</div>
+<h2 class="st">Abhi Project Me Kaunse Chaincode Functions Hain Aur Kaise Kaam Karte Hain?</h2>
+<p class="sb">Hamare current <code>land-registration-contract.js</code> me 11 main functions/helpers hain. Inka ek-ek kanoon (rule) aasan Hinglish me samjhein:</p>
+
+<!-- 1. initLedger -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">1. initLedger(ctx)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Any Org / Deployer</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Hyperledger Fabric standard function jo chaincode pehli baar instantiate/install hone par trigger hota hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">Ye ek startup hook hai. Abhi hamare project me ye empty hai (sirf log print karta hai). Agar hum chahe toh isme shuruat me koi dummy test application initialize kar sakte hain.</div>
+</div>
+</div>
+
+<!-- 2. createApplication -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">2. createApplication(ctx, applicationId)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Role: applicant / admin</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Naya land registration request blockchain ledger pe record karta hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+<strong>1. Role Check:</strong> Sirf wahi user call kar sakta hai jiska certificate role <code>applicant</code> ya <code>admin</code> ho.<br/>
+<strong>2. Duplicate Check:</strong> Agar <code>applicationId</code> pehle se ledger me hai toh error throw karega.<br/>
+<strong>3. Transient Encryption:</strong> Sensitive citizen details (Aadhaar, Name, Property Value) normal argument me nahi, <code>Transient Map</code> me aate hain taaki block payload me plaintext na dikhe. Code isko <code>AES-256-CBC</code> se encrypt karke ledger me daalta hai.<br/>
+<strong>4. Initial State:</strong> Application ka status <code>submitted</code> set hota hai aur history me 'created' ka pehla immutable block lagta hai.
+</div>
+</div>
+</div>
+
+<!-- 3. verifyByRevenue -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">3. verifyByRevenue(ctx, applicationId, officerDataStr)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Role: officer / admin (Org2)</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Revenue Department application ki basic verification karta hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+<strong>1. State Check:</strong> Application ka status compulsory <code>submitted</code> hona chahiye.<br/>
+<strong>2. Role:</strong> Calling certificate me role <code>officer</code> hona chahiye.<br/>
+<strong>3. Status Change:</strong> Status <code>verified</code> me badal jata hai, revenue verification metadata save hota hai, aur history me entry add hoti hai.
+</div>
+</div>
+</div>
+
+<!-- 4. surveyReportUpdate -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">4. surveyReportUpdate(ctx, applicationId, surveyDataStr)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">MSP: Org2MSP Only (Surveyor)</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Zameen ka actual physical survey data (coordinates, boundary map hash) blockchain pe update karta hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+<strong>1. MSP Check:</strong> Client Identity se check karta hai <code>cid.getMSPID() === 'Org2MSP'</code>. Koi citizen ya Org1/Org3 ka banda survey report upload nahi kar sakta.<br/>
+<strong>2. Survey Attach:</strong> Application object me <code>surveyReport</code> attach hota hai aur immutable history me surveyor ka ID aur timestamp seal ho jata hai.
+</div>
+</div>
+</div>
+
+<!-- 5. forwardApplication -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">5. forwardApplication(ctx, applicationId, forwardDataStr)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Strict Multi-Tier Workflow</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Hamare project ka sabse bada multi-tier government workflow engine. File ek desk se doosri desk tak electronically move karti hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Ye ek strict state machine hai jo dictionary <code>workflowSequence</code> follow karti hai:<br/>
+&bull; <code>submitted / with_clerk</code> &rarr; Sirf <strong>clerk</strong> forward karega &rarr; next status <code>with_superintendent</code><br/>
+&bull; <code>with_superintendent</code> &rarr; Sirf <strong>superintendent</strong> &rarr; next status <code>with_project_officer</code><br/>
+&bull; <code>with_project_officer</code> &rarr; Sirf <strong>project_officer</strong> &rarr; next status <code>with_mro</code> (Org2 shift)<br/>
+&bull; <code>with_mro</code> &rarr; <strong>mro</strong> &rarr; <code>with_surveyor</code> &rarr; <strong>surveyor</strong> &rarr; <code>with_revenue_inspector</code> &rarr; <code>with_vro</code> &rarr; <code>with_revenue_dept</code><br/>
+&bull; <code>with_revenue_dept</code> &rarr; <code>with_joint_collector</code> (Org3 shift) &rarr; <code>with_collector</code> &rarr; <code>with_ministry_welfare</code> &rarr; <code>approved</code>.<br/>
+<strong>Rule:</strong> Agar galat role ka user ya out-of-order forward attempt karega, smart contract transaction reject kar dega.
+</div>
+</div>
+</div>
+
+<!-- 6. approveByCollector -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">6. approveByCollector(ctx, applicationId, approvalDataStr)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Role: collector / admin / ministry_welfare</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">District Collector ya Ministry of Welfare ka final digital sign-off.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Application verified/processed hone ke baad District Collector final clearance deta hai. Agar call Ministry of Welfare (<code>mw</code>) role se aati hai toh final status <code>completed</code> banta hai (pukka land deed issue).
+</div>
+</div>
+</div>
+
+<!-- 7. getApplication -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">7. getApplication(ctx, applicationId)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Read-only (All Orgs)</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Kisi bhi specific application ki complete details fetch karta hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Ledger se encrypted data read karta hai, <code>decryptData()</code> se AES-256 decipher karke JSON format me return karta hai. Saath me automatically M8 Trust Score (0-100%) aur M9 AI-OCR data calculate karke response me attach karta hai.
+</div>
+</div>
+</div>
+
+<!-- 8. getAllLandRequest -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">8. getAllLandRequest(ctx)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Read-only (All Orgs)</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Ledger me moujood sabhi land applications ki list laata hai (Dashboards ke liye).</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Fabric iterator <code>ctx.stub.getStateByRange('', '')</code> se range query chalata hai. Har record ko decrypt karta hai aur list bana kar frontend ko deta hai.
+</div>
+</div>
+</div>
+
+<!-- 9. getHistory -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">9. getHistory(ctx, applicationId)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Audit Trail Query</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Application ka complete blockchain lifecycle audit trail nikalta hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Day-1 se lekar aaj tak kis officer ne, kis timestamp par, kya remark daal kar forward kiya, sabhi transaction IDs ke saath array me return hota hai. Ye tamper-proof proof hota hai court ya citizen ke liye.
+</div>
+</div>
+</div>
+
+<!-- 10. recordDocumentIntegrity -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">10. recordDocumentIntegrity(ctx, docHash, ipfsHash, aadharNumber, requestId, officialId)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">Org1MSP or Org2MSP</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">M7 Security feature: Document ka SHA-256 hash aur IPFS CID blockchain pe amar kar deta hai.</p>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Deed ya survey map ka hash composite key <code>integrity~[docHash]</code> bana kar state me daalta hai. Agar kal ko koi PDF me 1 pixel ya 1 letter bhi badalta hai toh hash match nahi hoga aur forgery pakdi jayegi!
+</div>
+</div>
+</div>
+
+<!-- 11. queryByStatus -->
+<div class="cc-card">
+<div class="cc-head">
+<div class="cc-title">11. queryByStatus(ctx, status)</div>
+<div><span class="cc-tag existing">Current Function</span> <span class="cc-role-badge">CouchDB Selector Query</span></div>
+</div>
+<p style="color:var(--tm);font-size:.88rem;">Status ke basis pe applications filter karta hai (jaise sirf 'with_collector' ya 'submitted').</p>
+</div>
+
+</div>
+</section>
+
+<hr class="d"/>
+
+<!-- SECTION 3: JOINT OWNERSHIP CHANGES -->
+<section class="section" id="new-features">
+<div class="sl">&#129309; Joint Ownership Blueprint</div>
+<h2 class="st">Joint Owner Ke Liye Hum Chaincode Me Kya Change Karenge?</h2>
+<p class="sb">Hamare smart contract me <strong>2 Functions Modify</strong> honge aur <strong>5 New Functions Add</strong> honge. Har function ka logic Hinglish me:</p>
+
+<!-- WORKFLOW DIAGRAM -->
+<div class="flow">
+<div class="flow-title">&#9654; JOINT OWNERSHIP CHAINCODE INTERACTION FLOW</div>
+<div class="flow-grid">
+<div class="fb fb1"><div class="fbox">createApplication()<br/>(Modified)</div><div class="fb-sub">owners[] array + shares<br/>allConsentsGiven = false</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb2"><div class="fbox">addCoOwnerConsent()<br/>(New)</div><div class="fb-sub">Each co-owner approves<br/>sets allConsentsGiven=true</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb3"><div class="fbox">forwardApplication()<br/>(Modified Guard)</div><div class="fb-sub">Blocks forward if<br/>consent is pending!</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb4"><div class="fbox">raise / resolve Dispute<br/>(New)</div><div class="fb-sub">Any co-owner freezes<br/>Org3 Collector resolves</div></div>
+<div class="farr">&#8594;</div>
+<div class="fb fb5"><div class="fbox">transferOwnershipShare()<br/>(New)</div><div class="fb-sub">Sell/Transfer % share<br/>after completed state</div></div>
+</div>
+</div>
+
+<!-- MODIFIED 1: createApplication -->
+<div class="cc-card mod">
+<div class="cc-head">
+<div class="cc-title">&#9999;&#65039; 1. createApplication() &mdash; [MODIFIED]</div>
+<div><span class="cc-tag mod">Modify Existing</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kya Change Hoga & Rule:</div>
+<div class="a-x">
+Pehle single applicant ka data save hota tha. Ab hum check karenge:
+<br/>&bull; Agar <code>ownershipType === 'joint'</code> hai toh <code>owners</code> array compulsory check hoga.
+<br/>&bull; <strong>Rule 1 (Count):</strong> Minimum 2 aur Maximum 5 co-owners hone chahiye.
+<br/>&bull; <strong>Rule 2 (100% Share Total):</strong> Sabhi co-owners ke <code>sharePercent</code> ka jod exactly <strong>100%</strong> hona chahiye. (e.g. 50% + 50%, ya 40% + 30% + 30%). Agar 99% ya 101% hua toh transaction <strong>throw Error</strong> karegi.
+<br/>&bull; <strong>Rule 3 (Consent Setup):</strong> Shuruat me har co-owner ka <code>consentStatus: 'pending'</code> aur <code>allConsentsGiven: false</code> set hoga. Single owner ke case me direct <code>allConsentsGiven: true</code> hoga taaki puraana flow break na ho!
+<br/>&bull; <strong>Rule 4 (Dispute Flag):</strong> Initial <code>isDisputed: false</code> hoga.
+</div>
+</div>
+</div>
+
+<!-- MODIFIED 2: forwardApplication -->
+<div class="cc-card mod">
+<div class="cc-head">
+<div class="cc-title">&#9999;&#65039; 2. forwardApplication() &mdash; [MODIFIED]</div>
+<div><span class="cc-tag mod">Modify Existing</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kya Change Hoga & Rule:</div>
+<div class="a-x">
+Function ke shuruat me do <strong>Iron-Clad Guards (Kanooni Suraksha Kawach)</strong> lagaye jayenge:
+<br/>&bull; <strong>Guard 1 (Dispute Check):</strong> Agar <code>application.isDisputed === true</code> hai, toh koi bhi officer application ko aage forward nahi kar sakta! Error aayega: <em>"Application is FROZEN due to active dispute. Contact Collectorate."</em>
+<br/>&bull; <strong>Guard 2 (All Consents Required):</strong> Agar <code>ownershipType === 'joint'</code> hai aur <code>allConsentsGiven !== true</code> hai, toh application Clerk/Superintendent ke desk par aage nahi badhegi! Error aayega: <em>"Cannot forward: Pending co-owner consents: [Ramesh, Suresh]"</em>.
+</div>
+</div>
+</div>
+
+<!-- NEW 1: addCoOwnerConsent -->
+<div class="cc-card new">
+<div class="cc-head">
+<div class="cc-title">&#10024; 3. addCoOwnerConsent(ctx, applicationId, ownerId, consentDataStr)</div>
+<div><span class="cc-tag new">New Function</span> <span class="cc-role-badge">Co-Owners Individually</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Jab Primary applicant application submit kar deta hai, toh baaki co-owners ko apne account se login karke consent sign karna hota hai.
+<br/>&bull; Calling user ka <code>ownerId</code> check hota hai ki wo <code>owners[]</code> list me hai ya nahi.
+<br/>&bull; Agar pehle se approved hai toh reject hoga (no double consent).
+<br/>&bull; Us owner ka <code>consentStatus = 'approved'</code> aur timestamp ledger me seal ho jayega.
+<br/>&bull; Smart contract turant check karega: <em>Kya ab sabhi owners ka consent 'approved' ho gaya?</em>
+<br/>&bull; Agar HAAN, toh automatic <code>allConsentsGiven = true</code> ban jayega, aur ab application forward hone ke liye unlock ho jayegi!
+</div>
+</div>
+</div>
+
+<!-- NEW 2: transferOwnershipShare -->
+<div class="cc-card new">
+<div class="cc-head">
+<div class="cc-title">&#10024; 4. transferOwnershipShare(ctx, applicationId, fromOwnerId, toOwnerId, sharePercent, ...)</div>
+<div><span class="cc-tag new">New Function</span> <span class="cc-role-badge">Property Owner (Org1MSP)</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Kal ko agar co-owner apna 20% ya 50% hissa kisi aur ko bechna ya gift karna chahta hai:
+<br/>&bull; <strong>Rule 1:</strong> Property ka status compulsory <code>completed</code> (registered) hona chahiye. (Processing ke beech me hissa nahi bik sakta).
+<br/>&bull; <strong>Rule 2:</strong> Property freeze ya dispute me nahi honi chahiye (<code>!isDisputed</code>).
+<br/>&bull; <strong>Rule 3:</strong> <code>fromOwnerId</code> ke paas utna share hona chahiye jitna wo transfer kar raha hai.
+<br/>&bull; <strong>Rule 4:</strong> Naye ya existing co-owner me share add hoga, aur transaction ke baad bhi total exactly 100% rehna chahiye.
+</div>
+</div>
+</div>
+
+<!-- NEW 3: raiseOwnershipDispute -->
+<div class="cc-card new">
+<div class="cc-head">
+<div class="cc-title">&#10024; 5. raiseOwnershipDispute(ctx, applicationId, raisedBy, reason)</div>
+<div><span class="cc-tag new">New Function</span> <span class="cc-role-badge">Any Listed Co-Owner</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Maan lo do bhaiyon me jhagda ho gaya ki <em>"Mera share 50% tha par application me 30% likha hai"</em>:
+<br/>&bull; Koi bhi listed co-owner ye function call kar sakta hai.
+<br/>&bull; Contract verify karega ki <code>raisedBy</code> waqai me property ka co-owner hai.
+<br/>&bull; Smart contract turant <code>application.isDisputed = true</code> kar dega aur reason + timestamp record karega.
+<br/>&bull; Iske baad <strong>pura application FREEZE</strong> ho jayega. Koi bhi revenue officer ya collector isko aage forward ya approve nahi kar sakta!
+</div>
+</div>
+</div>
+
+<!-- NEW 4: resolveOwnershipDispute -->
+<div class="cc-card new">
+<div class="cc-head">
+<div class="cc-title">&#10024; 6. resolveOwnershipDispute(ctx, applicationId, resolutionDataStr)</div>
+<div><span class="cc-tag new">New Function</span> <span class="cc-role-badge">&#128273; Org3MSP Collector Only</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Dispute kaun suljhayega? <strong>Org3 (Collectorate / District Collector)</strong>.
+<br/>&bull; Contract strictly check karta hai: <code>if (mspId !== 'Org3MSP') throw new Error(...)</code>.
+<br/>&bull; Collector dono pakshon ki baat sunkar formal resolution decision record karta hai.
+<br/>&bull; <code>isDisputed = false</code> ho jata hai aur file wapas <strong>UNFREEZE</strong> ho kar normal workflow me aa jati hai.
+</div>
+</div>
+</div>
+
+<!-- NEW 5: getOwnershipDetails -->
+<div class="cc-card new">
+<div class="cc-head">
+<div class="cc-title">&#10024; 7. getOwnershipDetails(ctx, applicationId)</div>
+<div><span class="cc-tag new">New Query Function</span> <span class="cc-role-badge">Read-only (All Orgs)</span></div>
+</div>
+<div class="hinglish-rule">
+<div class="hinglish-rule-label">&#128204; Kanoon / Rule:</div>
+<div class="a-x">
+Frontend dashboard ke liye fast read query. Ye ek clean object return karega jisme sabhi owners, unke percentage shares, kiska consent aa chuka hai (approved), aur kiska baki hai (pending) saaf-saaf dikhta hai.
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<hr class="d"/>
+
+<!-- SECTION 4: DISPUTE WORKFLOW -->
+<section class="section" id="dispute">
+<div class="sl">&#9878;&#65039; Legal & Governance Process</div>
+<h2 class="st">Dispute Freeze Aur Resolution Process: Kise Adhikar Hai Aur Kaise Solve Hoga?</h2>
+<p class="sb">Aapne pucha: <em>"Agar koi co-owner dispute raise kare toh freeze hoga, but resolve kaise hoga aur kaun karega?"</em></p>
+
+<div class="two">
+<div class="card">
+<h3 style="color:var(--ro-l);margin-bottom:.8rem;font-size:1.15rem;">&#9888;&#65039; Phase 1: Freeze Kaise Hota Hai?</h3>
+<ul style="padding-left:1.2rem;line-height:1.9;color:var(--tm);font-size:.9rem;">
+<li>Koi bhi listed co-owner (jiski ID <code>owners[]</code> me hai) call karega <code>raiseOwnershipDispute(applicationId, raisedBy, "Share percentage incorrect")</code>.</li>
+<li>Blockchain ledger par <code>isDisputed = true</code> set ho jata hai.</li>
+<li>History me transaction seal ho jati hai with official dispute tag.</li>
+<li><strong>Effect:</strong> <code>forwardApplication()</code> me laga hua Guard 1 turant activate ho jata hai. Ab Registration Clerk, Revenue Inspector, ya Tehsildar chah kar bhi is file ko aage forward nahi kar sakte!</li>
+</ul>
+</div>
+
+<div class="card">
+<h3 style="color:var(--em-l);margin-bottom:.8rem;font-size:1.15rem;">&#9878;&#65039; Phase 2: Kaun Resolve Karega Aur Kyun?</h3>
+<div class="alert info" style="margin-top:0;">
+<div class="a-x"><strong>Adhikar:</strong> Sirf <strong>Org3 (Collectorate / District Collector / Joint Collector)</strong> ko adhikar hai. Chaincode me check hai: <code>cid.getMSPID() === 'Org3MSP'</code>.</div>
+</div>
+<div class="a-x" style="font-size:.88rem;color:var(--tm);line-height:1.8;">
+<strong>Kyun Sirf Org3?</strong><br/>
+Real-world Indian Revenue Administration me:<br/>
+1. <strong>Org1 (Registration Department):</strong> Sirf document register karne wala clerk office hai, inke paas dispute sunne ka kanooni adhikar nahi hota.<br/>
+2. <strong>Org2 (Revenue Department):</strong> Field inspection aur survey karta hai.<br/>
+3. <strong>Org3 (District Collectorate):</strong> District ka sarvoch Quasi-Judicial Revenue Court hota hai. Kisi bhi land title ya share dispute ka faisla Collector / Joint Collector hi sunata hai.
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:1.5rem;">
+<h3 style="color:var(--sk-l);margin-bottom:.8rem;font-size:1.15rem;">&#128269; Phase 3: Resolution Kaise Execute Hota Hai?</h3>
+<div class="two">
+<div>
+<ol style="padding-left:1.2rem;line-height:1.9;color:var(--tx);font-size:.88rem;">
+<li><strong>Inquiry Hearing:</strong> Collector dono co-owners ke documents aur claim sunta hai (off-chain / digital inquiry).</li>
+<li><strong>Decision Draft:</strong> Collector resolution summary banata hai (e.g. <em>"Hearing completed on 29-Sep-2026. Both co-owners agreed to 50-50 share deed order #DC/REV/402"</em>).</li>
+<li><strong>On-Chain Resolution:</strong> Collector Org3 identity se <code>resolveOwnershipDispute(applicationId, resolutionData)</code> call karta hai.</li>
+<li><strong>State Reset:</strong> <code>isDisputed = false</code> ho jata hai aur <code>resolvedAt</code> timestamp stamp ho jata hai.</li>
+<li><strong>Unfreeze:</strong> Ab application wapas normal flow me unlock ho jati hai aur aage forward ho sakti hai!</li>
+</ol>
+</div>
+<div style="background:var(--bg3);border-radius:12px;padding:1.2rem;border:1px solid var(--bdr-l);">
+<div style="font-size:.75rem;font-weight:700;color:var(--em-l);text-transform:uppercase;margin-bottom:.5rem;">Collector's Chaincode Resolution Log</div>
+<div class="cb" style="margin:0;font-size:.74rem;">
+application.isDisputed = <span class="kw">false</span>;<br/>
+application.disputeDetails.resolvedAt = timestamp;<br/>
+application.disputeDetails.resolution = resolution.decision;<br/>
+application.disputeDetails.resolvedBy = <span class="str">"collector_user"</span>;<br/>
+<br/>
+application.history.push({<br/>
+&nbsp;&nbsp;action: <span class="str">'dispute_resolved'</span>,<br/>
+&nbsp;&nbsp;remarks: <span class="str">'Dispute resolved. Application UNFROZEN.'</span><br/>
+});
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<hr class="d"/>
+
+<!-- SECTION 5: IMPACT ANALYSIS & CRASH RISK -->
+<section class="section" id="impact">
+<div class="sl">&#128737;&#65039; Safety & Compatibility Analysis</div>
+<h2 class="st">Kya Ye Changes Project Ko Crash Kar Sakte Hain? (Impact Analysis)</h2>
+<p class="sb">Aapne bilkul sahi aur sensible sawal pucha: <em>"Does this crash the project and what other things are affected?"</em> Chaliye har ek aspect ko analyze karte hain:</p>
+
+<div class="three">
+<div class="card">
+<div style="font-size:1.8rem;margin-bottom:.5rem;">&#128737;&#65039;</div>
+<h3 style="font-size:1.05rem;color:var(--em-l);margin-bottom:.5rem;">Crash Hoga? NO (0% Risk)</h3>
+<p style="color:var(--tm);font-size:.85rem;line-height:1.7;">
+Hyperledger Fabric me smart contract logic JavaScript class me hoti hai. Agar hum naye functions add karte hain ya existing function me safe conditions lagate hain, toh container ya network kabhi crash nahi hota.
+</p>
+</div>
+
+<div class="card">
+<div style="font-size:1.8rem;margin-bottom:.5rem;">&#128260;</div>
+<h3 style="font-size:1.05rem;color:var(--sk-l);margin-bottom:.5rem;">100% Backward Compatible</h3>
+<p style="color:var(--tm);font-size:.85rem;line-height:1.7;">
+Puraane single-owner records ke paas <code>ownershipType</code> nahi tha. Humne code me likha hai:
+<br/><code>userDataRaw.ownershipType || 'single'</code>
+<br/>Isliye puraana koi bhi flow tootega nahi!
+</p>
+</div>
+
+<div class="card">
+<div style="font-size:1.8rem;margin-bottom:.5rem;">&#128679;</div>
+<h3 style="font-size:1.05rem;color:var(--am-l);margin-bottom:.5rem;">No Docker / MSP Rebuild</h3>
+<p style="color:var(--tm);font-size:.85rem;line-height:1.7;">
+Hamein koi naya Peer, Orderer, ya Organization nahi banana hai. Same 3 existing Orgs (Org1, Org2, Org3) hi execute karenge. Fabric network restart karne ki bhi zaroorat nahi hai.
+</p>
+</div>
+</div>
+
+<div class="card" style="margin-top:1.5rem;">
+<h3 style="font-size:1.1rem;color:var(--tx);margin-bottom:1rem;">In Updates Se Doosri Cheezein Kya Affect Hongi?</h3>
+
+<table class="lt">
+<thead>
+<tr>
+<th>Component</th>
+<th>Effect / Dependency</th>
+<th>Action Needed</th>
+<th>Risk Level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Existing Single Applications</strong></td>
+<td>Default fallback <code>ownershipType='single'</code> aur <code>allConsentsGiven=true</code> milega.</td>
+<td>Kuch nahi. Bilkul pehle jaisa chalega.</td>
+<td><span class="pill ok">Zero Risk</span></td>
+</tr>
+<tr>
+<td><strong>Backend API (fabric-api)</strong></td>
+<td>Backend ko new endpoints expose karne honge taaki Member 3 frontend se connect kar sake.</td>
+<td>Member 2 <code>jointOwnershipRoutes.js</code> add karega aur <code>index.js</code> me mount karega.</td>
+<td><span class="pill ok">Safe (Independent)</span></td>
+</tr>
+<tr>
+<td><strong>Frontend (client)</strong></td>
+<td>User dashboard aur official dashboard ko new fields (owners list, consent status) handle karne honge.</td>
+<td>Member 3 pages banayega. Agar frontend ready nahi bhi ho, tab bhi backend aur chaincode standalone test ho sakte hain via Postman / curl.</td>
+<td><span class="pill ok">Safe (Independent)</span></td>
+</tr>
+<tr>
+<td><strong>Blockchain Ledger State</strong></td>
+<td>Puraane blocks aur transactions ledger me rahenge. New chaincode version commit hoga.</td>
+<td>Chaincode package version <code>2.0</code> sequence <code>2</code> ke saath commit karna hai using <code>upgrade-chaincode.sh</code>.</td>
+<td><span class="pill ok">Standard Fabric Lifecycle</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<hr class="d"/>
+
+<!-- SECTION 6: IMPLEMENTATION PLAN -->
+<section class="section" id="implementation-plan">
+<div class="sl">&#9989; Implementation Blueprint</div>
+<h2 class="st">Member 1 Implementation Checklist: Code Kaise Likhenge?</h2>
+<p class="sb">Jab aap aur aapki team ready ho jaye, tab hum <code>LandRecords_extracted/chaincode/land-registration/lib/land-registration-contract.js</code> me ek hi go me ye steps execute karenge:</p>
+
+<div class="two">
+<div class="card">
+<h4 style="color:var(--ind-l);margin-bottom:.6rem;">Step 1: createApplication() Update</h4>
+<div class="a-x" style="font-size:.85rem;color:var(--tm);line-height:1.8;">
+Line 92 ke aas paas <code>application</code> object me joint fields add karna:<br/>
+&bull; <code>ownershipType: userDataRaw.ownershipType || 'single'</code><br/>
+&bull; <code>owners: userDataRaw.owners || []</code><br/>
+&bull; <code>allConsentsGiven: (userDataRaw.ownershipType !== 'joint')</code><br/>
+&bull; <code>isDisputed: false</code>, <code>disputeDetails: null</code><br/>
+&bull; 100% share validation if joint.
+</div>
+</div>
+
+<div class="card">
+<h4 style="color:var(--am-l);margin-bottom:.6rem;">Step 2: forwardApplication() Guards</h4>
+<div class="a-x" style="font-size:.85rem;color:var(--tm);line-height:1.8;">
+Line 249 ke turant baad (application parse hote hi):<br/>
+&bull; Guard 1: <code>if (application.isDisputed) throw Error("Frozen due to dispute")</code><br/>
+&bull; Guard 2: <code>if (joint && !allConsentsGiven) throw Error("Pending co-owner consents")</code>.
+</div>
+</div>
+
+<div class="card">
+<h4 style="color:var(--em-l);margin-bottom:.6rem;">Step 3: 5 New Chaincode Functions</h4>
+<div class="a-x" style="font-size:.85rem;color:var(--tm);line-height:1.8;">
+Class ke end me (line 581 se pehle) 5 functions append karna:<br/>
+1. <code>addCoOwnerConsent()</code><br/>
+2. <code>transferOwnershipShare()</code><br/>
+3. <code>raiseOwnershipDispute()</code><br/>
+4. <code>resolveOwnershipDispute()</code><br/>
+5. <code>getOwnershipDetails()</code>.
+</div>
+</div>
+
+<div class="card">
+<h4 style="color:var(--sk-l);margin-bottom:.6rem;">Step 4: Deploy & Verify</h4>
+<div class="a-x" style="font-size:.85rem;color:var(--tm);line-height:1.8;">
+Chaincode upgrade script chalana ya fabric-api ke unit test se verify karna ki single application aur joint application dono flawless chal rahe hain.
+</div>
+</div>
+</div>
+
+<div class="alert ok" style="margin-top:1.5rem;">
+<span class="a-ico">&#129309;</span>
+<div>
+<div class="a-t">Final Conclusion & Next Step</div>
+<div class="a-x">Saari details, logic, boundaries, aur dispute handling humne clear kar li hai. Jab aap bolenge <strong>"Proceed with updates"</strong>, hum chaincode me ek hi go me bina kisi error ke saara code perfectly integrate kar denge!</div>
+</div>
+</div>
+</div>
+
+<hr class="d"/>
+
+<!-- SECTION 7: DEEP DOUBTS EXPLAINED -->
+<section class="section" id="deep-doubts">
+<div class="sl">&#10067; Member 1 Deep Q&A</div>
+<h2 class="st">Deep Doubts Clarified: Share Rectification & Sale Verification</h2>
+<p class="sb">Aapne jo do technical aur governance doubts puche hain, wo real-world land administration aur blockchain smart contracts ke sabse crucial edge cases hain. Inka detailed explanation dekhein:</p>
+
+<!-- DOUBT 1 -->
+<div class="card" style="margin-bottom:2rem;border-left:4px solid var(--em);">
+<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;">
+<span class="pill ok" style="font-size:.78rem;">DOUBT 1</span>
+<h3 style="font-size:1.15rem;color:#fff;">Co-Owner Dispute Me Form Entry Direct Update Hoti Hai Ya Form Reject Hokar Naya Banta Hai?</h3>
+</div>
+
+<p style="color:var(--tm);font-size:.88rem;margin-bottom:1rem;">
+<strong>Scenario:</strong> Ek co-owner ne dispute raise kiya: <em>"Mera share 50% tha, par form me galti se 30% likha hai."</em> Collector ne sunwayi ki aur user ki baat maante hue 50% share dene ka faisla kiya. Toh kya existing form ki share % entry update hogi ya form reject hoga?
+</p>
+
+<div class="two" style="margin-bottom:1.2rem;">
+<div style="background:var(--bg3);border:1px solid rgba(16,185,129,.3);border-radius:var(--r);padding:1.2rem;">
+<div style="color:var(--em-l);font-weight:700;font-size:.9rem;margin-bottom:.5rem;">&#9989; Option A (Recommended): Direct On-Chain Rectification Order</div>
+<div class="a-x" style="font-size:.82rem;color:var(--tx);line-height:1.75;">
+<strong>Kaise Hota Hai:</strong> Collectorate (Org3) ke paas <em>Quasi-Judicial Revenue Court</em> ki power hoti hai. Collector ek <strong>Rectification Order (Durusti Aadesh)</strong> pass karta hai.
+<br/><br/>
+Smart contract function <code>resolveOwnershipDispute(applicationId, resolutionData)</code> me Collector corrected shares pass karta hai:
+<br/>
+<code>resolutionData = { decision: "Share corrected to 50%", updatedOwners: [...] }</code>.
+<br/><br/>
+<strong>Kyun Best Hai?</strong>
+<ul style="padding-left:1.1rem;margin-top:.4rem;">
+<li>Pehle se complete ho chuki <strong>Surveyor Inspection Report aur Field Map</strong> bekar nahi hoti.</li>
+<li>Citizen ko dobara registration fees aur lambe line me nahi lagna padta.</li>
+<li>Blockchain ledger par <strong>tamper-proof audit trail</strong> banta hai: shuru me 30% tha, dispute hua, Collector ka order number laga, aur ab 50% ho gaya!</li>
+</ul>
+</div>
+</div>
+
+<div style="background:var(--bg3);border:1px solid rgba(244,63,94,.3);border-radius:var(--r);padding:1.2rem;">
+<div style="color:var(--ro-l);font-weight:700;font-size:.9rem;margin-bottom:.5rem;">&#10060; Option B (Strict Fraud Case): Hard Rejection & Fresh Filing</div>
+<div class="a-x" style="font-size:.82rem;color:var(--tx);line-height:1.75;">
+<strong>Kaise Hota Hai:</strong> Agar Collector ko pata chale ki Primary Applicant ne <strong>forgery ya fraud</strong> kiya hai aur dono paksh aapas me raazi nahi hain:
+<br/><br/>
+Collector application ka status direct <code>application.status = 'rejected'</code> kar deta hai.
+<br/><br/>
+<strong>Iska Asar:</strong>
+<ul style="padding-left:1.1rem;margin-top:.4rem;">
+<li>Puraani application hamesha ke liye <code>rejected</code> mark ho jati hai (audit trail blockchain par rehta hai).</li>
+<li>Applicants ko saare co-owners ke signature ke saath ek <strong>Fresh Joint Application</strong> shuru se submit karni padti hai.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="alert info" style="margin:0;">
+<span class="a-ico">&#128161;</span>
+<div>
+<div class="a-t">Hamara Smart Contract Dono Support Karega!</div>
+<div class="a-x">
+Hamare <code>resolveOwnershipDispute</code> function me Collector dono options choose kar sakta hai:
+<br/>
+Agar <code>resolutionData.action === 'rectify_shares'</code> hai, toh contract automatically <code>application.owners</code> array ko update karke application ko <strong>UNFREEZE</strong> kar dega taaki workflow smoothly aage badh sake!
+</div>
+</div>
+</div>
+</div>
+
+<!-- DOUBT 2 -->
+<div class="card" style="border-left:4px solid var(--sk);">
+<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;">
+<span class="pill info" style="font-size:.78rem;">DOUBT 2</span>
+<h3 style="font-size:1.15rem;color:#fff;">Jab Ek Co-Owner Apna Share Kisi Naye Ya Doosre Co-Owner Ko Bechega, Toh Kya Verification Hogi Ya Direct Transfer?</h3>
+</div>
+
+<p style="color:var(--tm);font-size:.88rem;margin-bottom:1rem;">
+<strong>Question:</strong> Kya land share Bitcoin ya Crypto token ki tarah 1-click me wallet-to-wallet transfer ho jata hai, ya koi legal verification process run hoti hai?
+</p>
+
+<div class="alert warn" style="margin-top:0;">
+<span class="a-ico">&#9888;&#65039;</span>
+<div>
+<div class="a-t">Golden Rule: Zameen Crypto Token Nahi Hai!</div>
+<div class="a-x">
+Zameen physical property hai. Agar bina verification direct transfer allow kar diya jaye, toh koi bhi hacker ya be-imaan co-owner family ki zameen kisi gunde ya ajnabi (stranger) ke naam transfer kar dega. Isliye land law me <strong>Verification Pipeline Mandatory</strong> hoti hai!
+</div>
+</div>
+</div>
+
+<div class="two" style="margin-top:1.2rem;">
+<div style="background:var(--bg3);border:1px solid var(--bdr-l);border-radius:var(--r);padding:1.2rem;">
+<h4 style="color:var(--sk-l);margin-bottom:.6rem;font-size:.95rem;">Case 1: Naye Person (Third Party) Ko Bechna</h4>
+<ol style="padding-left:1.2rem;line-height:1.8;color:var(--tx);font-size:.82rem;">
+<li><strong>Identity & KYC Check:</strong> Naye khareeddar (Buyer) ka Aadhaar / DigiLocker verification compulsory hoga.</li>
+<li><strong>Right of Pre-emption (Haq-e-Shufa / Co-Owners NOC):</strong> Indian Land Law ke mutabiq parivarik ya joint land me baaki co-owners ko pehla haq hota hai. Isliye baaki co-owners ka <strong>Digital NOC / Approval</strong> smart contract par record hota hai.</li>
+<li><strong>Deed Registration (Org1):</strong> Org1 Sub-Registrar stamp duty aur sale deed verify karta hai. Uske baad hi ledger me naya owner add hota hai.</li>
+</ol>
+</div>
+
+<div style="background:var(--bg3);border:1px solid var(--bdr-l);border-radius:var(--r);padding:1.2rem;">
+<h4 style="color:var(--vi-l);margin-bottom:.6rem;font-size:.95rem;">Case 2: Kisi Existing Co-Owner Ko Transfer Karna</h4>
+<ol style="padding-left:1.2rem;line-height:1.8;color:var(--tx);font-size:.82rem;">
+<li><strong>Relinquishment Deed (Haq-Tyag Patra):</strong> Selling co-owner apna hissa doosre maujuda bhai/partner ke naam relinquish karta hai.</li>
+<li><strong>Co-Owner Mutual Consent:</strong> Dono parties (Seller & Buyer) digital signature se transaction confirm karte hain.</li>
+<li><strong>Mathematical Invariant:</strong> Smart contract strictly verify karta hai:
+<br/><code>seller.share >= transferShare</code>
+<br/>Aur transfer ke baad bhi sabhi owners ka total <strong>exactly 100%</strong> rehta hai.
+</li>
+</ol>
+</div>
+</div>
+
+<div class="cb-header" style="margin-top:1.3rem;"><div class="cb-title">Chaincode Implementation Logic for transferOwnershipShare()</div><span class="cb-badge new">SMART CONTRACT</span></div>
+<div class="cb" style="font-size:.76rem;">
+<span class="cm">// Rule 1: Property must be fully registered and not in dispute</span>
+<span class="kw">if</span> (application.status !== <span class="str">'completed'</span> || application.isDisputed) {
+    <span class="kw">throw new</span> Error(<span class="str">'Share transfer only allowed on COMPLETED, NON-DISPUTED land records'</span>);
+}
+
+<span class="cm">// Rule 2: Verify Seller holds sufficient share</span>
+<span class="kw">const</span> seller = application.owners.find(o =&gt; o.ownerId === fromOwnerId);
+<span class="kw">if</span> (!seller || seller.sharePercent &lt; sharePercent) {
+    <span class="kw">throw new</span> Error(<span class="str">'Seller does not own sufficient share percentage'</span>);
+}
+
+<span class="cm">// Rule 3: Reallocate shares & keep total exactly 100%</span>
+seller.sharePercent -= parseFloat(sharePercent);
+<span class="kw">let</span> buyer = application.owners.find(o =&gt; o.ownerId === toOwnerId);
+<span class="kw">if</span> (buyer) {
+    buyer.sharePercent += parseFloat(sharePercent); <span class="cm">// Existing co-owner</span>
+} <span class="kw">else</span> {
+    application.owners.push({ ...newOwnerData, sharePercent: parseFloat(sharePercent) }); <span class="cm">// New Buyer</span>
+}
+</div>
+</div>
+</section>
+
+<hr class="d"/>
+
+<!-- SECTION 8: UI MAPPING FOR ALL EDGE CASES -->
+<section class="section" id="ui-mapping">
+<div class="sl">&#128421;&#65039; Frontend & User Experience</div>
+<h2 class="st">UI Me Ye Sabhi Options Aur Edge Cases Kaise Dikhayi Denge?</h2>
+<p class="sb">Aapka sawal 100% valid hai! Smart contract ke sabhi rules UI me properly reflect hone chahiye taaki citizen aur officials ko har status aur option crystal-clear dikhe. Member 3 (Frontend Layer) ke liye complete UI blueprint:</p>
+
+<div class="two">
+<!-- UI 1 -->
+<div class="card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+<span class="pill info">Screen 1</span>
+<span style="font-size:.74rem;color:var(--tm);">Citizen Application</span>
+</div>
+<h4 style="font-size:1.05rem;color:#fff;margin-bottom:.6rem;">&#128221; Multi-Owner Registration Form</h4>
+<ul style="padding-left:1.2rem;line-height:1.8;color:var(--tm);font-size:.84rem;">
+<li><strong>Ownership Selector:</strong> Radio Toggle &mdash; <code>[Single Owner]</code> vs <code>[Joint Ownership]</code>.</li>
+<li><strong>Dynamic Co-Owner Rows:</strong> Har owner ke liye: Name, Aadhaar/ID, aur Share % input. <code>[+ Add Co-Owner]</code> (max 5) aur <code>[- Remove]</code> (min 2).</li>
+<li><strong>Live 100% Progress Bar:</strong> Niche real-time progress bar:
+  <br/>&bull; Agar 80% hai: <span style="color:var(--ro-l);font-weight:700;">&#9888;&#65039; Total: 80% / 100% (20% share missing)</span> &rarr; Submit Button <strong>DISABLED</strong>.
+  <br/>&bull; Jaise hi 100% hua: <span style="color:var(--em-l);font-weight:700;">&#9989; Total: 100% / 100% (Valid)</span> &rarr; Submit Button <strong>ACTIVE</strong>.
+</li>
+</ul>
+</div>
+
+<!-- UI 2 -->
+<div class="card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+<span class="pill warn">Screen 2</span>
+<span style="font-size:.74rem;color:var(--tm);">Co-Owner Dashboard</span>
+</div>
+<h4 style="font-size:1.05rem;color:#fff;margin-bottom:.6rem;">&#129309; Co-Owner Consent & Dispute Panel</h4>
+<ul style="padding-left:1.2rem;line-height:1.8;color:var(--tm);font-size:.84rem;">
+<li>Jab co-owner login karega, dashboard par alert banner aayega: <strong>"1 Pending Joint Ownership Request"</strong>.</li>
+<li>Property details, Primary owner name, aur usko diya gaya <strong>Share %</strong> saaf-saaf dikhega.</li>
+<li><strong>2 Clear Action Buttons:</strong>
+  <br/>&bull; <code>[&#9989; Approve & Sign Digital Consent]</code> &rarr; Popup me DigiLocker signature.
+  <br/>&bull; <code>[&#9888;&#65039; Raise Dispute / Object]</code> &rarr; Popup open hoga: Reason type karega (e.g. <em>"My share is 50%, not 30%"</em>) aur dispute submit karega.
+</li>
+</ul>
+</div>
+</div>
+
+<div class="two" style="margin-top:1.5rem;">
+<!-- UI 3 -->
+<div class="card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+<span class="pill danger">Screen 3</span>
+<span style="font-size:.74rem;color:var(--tm);">Official Workflow</span>
+</div>
+<h4 style="font-size:1.05rem;color:#fff;margin-bottom:.6rem;">&#128683; Freeze & Consent Guard in Official Dashboard</h4>
+<ul style="padding-left:1.2rem;line-height:1.8;color:var(--tm);font-size:.84rem;">
+<li><strong>Consent Pending Warning:</strong> Clerk/Inspector ke card par yellow badge: <em>"Pending Co-Owner Consents (1/3 Pending)"</em>. <strong>Forward Button DISABLED</strong> with tooltip!</li>
+<li><strong>Dispute Freeze Alert:</strong> Agar dispute raise hua, toh card Red background me convert ho jayega:
+  <div style="background:rgba(244,63,94,.15);border:1px solid rgba(244,63,94,.3);border-radius:8px;padding:.5rem .8rem;margin-top:.4rem;color:var(--ro-l);font-weight:700;font-size:.78rem;">
+  &#128683; APPLICATION FROZEN &middot; Active Dispute Raised by Suresh
+  <br/><span style="font-weight:400;color:var(--tm);font-size:.72rem;">Reason: "Share is 50%, wrongly submitted as 30%". File locked.</span>
+  </div>
+</li>
+</ul>
+</div>
+
+<!-- UI 4 -->
+<div class="card">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+<span class="pill ok">Screen 4</span>
+<span style="font-size:.74rem;color:var(--tm);">Collectorate Court</span>
+</div>
+<h4 style="font-size:1.05rem;color:#fff;margin-bottom:.6rem;">&#9878;&#65039; Collector Dispute Resolution Modal</h4>
+<ul style="padding-left:1.2rem;line-height:1.8;color:var(--tm);font-size:.84rem;">
+<li>District Collector ke dashboard par alag tab hoga: <strong>"Disputed Land Records (1)"</strong>.</li>
+<li>Card par <code>[&#9878;&#65039; Hear & Resolve Dispute]</code> button:
+  <br/>&bull; <strong>Option 1 (Rectify Shares):</strong> Interactive table jisme Collector kisi bhi owner ka share directly edit kar sakta hai (e.g. 30% &rarr; 50%), order number daal kar <em>"Rectify & Unfreeze"</em> karega.
+  <br/>&bull; <strong>Option 2 (Reject Application):</strong> Agar fraud paya jaye, toh <em>"Reject Application Permanently"</em> button.
+</li>
+</ul>
+</div>
+</div>
+
+<div class="card" style="margin-top:1.5rem;">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;">
+<span class="pill info">Screen 5</span>
+<span style="font-size:.74rem;color:var(--tm);">Post-Registration / Completed Stage</span>
+</div>
+<h4 style="font-size:1.05rem;color:#fff;margin-bottom:.6rem;">&#128176; Share Transfer & Mutation UI (Selling Share)</h4>
+<p style="color:var(--tm);font-size:.85rem;line-height:1.7;">
+Jab land <code>completed</code> status par ho, tab owner ke property details page par <code>[Transfer / Sell Share %]</code> ka button show hoga:
+</p>
+<div class="two" style="margin-top:.8rem;">
+<div style="background:var(--bg3);border:1px solid var(--bdr-l);border-radius:10px;padding:1rem;">
+<div style="font-weight:700;color:var(--sk-l);font-size:.85rem;margin-bottom:.3rem;">Option A: Sell to Existing Co-Owner</div>
+<p style="font-size:.8rem;color:var(--tm);">Dropdown se co-owner select karo, share % choose karo (slider 1% to current holding). Instant recalculation dikhega.</p>
+</div>
+<div style="background:var(--bg3);border:1px solid var(--bdr-l);border-radius:10px;padding:1rem;">
+<div style="font-weight:700;color:var(--vi-l);font-size:.85rem;margin-bottom:.3rem;">Option B: Sell to New Buyer</div>
+<p style="font-size:.8rem;color:var(--tm);">New buyer ka Aadhaar/Name enter karo, Co-owners ka NOC approval tracker show hoga, aur Org1 Registry verification trigger hogi.</p>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+<p>Joint Ownership Feature Blueprint &middot; Blockchain Land Registration PBL &middot; Member 1 Guide</p>
+<p style="margin-top:.4rem;color:var(--td);font-size:.74rem;">Created for Himanshu (Member 1 - Blockchain/Chaincode Layer) &middot; Help_Notes_Group2</p>
+</footer>
+
+</body>
+</html>
