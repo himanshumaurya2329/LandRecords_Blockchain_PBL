@@ -89,6 +89,11 @@ export default function AdminDashboard() {
   const [userActivity, setUserActivity] = useState<any>(null);
   const [officialActivity, setOfficialActivity] = useState<any>(null);
   const [loadingActivity, setLoadingActivity] = useState(false);
+
+  // Dispute resolution state
+  const [disputeApp, setDisputeApp] = useState<Application | null>(null);
+  const [disputeResolution, setDisputeResolution] = useState('');
+  const [isResolvingDispute, setIsResolvingDispute] = useState(false);
   
   // Survey form states (for Surveyor role)
   const [passwordData, setPasswordData] = useState({
@@ -274,6 +279,40 @@ export default function AdminDashboard() {
     app?.ownerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     app?.status?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleResolveDispute = async () => {
+    if (!disputeApp || !disputeResolution.trim()) return;
+    setIsResolvingDispute(true);
+    try {
+      const response = await fetch('/api/land/dispute/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          receiptNumber: disputeApp.receiptNumber,
+          resolution: disputeResolution,
+        }),
+      });
+      if (response.ok) {
+        alert('Dispute resolved successfully!');
+        setDisputeApp(null);
+        setDisputeResolution('');
+        // Refresh applications list
+        const res = await fetch('/api/admin/applications');
+        if (res.ok) {
+          const data = await res.json();
+          setApplications(data.applications);
+        }
+      } else {
+        const err = await response.json();
+        alert(`Failed: ${err.error || 'Could not resolve dispute'}`);
+      }
+    } catch (e) {
+      console.error('Error resolving dispute:', e);
+      alert('Network error while resolving dispute');
+    } finally {
+      setIsResolvingDispute(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -643,29 +682,95 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 text-white font-mono">{app?.receiptNumber || 'N/A'}</td>
                         <td className="px-6 py-4 text-gray-300">{app?.ownerName || 'N/A'}</td>
                         <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            app?.status === 'completed' ? 'bg-green-500/20 text-green-300' :
-                            app?.status === 'rejected' ? 'bg-red-500/20 text-red-300' :
-                            'bg-yellow-500/20 text-yellow-300'
-                          }`}>
-                            {app?.status?.toUpperCase() || 'UNKNOWN'}
-                          </span>
+                          <div className="flex flex-col items-start gap-1">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              (app as any)?.status === 'completed' ? 'bg-green-500/20 text-green-300' :
+                              (app as any)?.status === 'rejected' ? 'bg-red-500/20 text-red-300' :
+                              'bg-yellow-500/20 text-yellow-300'
+                            }`}>
+                              {(app as any)?.status?.toUpperCase() || 'UNKNOWN'}
+                            </span>
+                            {(app as any)?.isDisputed && (
+                              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30">
+                                ⚠️ Disputed
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-gray-300">
                           {app?.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
                         </td>
                         <td className="px-6 py-4">
-                          <button
-                            onClick={() => setSelectedApp(app)}
-                            className="p-2 bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors"
-                          >
-                            <FaHistory className="text-white" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSelectedApp(app)}
+                              className="p-2 bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors"
+                              title="View History"
+                            >
+                              <FaHistory className="text-white" />
+                            </button>
+                            {(app as any)?.isDisputed && (
+                              <button
+                                onClick={() => { setDisputeApp(app); setDisputeResolution(''); }}
+                                className="p-2 bg-red-700 hover:bg-red-600 rounded-lg transition-colors"
+                                title="Resolve Dispute"
+                              >
+                                <FaExclamationTriangle className="text-white" />
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Resolve Dispute Modal */}
+        {disputeApp && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-slate-900 border border-red-500/30 rounded-2xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+              <div className="flex items-center gap-3 mb-6">
+                <FaExclamationTriangle className="text-red-400 text-2xl" />
+                <h3 className="text-xl font-bold text-white">Resolve Dispute</h3>
+              </div>
+              <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
+                <p className="text-red-300 text-sm font-semibold">Application: <span className="font-mono text-white">{disputeApp.receiptNumber}</span></p>
+                <p className="text-red-200 text-sm mt-1">Owner: {disputeApp.ownerName}</p>
+              </div>
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-300 mb-2">Resolution Note <span className="text-red-400">*</span></label>
+                <textarea
+                  rows={4}
+                  value={disputeResolution}
+                  onChange={(e) => setDisputeResolution(e.target.value)}
+                  placeholder="Describe how the dispute was resolved (e.g., boundary verification completed, documents verified, all owners agreed)..."
+                  className="w-full px-4 py-3 bg-white/10 border border-red-500/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-400 resize-none"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleResolveDispute}
+                  disabled={isResolvingDispute || !disputeResolution.trim()}
+                  className={`flex-1 px-6 py-3 rounded-xl font-bold transition-all ${
+                    isResolvingDispute || !disputeResolution.trim()
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      : 'bg-red-600 hover:bg-red-500 text-white'
+                  }`}
+                >
+                  <FaCheckCircle className="inline mr-2" />
+                  {isResolvingDispute ? 'Resolving...' : 'Mark as Resolved'}
+                </button>
+                <button
+                  onClick={() => { setDisputeApp(null); setDisputeResolution(''); }}
+                  disabled={isResolvingDispute}
+                  className="px-6 py-3 rounded-xl font-bold bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/20 transition-all"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>

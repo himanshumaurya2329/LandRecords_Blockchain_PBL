@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Member 2 (Tushar) - API Implementation Report</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
     :root {
       --bg-primary: #0a0f1e;
       --bg-card: #111827;
@@ -19,7 +21,13 @@
       --border: #1e293b;
       --tag-api: rgba(16, 185, 129, 0.15);
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg-primary);
@@ -27,159 +35,271 @@
       line-height: 1.6;
       min-height: 100vh;
     }
+
     .hero {
       background: linear-gradient(135deg, #0a0f1e 0%, #0f2a24 50%, #0a0f1e 100%);
       border-bottom: 1px solid var(--border);
       padding: 56px 40px 48px;
     }
-    .hero-inner { max-width: 960px; margin: 0 auto; position: relative; }
+
+    .hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      position: relative;
+    }
+
     .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--tag-api); border: 1px solid rgba(16, 185, 129, 0.3);
-      border-radius: 100px; padding: 6px 16px; font-size: 12px;
-      font-weight: 700; color: var(--accent-green); letter-spacing: 0.08em;
-      text-transform: uppercase; margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--tag-api);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-green);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
     }
-    .hero-badge .dot { width: 7px; height: 7px; background: var(--accent-green); border-radius: 50%; }
+
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-green);
+      border-radius: 50%;
+    }
+
     .hero h1 {
-      font-size: clamp(26px, 4vw, 40px); font-weight: 800;
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
       background: linear-gradient(135deg, #fff 0%, #6ee7b7 60%, #10b981 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      line-height: 1.15; margin-bottom: 16px;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+      margin-bottom: 16px;
     }
-    .hero-sub { font-size: 15px; color: var(--text-secondary); max-width: 680px; margin-bottom: 28px; }
-    .container { max-width: 960px; margin: 0 auto; padding: 48px 40px; }
-    section { margin-bottom: 64px; }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 40px;
+    }
+
+    section {
+      margin-bottom: 64px;
+    }
+
     section h2 {
-      font-size: 22px; font-weight: 700; color: var(--text-primary);
-      margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
     }
+
     .card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 24px 28px; margin-bottom: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
     }
+
     .code-block {
-      background: var(--bg-code); border: 1px solid #21262d;
-      border-radius: 10px; overflow: hidden; margin: 14px 0;
+      background: var(--bg-code);
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
     }
+
     .code-block .cb-header {
-      background: #161b22; border-bottom: 1px solid #21262d;
-      padding: 8px 14px; font-size: 12px; color: var(--text-muted);
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--text-muted);
     }
+
     .code-block pre {
-      padding: 16px 20px; overflow-x: auto; font-size: 13px;
-      font-family: 'JetBrains Mono', monospace; line-height: 1.6; color: #e6edf3;
+      padding: 16px 20px;
+      overflow-x: auto;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+      color: #e6edf3;
     }
+
     .tag {
-      display: inline-block; padding: 2px 8px; border-radius: 6px;
-      font-size: 12px; font-weight: 600; background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4);
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
     }
-    .route-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .route-table th { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
-    .route-table td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
-    .method-post { color: #f59e0b; font-weight: 700; }
-    .method-put { color: #3b82f6; font-weight: 700; }
-    .method-get { color: #10b981; font-weight: 700; }
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 30px; font-size: 13px; color: var(--text-muted); }
+
+    .route-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .route-table th {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .route-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .method-post {
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    .method-put {
+      color: #3b82f6;
+      font-weight: 700;
+    }
+
+    .method-get {
+      color: #10b981;
+      font-weight: 700;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 30px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
+
 <body>
 
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-badge"><span class="dot"></span> Member 2 (Tushar) | Backend API Handoff</div>
-    <h1>Joint Ownership API Layer<br>Implementation Complete</h1>
-    <p class="hero-sub">
-      This document details the Express.js REST API endpoints developed by Member 2 to bridge the Next.js Frontend (Member 3) with the Joint Ownership smart contract functions (Member 1).
-    </p>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="dot"></span> Member 2 (Tushar) | Backend API Handoff</div>
+      <h1>Joint Ownership API Layer<br>Implementation Complete</h1>
+      <p class="hero-sub">
+        This document details the Express.js REST API endpoints developed by Member 2 to bridge the Next.js Frontend
+        (Member 3) with the Joint Ownership smart contract functions (Member 1).
+      </p>
+    </div>
   </div>
-</div>
 
-<div class="container">
+  <div class="container">
 
-  <section>
-    <h2>1. Summary of Work Done</h2>
-    <div class="card">
-      <p style="margin-bottom: 16px; color: var(--text-secondary);">The following components were implemented seamlessly without breaking existing single-owner routes:</p>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; color: var(--text-secondary);">
-        <li>✅ <strong>Created <code>fabric-api/src/jointOwnershipRoutes.js</code>:</strong> Encapsulated all new joint ownership logic into a dedicated router module.</li>
-        <li>✅ <strong>Added 6 REST API Endpoints:</strong> Handled the request parsing, business validation (like 100% share checks), and invoking Fabric SDK via <code>fabricClient.js</code>.</li>
-        <li>✅ <strong>Org Validation:</strong> Hardcoded Collector Dispute Resolution endpoints to explicitly map to <code>Org3MSP</code>.</li>
-        <li>✅ <strong>Registered Routes:</strong> Safely mounted <code>app.use('/api/land', jointOwnershipRoutes)</code> in <code>fabric-api/index.js</code>.</li>
-      </ul>
-    </div>
-  </section>
+    <section>
+      <h2>1. Summary of Work Done</h2>
+      <div class="card">
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">The following components were implemented
+          seamlessly without breaking existing single-owner routes:</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; color: var(--text-secondary);">
+          <li>✅ <strong>Created <code>fabric-api/src/jointOwnershipRoutes.js</code>:</strong> Encapsulated all new joint
+            ownership logic into a dedicated router module.</li>
+          <li>✅ <strong>Added 6 REST API Endpoints:</strong> Handled the request parsing, business validation (like 100%
+            share checks), and invoking Fabric SDK via <code>fabricClient.js</code>.</li>
+          <li>✅ <strong>Org Validation:</strong> Hardcoded Collector Dispute Resolution endpoints to explicitly map to
+            <code>Org3MSP</code>.</li>
+          <li>✅ <strong>Registered Routes:</strong> Safely mounted
+            <code>app.use('/api/land', jointOwnershipRoutes)</code> in <code>fabric-api/index.js</code>.</li>
+        </ul>
+      </div>
+    </section>
 
-  <section>
-    <h2>2. API Endpoint Reference for Member 3</h2>
-    <div class="card">
-      <table class="route-table">
-        <thead>
-          <tr>
-            <th>Method</th>
-            <th>Endpoint</th>
-            <th>Chaincode Target</th>
-            <th>Payload Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="method-post">POST</td>
-            <td><code>/api/land/joint</code></td>
-            <td><span class="tag">createApplication</span></td>
-            <td><code>{ applicationId, owners: [{ ownerId, sharePercent, ... }], primaryOwner }</code></td>
-          </tr>
-          <tr>
-            <td class="method-post">POST</td>
-            <td><code>/api/land/:id/consent</code></td>
-            <td><span class="tag">addCoOwnerConsent</span></td>
-            <td><code>{ ownerId, remarks, username }</code></td>
-          </tr>
-          <tr>
-            <td class="method-post">POST</td>
-            <td><code>/api/land/:id/transfer-share</code></td>
-            <td><span class="tag">transferOwnershipShare</span></td>
-            <td><code>{ fromOwnerId, toOwnerId, sharePercent, newOwnerData, username }</code></td>
-          </tr>
-          <tr>
-            <td class="method-post">POST</td>
-            <td><code>/api/land/:id/dispute</code></td>
-            <td><span class="tag">raiseOwnershipDispute</span></td>
-            <td><code>{ raisedBy, reason, username }</code></td>
-          </tr>
-          <tr>
-            <td class="method-put">PUT</td>
-            <td><code>/api/land/:id/dispute/resolve</code></td>
-            <td><span class="tag">resolveOwnershipDispute</span></td>
-            <td><code>{ decision, action, orderNumber, updatedOwners, username }</code><br/><small>*Enforced to use Org3 Collector credentials internally.</small></td>
-          </tr>
-          <tr>
-            <td class="method-get">GET</td>
-            <td><code>/api/land/:id/owners</code></td>
-            <td><span class="tag">getOwnershipDetails</span></td>
-            <td>Returns the complete consent map and share breakdown.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <section>
+      <h2>2. API Endpoint Reference for Member 3</h2>
+      <div class="card">
+        <table class="route-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Endpoint</th>
+              <th>Chaincode Target</th>
+              <th>Payload Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="method-post">POST</td>
+              <td><code>/api/land/joint</code></td>
+              <td><span class="tag">createApplication</span></td>
+              <td><code>{ applicationId, owners: [{ ownerId, sharePercent, ... }], primaryOwner }</code></td>
+            </tr>
+            <tr>
+              <td class="method-post">POST</td>
+              <td><code>/api/land/:id/consent</code></td>
+              <td><span class="tag">addCoOwnerConsent</span></td>
+              <td><code>{ ownerId, remarks, username }</code></td>
+            </tr>
+            <tr>
+              <td class="method-post">POST</td>
+              <td><code>/api/land/:id/transfer-share</code></td>
+              <td><span class="tag">transferOwnershipShare</span></td>
+              <td><code>{ fromOwnerId, toOwnerId, sharePercent, newOwnerData, username }</code></td>
+            </tr>
+            <tr>
+              <td class="method-post">POST</td>
+              <td><code>/api/land/:id/dispute</code></td>
+              <td><span class="tag">raiseOwnershipDispute</span></td>
+              <td><code>{ raisedBy, reason, username }</code></td>
+            </tr>
+            <tr>
+              <td class="method-put">PUT</td>
+              <td><code>/api/land/:id/dispute/resolve</code></td>
+              <td><span class="tag">resolveOwnershipDispute</span></td>
+              <td><code>{ decision, action, orderNumber, updatedOwners, username }</code><br /><small>*Enforced to use
+                  Org3 Collector credentials internally.</small></td>
+            </tr>
+            <tr>
+              <td class="method-get">GET</td>
+              <td><code>/api/land/:id/owners</code></td>
+              <td><span class="tag">getOwnershipDetails</span></td>
+              <td>Returns the complete consent map and share breakdown.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-  <section>
-    <h2>3. Key Implementation Highlights</h2>
-    <div class="card">
-      <p style="color: var(--text-secondary); margin-bottom: 12px;"><strong>Validation Layer Example:</strong> 100% share validation logic inside the <code>/joint</code> route.</p>
-      <div class="code-block">
-        <div class="cb-header"><span>fabric-api/src/jointOwnershipRoutes.js</span></div>
-        <pre><code>const totalShare = owners.reduce((s, o) => s + parseFloat(o.sharePercent || 0), 0);
+    <section>
+      <h2>3. Key Implementation Highlights</h2>
+      <div class="card">
+        <p style="color: var(--text-secondary); margin-bottom: 12px;"><strong>Validation Layer Example:</strong> 100%
+          share validation logic inside the <code>/joint</code> route.</p>
+        <div class="code-block">
+          <div class="cb-header"><span>fabric-api/src/jointOwnershipRoutes.js</span></div>
+          <pre><code>const totalShare = owners.reduce((s, o) => s + parseFloat(o.sharePercent || 0), 0);
 if (Math.abs(totalShare - 100) > 0.01) {
     return res.status(400).json({ error: `Shares must total 100%. Got: ${totalShare}%` });
 }</code></pre>
-      </div>
-      <p style="color: var(--text-secondary); margin-top: 16px; margin-bottom: 12px;"><strong>Fabric SDK Invocation Example:</strong> Safe abstraction using the pre-existing <code>fabricClient</code> class.</p>
-      <div class="code-block">
-        <div class="cb-header"><span>fabric-api/src/jointOwnershipRoutes.js</span></div>
-        <pre><code>const caller = username || 'admin-registration';
+        </div>
+        <p style="color: var(--text-secondary); margin-top: 16px; margin-bottom: 12px;"><strong>Fabric SDK Invocation
+            Example:</strong> Safe abstraction using the pre-existing <code>fabricClient</code> class.</p>
+        <div class="code-block">
+          <div class="cb-header"><span>fabric-api/src/jointOwnershipRoutes.js</span></div>
+          <pre><code>const caller = username || 'admin-registration';
 await fabricClient.connect(caller);
     
 const response = await fabricClient.submitTransaction(
@@ -189,15 +309,160 @@ const response = await fabricClient.submitTransaction(
     ownerId, 
     JSON.stringify({ remarks: remarks || 'Consent given' })
 );</code></pre>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-</div>
+    <section>
+      <h2>4. Frontend UI Changes Implemented (Member 3 — Next.js)</h2>
+      <div class="card">
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">
+          The following frontend pages, components, and dashboard modifications were implemented to fully consume the API layer above. All changes are backward-compatible — single-owner flows are unaffected.
+        </p>
 
-<footer>
-  LandRecords PBL - API Layer Handoff | Group 2 | Member 2 (Tushar) &copy; 2026
-</footer>
+        <!-- New Pages -->
+        <h3 style="font-size:15px; font-weight:700; color:#6ee7b7; margin-bottom:12px; margin-top:8px;">📄 New Pages Created</h3>
+        <table class="route-table" style="margin-bottom:24px;">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Route</th>
+              <th>Description</th>
+              <th>API Used</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>joint-application/page.tsx</code></td>
+              <td><code>/joint-application</code></td>
+              <td>Multi-owner application form. Add/remove co-owners, set share %, live total validation (must = 100%), submits to Fabric via API.</td>
+              <td><code>POST /api/land/joint</code></td>
+            </tr>
+            <tr>
+              <td><code>consent-panel/page.tsx</code></td>
+              <td><code>/consent-panel</code></td>
+              <td>Co-owner consent dashboard. Fetch ownership details by appId, view all owners + their consent status (green/red), one-click "Grant Consent" button.</td>
+              <td><code>GET /api/land/:id/owners</code><br/><code>POST /api/land/:id/consent</code></td>
+            </tr>
+            <tr>
+              <td><code>ownership-dashboard/page.tsx</code></td>
+              <td><code>/ownership-dashboard</code></td>
+              <td>Visual ownership dashboard. Shows SVG pie chart of share percentages per owner, consent status with color badges, dispute status with frozen indicator.</td>
+              <td><code>GET /api/land/:id/owners</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- New Components -->
+        <h3 style="font-size:15px; font-weight:700; color:#6ee7b7; margin-bottom:12px;">🧩 New Components Created</h3>
+        <table class="route-table" style="margin-bottom:24px;">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>components/OwnershipPieChart.tsx</code></td>
+              <td>SVG-based pie chart rendering each co-owner's share % with a colour-coded legend. Used inside ownership-dashboard.</td>
+            </tr>
+            <tr>
+              <td><code>components/ConsentStatusBadge.tsx</code></td>
+              <td>Reusable badge component: green = consented, amber = pending, red = rejected. Used wherever consent status is displayed.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Modified Dashboards -->
+        <h3 style="font-size:15px; font-weight:700; color:#6ee7b7; margin-bottom:12px;">✏️ Existing Dashboards Modified</h3>
+
+        <div style="margin-bottom:20px;">
+          <p style="font-weight:600; color:var(--text-primary); margin-bottom:8px;">
+            1. <code>user-dashboard/page.tsx</code>
+          </p>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; color:var(--text-secondary); padding-left:12px;">
+            <li>✅ Added <strong>"📊 Joint Ownership"</strong> navigation link in the sidebar pointing to <code>/ownership-dashboard</code></li>
+            <li>✅ Status column in the requests table now shows sub-badges:
+              <ul style="margin-top:6px; padding-left:20px; gap:4px; display:flex; flex-direction:column;">
+                <li><strong>👥 Joint Ownership</strong> — shown when <code>req.ownershipType === 'joint'</code></li>
+                <li><strong>⚠️ Disputed</strong> — shown when <code>req.isDisputed === true</code></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="code-block" style="margin-top:10px;">
+            <div class="cb-header">user-dashboard/page.tsx — Status column (simplified)</div>
+            <pre><code>{(req as any).ownershipType === 'joint' && (
+  &lt;span className="... bg-indigo-100 text-indigo-700"&gt;👥 Joint Ownership&lt;/span&gt;
+)}
+{(req as any).isDisputed && (
+  &lt;span className="... bg-red-100 text-red-700"&gt;⚠️ Disputed&lt;/span&gt;
+)}</code></pre>
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <p style="font-weight:600; color:var(--text-primary); margin-bottom:8px;">
+            2. <code>official-dashboard/[receiptNumber]/page.tsx</code> — Consent Guard
+          </p>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; color:var(--text-secondary); padding-left:12px;">
+            <li>✅ Forward/Approve button is <strong>disabled + shows 🔒 lock icon</strong> when <code>ownershipType === 'joint'</code> AND <code>allConsentsGiven !== true</code></li>
+            <li>✅ Amber warning banner appears explaining that all co-owner consents are required before forwarding</li>
+            <li>✅ Reject button remains fully functional regardless of consent state</li>
+            <li>✅ Single-owner applications (<code>ownershipType !== 'joint'</code>) are completely unaffected</li>
+          </ul>
+          <div class="code-block" style="margin-top:10px;">
+            <div class="cb-header">official-dashboard/[receiptNumber]/page.tsx — Consent Guard logic</div>
+            <pre><code>const isJoint = (application as any).ownershipType === 'joint';
+const allConsentsGiven = (application as any).allConsentsGiven;
+const isConsentBlocked = isJoint && !allConsentsGiven;
+
+// Forward button:
+disabled={isProcessing || isConsentBlocked}
+
+// Warning banner (shown only when isConsentBlocked):
+// "All co-owners must provide consent before this application can be forwarded."</code></pre>
+          </div>
+        </div>
+
+        <div>
+          <p style="font-weight:600; color:var(--text-primary); margin-bottom:8px;">
+            3. <code>admin-dashboard/page.tsx</code> — Resolve Dispute Modal
+          </p>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; color:var(--text-secondary); padding-left:12px;">
+            <li>✅ Applications table Status column shows <strong>⚠️ Disputed</strong> badge for disputed records</li>
+            <li>✅ Actions column shows a red <strong>"Resolve Dispute"</strong> button (triangle icon) on disputed rows</li>
+            <li>✅ Clicking opens a full-screen modal with application info, required resolution notes textarea, and "Mark as Resolved" button</li>
+            <li>✅ On submit → calls <code>POST /api/land/dispute/resolve</code> → auto-refreshes the table on success</li>
+            <li>✅ Non-disputed rows are unaffected</li>
+          </ul>
+          <div class="code-block" style="margin-top:10px;">
+            <div class="cb-header">admin-dashboard/page.tsx — Resolve handler</div>
+            <pre><code>const handleResolveDispute = async () => {
+  const response = await fetch('/api/land/dispute/resolve', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      receiptNumber: disputeApp.receiptNumber,
+      resolution: disputeResolution,
+    }),
+  });
+  if (response.ok) {
+    alert('Dispute resolved successfully!');
+    // Refresh applications list automatically
+  }
+};</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    LandRecords PBL - API Layer Handoff | Group 2 | Member 2 (Tushar) &copy; 2026
+  </footer>
 
 </body>
+
 </html>
