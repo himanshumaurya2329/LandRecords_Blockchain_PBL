@@ -11,6 +11,7 @@ const fs = require('fs');
 // Import route handlers
 const authRoutes = require('./src/authController').router;
 const landRoutes = require('./src/landController');
+const jointOwnershipRoutes = require('./src/jointOwnershipRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/land', landRoutes);
+app.use('/api/land', jointOwnershipRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
