@@ -84,6 +84,7 @@ export default function UserDashboard() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeTab, setActiveTab] = useState('create');
+  const [ownershipType, setOwnershipType] = useState<'single' | 'joint'>('single');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [digiLockerDocs, setDigiLockerDocs] = useState<any[]>([]);
   const [selectedDigiDoc, setSelectedDigiDoc] = useState<any>(null);
@@ -108,6 +109,11 @@ export default function UserDashboard() {
     pincode: '',
   });
 
+  const [coOwners, setCoOwners] = useState<Array<{ ownerId: string; name: string; aadhar: string; sharePercent: number }>>([
+    { ownerId: '', name: '', aadhar: '', sharePercent: 50 },
+    { ownerId: '', name: '', aadhar: '', sharePercent: 50 },
+  ]);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -120,6 +126,22 @@ export default function UserDashboard() {
         if (response.ok) {
           const data = await response.json();
           setUserData(data.user);
+          if (data.user) {
+            setCoOwners([
+              {
+                ownerId: data.user.email || 'primary_applicant',
+                name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim() || 'Primary Applicant',
+                aadhar: data.user.aadhar || '',
+                sharePercent: 50,
+              },
+              {
+                ownerId: '',
+                name: '',
+                aadhar: '',
+                sharePercent: 50,
+              },
+            ]);
+          }
           if (data.user?.aadhar) fetchDigiLockerDocs(data.user.aadhar);
         }
       } catch (error) {
@@ -133,8 +155,10 @@ export default function UserDashboard() {
     if (!userData) return;
     setLoadingRequests(true);
     try {
+      // Pass aadhar so co-owner applications also show up
+      const aadharParam = userData.aadhar ? `&aadhar=${encodeURIComponent(userData.aadhar)}` : '';
       const response = await fetch(
-        `/api/land-requests/by-email?email=${userData.email}`,
+        `/api/land-requests/by-email?email=${encodeURIComponent(userData.email)}${aadharParam}`,
         {
           credentials: 'include',
           cache: 'no-store',
@@ -182,6 +206,8 @@ export default function UserDashboard() {
   useEffect(() => {
     if (activeTab === 'inbox' && userData) {
       fetchNotifications();
+      // Also fetch requests so co-owner consent alerts can show in inbox
+      if (requests.length === 0) fetchRequests();
     }
   }, [activeTab, userData]);
 
@@ -239,6 +265,21 @@ export default function UserDashboard() {
     if (!formData.pincode.trim()) newErrors.pincode = 'Pincode is required';
     if (!/^\d{6}$/.test(formData.pincode.replace(/\D/g, ''))) newErrors.pincode = 'Pincode must be 6 digits';
     if (!formData.ownerName.trim()) newErrors.ownerName = 'Owner name is required';
+
+    if (ownershipType === 'joint') {
+      if (coOwners.length < 2) {
+        newErrors.coOwners = 'Joint registration requires at least 2 co-owners.';
+      } else {
+        const hasEmptyNames = coOwners.some(o => !o.name.trim());
+        if (hasEmptyNames) {
+          newErrors.coOwners = 'All co-owners must have a full name provided.';
+        }
+        const total = coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0);
+        if (Math.abs(total - 100) > 0.01) {
+          newErrors.coOwners = `Total share percentages must equal 100%. Current total: ${total}%.`;
+        }
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -334,6 +375,8 @@ export default function UserDashboard() {
           dob: userData?.dateOfBirth || '',
           nature,
           ipfsHash,
+          ownershipType,
+          owners: ownershipType === 'joint' ? coOwners : undefined,
         }),
       });
 
@@ -586,7 +629,68 @@ export default function UserDashboard() {
 
         {/* Tab Content */}
         {activeTab === 'create' && (
-          <div className="grid grid-cols-1 lg:grid-cols-8 gap-6 ">
+          <div className="space-y-6">
+            {/* Ownership Type Toggle */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-200/50">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center border border-indigo-100">
+                  <span className="text-indigo-600 text-lg">🏛️</span>
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-slate-800">Ownership Type</h4>
+                  <p className="text-xs text-slate-500">Select how you want to register this property</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setOwnershipType('single')}
+                  className={`p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+                    ownershipType === 'single'
+                      ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500/20'
+                      : 'border-slate-200 bg-white hover:border-blue-300'
+                  }`}
+                >
+                  <span className="text-3xl">👤</span>
+                  <span className={`font-bold text-sm ${ownershipType === 'single' ? 'text-blue-900' : 'text-slate-600'}`}>Single Ownership</span>
+                  <span className="text-xs text-slate-400 text-center">Property owned by one person</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOwnershipType('joint')}
+                  className={`p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+                    ownershipType === 'joint'
+                      ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500/20'
+                      : 'border-slate-200 bg-white hover:border-indigo-300'
+                  }`}
+                >
+                  <span className="text-3xl">👥</span>
+                  <span className={`font-bold text-sm ${ownershipType === 'joint' ? 'text-indigo-900' : 'text-slate-600'}`}>Joint Ownership</span>
+                  <span className="text-xs text-slate-400 text-center">Property shared between co-owners</span>
+                </button>
+              </div>
+              {/* Joint Ownership Active Notice */}
+              {ownershipType === 'joint' && (
+                <div className="mt-4 p-4 rounded-xl bg-indigo-50 border border-indigo-200 flex flex-col md:flex-row md:items-center justify-between gap-3 text-sm text-indigo-900 shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">👥</span>
+                    <div>
+                      <p className="font-bold">Joint Ownership Mode Active</p>
+                      <p className="text-xs text-indigo-700">Enter co-owners and share percentages in the form below. All co-owners will verify consent via the Consent Portal.</p>
+                    </div>
+                  </div>
+                  <a
+                    href="/joint-application"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold whitespace-nowrap transition"
+                  >
+                    Standalone Form ↗
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* Registration Form */}
+            <div className="grid grid-cols-1 lg:grid-cols-8 gap-6 ">
             {/* Left Side: PDF Preview - 3 columns */}
             <div className="lg:col-span-3 sticky space-y-6">
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-200/50">
@@ -800,6 +904,144 @@ export default function UserDashboard() {
                   </div>
                 )}
 
+                {/* Co-Owners & Share Allocation (Only shown for Joint Ownership) */}
+                {ownershipType === 'joint' && (
+                  <div className="bg-white rounded-2xl border-2 border-indigo-200 p-6 shadow-xl shadow-indigo-100/50 space-y-5">
+                    <div className="flex items-center justify-between border-b border-indigo-100 pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center border border-indigo-100">
+                          <span className="text-xl">👥</span>
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-bold text-slate-800">Co-Owners & Share Allocation</h4>
+                          <p className="text-xs text-indigo-600 font-medium">Add all co-owners. Total shares must equal 100%.</p>
+                        </div>
+                      </div>
+                      <div className={`px-3 py-1.5 rounded-full text-xs font-bold border ${
+                        Math.abs(coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0) - 100) < 0.01
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-amber-50 text-amber-700 border-amber-200 animate-pulse'
+                      }`}>
+                        Total: {coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0)}%
+                        {Math.abs(coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0) - 100) < 0.01 ? ' ✅' : ' ⚠️ (Must be 100%)'}
+                      </div>
+                    </div>
+
+                    {/* Visual Progress Bar */}
+                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+                      {coOwners.map((owner, idx) => {
+                        const colors = ['bg-indigo-500', 'bg-purple-500', 'bg-cyan-500', 'bg-emerald-500', 'bg-amber-500'];
+                        return (
+                          <div
+                            key={idx}
+                            style={{ width: `${Math.min(100, Math.max(0, Number(owner.sharePercent) || 0))}%` }}
+                            className={`${colors[idx % colors.length]} h-full transition-all duration-300`}
+                            title={`${owner.name || `Owner ${idx + 1}`}: ${owner.sharePercent}%`}
+                          />
+                        );
+                      })}
+                    </div>
+
+                    {/* Co-Owner Rows */}
+                    <div className="space-y-4">
+                      {coOwners.map((owner, idx) => (
+                        <div key={idx} className="bg-slate-50 border border-slate-200 rounded-xl p-4 transition-all">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                              <span className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">
+                                {idx + 1}
+                              </span>
+                              {idx === 0 ? 'Primary Owner (Applicant)' : `Co-Owner #${idx + 1}`}
+                            </span>
+                            {idx > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => setCoOwners(coOwners.filter((_, i) => i !== idx))}
+                                className="text-xs text-red-500 hover:text-red-700 font-semibold"
+                              >
+                                ✕ Remove
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                              <label className="text-[11px] font-bold text-slate-500 uppercase block mb-1">
+                                Full Name <span className="text-red-500">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={owner.name}
+                                disabled={idx === 0}
+                                onChange={(e) => {
+                                  const updated = [...coOwners];
+                                  updated[idx] = { ...updated[idx], name: e.target.value };
+                                  setCoOwners(updated);
+                                }}
+                                placeholder="Co-owner full name"
+                                className={`w-full px-3 py-2 text-sm rounded-lg border bg-white text-slate-800 ${idx === 0 ? 'bg-slate-100 cursor-not-allowed' : 'border-slate-300 focus:border-indigo-500'}`}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[11px] font-bold text-slate-500 uppercase block mb-1">
+                                Aadhaar / Owner ID <span className="text-red-500">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={owner.aadhar}
+                                disabled={idx === 0}
+                                onChange={(e) => {
+                                  const updated = [...coOwners];
+                                  updated[idx] = { ...updated[idx], aadhar: e.target.value, ownerId: e.target.value || `owner_${idx + 1}` };
+                                  setCoOwners(updated);
+                                }}
+                                placeholder="12-digit Aadhaar"
+                                className={`w-full px-3 py-2 text-sm rounded-lg border bg-white text-slate-800 ${idx === 0 ? 'bg-slate-100 cursor-not-allowed' : 'border-slate-300 focus:border-indigo-500'}`}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-[11px] font-bold text-slate-500 uppercase block mb-1">
+                                Share Percentage (%) <span className="text-red-500">*</span>
+                              </label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="99"
+                                  value={owner.sharePercent}
+                                  onChange={(e) => {
+                                    const updated = [...coOwners];
+                                    updated[idx] = { ...updated[idx], sharePercent: Number(e.target.value) };
+                                    setCoOwners(updated);
+                                  }}
+                                  className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:border-indigo-500 font-bold text-indigo-700 bg-white"
+                                />
+                                <span className="absolute right-3 top-2 text-xs text-slate-400 font-bold">%</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {coOwners.length < 5 && (
+                      <button
+                        type="button"
+                        onClick={() => setCoOwners([...coOwners, { ownerId: `owner_${coOwners.length + 1}`, name: '', aadhar: '', sharePercent: 0 }])}
+                        className="w-full py-2.5 border-2 border-dashed border-indigo-200 hover:border-indigo-400 rounded-xl text-indigo-600 hover:text-indigo-800 text-xs font-bold transition flex items-center justify-center gap-2 bg-indigo-50/50"
+                      >
+                        + Add Another Co-Owner (Up to 5)
+                      </button>
+                    )}
+
+                    {errors.coOwners && (
+                      <p className="text-xs text-red-600 font-bold bg-red-50 p-2.5 rounded-lg border border-red-200">
+                        ⚠️ {errors.coOwners}
+                      </p>
+                    )}
+                  </div>
+                )}
+
                 {/* Land Details */}
                 <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-200/50">
                   <div className="flex items-center gap-3 mb-6">
@@ -841,7 +1083,9 @@ export default function UserDashboard() {
                   disabled={isUploading}
                   className={`w-full py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 border ${isUploading
                     ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed'
-                    : 'bg-blue-600 hover:bg-blue-700 border-transparent text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                    : ownershipType === 'joint'
+                      ? 'bg-indigo-600 hover:bg-indigo-700 border-transparent text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5'
+                      : 'bg-blue-600 hover:bg-blue-700 border-transparent text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5'
                     }`}
                 >
                   {isUploading ? (
@@ -855,7 +1099,7 @@ export default function UserDashboard() {
                   ) : (
                     <>
                       <IoRocketSharp className="text-xl" />
-                      <span>Submit Application</span>
+                      <span>{ownershipType === 'joint' ? 'Submit Joint Land Application' : 'Submit Application'}</span>
                       <FiArrowRight className="text-xl" />
                     </>
                   )}
@@ -871,6 +1115,7 @@ export default function UserDashboard() {
                 )}
               </form>
             </div>
+          </div>
           </div>
         )}
 
@@ -944,7 +1189,20 @@ export default function UserDashboard() {
                         return (
                           <tr key={req.receiptNumber || idx} className={`hover:bg-slate-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                             <td className="px-6 py-4">
-                              <span className="text-sm font-bold text-slate-700 font-mono bg-slate-100 px-2 py-1 rounded">{req.receiptNumber}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-bold text-slate-700 font-mono bg-slate-100 px-2 py-1 rounded border border-slate-200">{req.receiptNumber}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(req.receiptNumber);
+                                    alert(`Application ID "${req.receiptNumber}" copied to clipboard!`);
+                                  }}
+                                  className="text-[11px] px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded font-semibold transition flex items-center gap-1"
+                                  title="Copy Application ID"
+                                >
+                                  📋 Copy
+                                </button>
+                              </div>
                             </td>
                             <td className="px-6 py-4">
                               <span className="text-sm text-slate-700 font-semibold">{req.ownerName || req.fullName}</span>
@@ -986,7 +1244,7 @@ export default function UserDashboard() {
                               <span className="text-sm text-slate-600 font-medium bg-slate-100 px-3 py-1 rounded-full">{req.currentlyWithName || 'Processing'}</span>
                             </td>
                             <td className="px-6 py-4">
-                              <div className="flex items-center justify-center gap-2">
+                              <div className="flex items-center justify-center gap-2 flex-wrap">
                                 <button
                                   onClick={() => handleViewPatta(req.receiptNumber)}
                                   disabled={!isApproved}
@@ -1008,6 +1266,24 @@ export default function UserDashboard() {
                                     <FiDownload className="text-sm" />
                                     Download
                                   </button>
+                                )}
+                                {/* Shares Dashboard shortcut */}
+                                <a
+                                  href={`/ownership-dashboard?appId=${req.receiptNumber}`}
+                                  className="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-300 inline-flex items-center gap-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200"
+                                  title="View Ownership Distribution & Transfer Shares"
+                                >
+                                  📊 Shares
+                                </a>
+                                {/* Consent Portal shortcut for pending joint apps */}
+                                {(req as any).ownershipType === 'joint' && !isApproved && !(req as any).allConsentsGiven && (
+                                  <a
+                                    href={`/consent-panel?appId=${req.receiptNumber}`}
+                                    className="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-300 inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm border border-transparent"
+                                    title="Go to Consent Portal"
+                                  >
+                                    🤝 Consent
+                                  </a>
                                 )}
                               </div>
                             </td>
@@ -1079,6 +1355,38 @@ export default function UserDashboard() {
               </div>
             ) : (
               <div className="space-y-4">
+                {/* Consent-pending notifications for co-owner applications */}
+                {requests
+                  .filter((req: any) => req.ownershipType === 'joint' && !req.allConsentsGiven && req.isCoOwnerView)
+                  .map((req: any) => {
+                    const myOwner = (req.owners || []).find((o: any) => o.aadhar === userData?.aadhar);
+                    const needsConsent = myOwner && myOwner.consentStatus !== 'consented';
+                    if (!needsConsent) return null;
+                    return (
+                      <div key={`consent-${req.receiptNumber}`} className="bg-indigo-50 border-2 border-indigo-300 rounded-2xl p-5 shadow-sm">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-3">
+                            <span className="p-2 bg-indigo-100 text-indigo-700 rounded-full mt-0.5"><FiInfo className="text-lg" /></span>
+                            <div>
+                              <p className="font-bold text-indigo-900 text-base">🤝 Consent Required — Joint Ownership</p>
+                              <p className="text-sm text-indigo-700 mt-0.5">
+                                You are listed as a co-owner on application{' '}
+                                <span className="font-mono font-bold bg-indigo-100 px-1 rounded">{req.receiptNumber}</span>.
+                                Your digital consent is required to proceed.
+                              </p>
+                            </div>
+                          </div>
+                          <a
+                            href={`/consent-panel?appId=${req.receiptNumber}`}
+                            className="shrink-0 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-bold transition"
+                          >
+                            Give Consent →
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+
                 {notifications.map((notif) => (
                   <div key={notif._id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hover:shadow-md transition-all">
                     <div className="flex justify-between items-start mb-2">
@@ -1094,10 +1402,10 @@ export default function UserDashboard() {
                         </div>
                       </div>
                       <span className="text-xs text-slate-400 font-medium bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                        {new Date(notif.timestamp).toLocaleString(undefined, {
+                        {notif.timestamp ? new Date(notif.timestamp).toLocaleString(undefined, {
                           year: 'numeric', month: 'short', day: 'numeric',
                           hour: '2-digit', minute: '2-digit'
-                        })}
+                        }) : 'Unknown date'}
                       </span>
                     </div>
                     {notif.remarks && (

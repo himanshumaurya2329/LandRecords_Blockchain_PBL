@@ -93,6 +93,9 @@ export default function AdminDashboard() {
   // Dispute resolution state
   const [disputeApp, setDisputeApp] = useState<Application | null>(null);
   const [disputeResolution, setDisputeResolution] = useState('');
+  const [disputeAction, setDisputeAction] = useState<'rectify_shares' | 'reject'>('rectify_shares');
+  const [disputeOrderNumber, setDisputeOrderNumber] = useState('');
+  const [disputeUpdatedOwners, setDisputeUpdatedOwners] = useState<{ownerId: string; sharePercent: number}[]>([]);
   const [isResolvingDispute, setIsResolvingDispute] = useState(false);
   
   // Survey form states (for Surveyor role)
@@ -281,21 +284,29 @@ export default function AdminDashboard() {
   );
 
   const handleResolveDispute = async () => {
-    if (!disputeApp || !disputeResolution.trim()) return;
+    if (!disputeApp || !disputeOrderNumber.trim()) return;
     setIsResolvingDispute(true);
     try {
-      const response = await fetch('/api/land/dispute/resolve', {
-        method: 'POST',
+      const payload: any = {
+        action: disputeAction,
+        orderNumber: disputeOrderNumber,
+        username: 'admin-collector', // Org3 collector identity
+      };
+      if (disputeAction === 'rectify_shares' && disputeUpdatedOwners.length > 0) {
+        payload.updatedOwners = disputeUpdatedOwners;
+      }
+
+      const response = await fetch(`http://localhost:3001/api/land/${disputeApp.receiptNumber}/dispute/resolve`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          receiptNumber: disputeApp.receiptNumber,
-          resolution: disputeResolution,
-        }),
+        body: JSON.stringify(payload),
       });
       if (response.ok) {
         alert('Dispute resolved successfully!');
         setDisputeApp(null);
         setDisputeResolution('');
+        setDisputeOrderNumber('');
+        setDisputeUpdatedOwners([]);
         // Refresh applications list
         const res = await fetch('/api/admin/applications');
         if (res.ok) {
@@ -729,43 +740,149 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Resolve Dispute Modal */}
+        {/* Resolve Dispute Modal — District Collector (Org3) */}
         {disputeApp && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-slate-900 border border-red-500/30 rounded-2xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-slate-900 border border-red-500/30 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center gap-3 mb-6">
                 <FaExclamationTriangle className="text-red-400 text-2xl" />
-                <h3 className="text-xl font-bold text-white">Resolve Dispute</h3>
+                <h3 className="text-xl font-bold text-white">Resolve Dispute — District Collector</h3>
               </div>
               <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
                 <p className="text-red-300 text-sm font-semibold">Application: <span className="font-mono text-white">{disputeApp.receiptNumber}</span></p>
                 <p className="text-red-200 text-sm mt-1">Owner: {disputeApp.ownerName}</p>
               </div>
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-300 mb-2">Resolution Note <span className="text-red-400">*</span></label>
-                <textarea
-                  rows={4}
-                  value={disputeResolution}
-                  onChange={(e) => setDisputeResolution(e.target.value)}
-                  placeholder="Describe how the dispute was resolved (e.g., boundary verification completed, documents verified, all owners agreed)..."
-                  className="w-full px-4 py-3 bg-white/10 border border-red-500/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-400 resize-none"
+
+              {/* Action Selection */}
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-300 mb-3">Resolution Action <span className="text-red-400">*</span></label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setDisputeAction('rectify_shares')}
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                      disputeAction === 'rectify_shares'
+                        ? 'border-green-500 bg-green-500/15 text-green-300'
+                        : 'border-white/20 bg-white/5 text-gray-300 hover:border-green-500/50'
+                    }`}
+                  >
+                    <div className="font-bold text-sm mb-1">✅ Rectify Shares</div>
+                    <div className="text-xs opacity-70">Update co-owner percentages and unfreeze</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDisputeAction('reject')}
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
+                      disputeAction === 'reject'
+                        ? 'border-red-500 bg-red-500/15 text-red-300'
+                        : 'border-white/20 bg-white/5 text-gray-300 hover:border-red-500/50'
+                    }`}
+                  >
+                    <div className="font-bold text-sm mb-1">❌ Reject Dispute</div>
+                    <div className="text-xs opacity-70">Dismiss dispute, keep original shares</div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Order Number */}
+              <div className="mb-5">
+                <label className="block text-sm font-semibold text-gray-300 mb-2">Court/Collector Order Number <span className="text-red-400">*</span></label>
+                <input
+                  type="text"
+                  value={disputeOrderNumber}
+                  onChange={(e) => setDisputeOrderNumber(e.target.value)}
+                  placeholder="e.g. DC/ORDER/2026/1234"
+                  className="w-full px-4 py-3 bg-white/10 border border-red-500/30 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-red-400"
                 />
               </div>
+
+              {/* Updated Shares — only when rectifying */}
+              {disputeAction === 'rectify_shares' && (
+                <div className="mb-5">
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">Updated Owner Shares</label>
+                  <p className="text-xs text-gray-400 mb-3">Enter new share percentages for each owner (must total 100%)</p>
+                  {disputeUpdatedOwners.length === 0 && (
+                    <div className="text-center py-4">
+                      <button
+                        type="button"
+                        onClick={() => setDisputeUpdatedOwners([
+                          { ownerId: '', sharePercent: 50 },
+                          { ownerId: '', sharePercent: 50 },
+                        ])}
+                        className="text-sm text-green-400 hover:text-green-300 underline"
+                      >
+                        + Add Owner Share Rows
+                      </button>
+                    </div>
+                  )}
+                  {disputeUpdatedOwners.map((owner, idx) => (
+                    <div key={idx} className="flex gap-3 items-center mb-3">
+                      <input
+                        type="text"
+                        value={owner.ownerId}
+                        onChange={(e) => {
+                          const updated = [...disputeUpdatedOwners];
+                          updated[idx] = { ...updated[idx], ownerId: e.target.value };
+                          setDisputeUpdatedOwners(updated);
+                        }}
+                        placeholder="Owner ID"
+                        className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-green-400"
+                      />
+                      <input
+                        type="number"
+                        min="1" max="99"
+                        value={owner.sharePercent}
+                        onChange={(e) => {
+                          const updated = [...disputeUpdatedOwners];
+                          updated[idx] = { ...updated[idx], sharePercent: Number(e.target.value) };
+                          setDisputeUpdatedOwners(updated);
+                        }}
+                        className="w-20 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-green-400"
+                      />
+                      <span className="text-gray-400 text-sm">%</span>
+                      <button
+                        type="button"
+                        onClick={() => setDisputeUpdatedOwners(disputeUpdatedOwners.filter((_, i) => i !== idx))}
+                        className="text-red-400 hover:text-red-300 text-xs px-2"
+                      >✕</button>
+                    </div>
+                  ))}
+                  {disputeUpdatedOwners.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setDisputeUpdatedOwners([...disputeUpdatedOwners, { ownerId: '', sharePercent: 0 }])}
+                      className="text-xs text-green-400 hover:text-green-300 underline mt-1"
+                    >
+                      + Add Another Owner
+                    </button>
+                  )}
+                  {disputeUpdatedOwners.length > 0 && (
+                    <p className={`text-xs mt-2 font-semibold ${
+                      Math.abs(disputeUpdatedOwners.reduce((s, o) => s + (o.sharePercent || 0), 0) - 100) < 0.01
+                        ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      Total: {disputeUpdatedOwners.reduce((s, o) => s + (o.sharePercent || 0), 0)}%
+                      {Math.abs(disputeUpdatedOwners.reduce((s, o) => s + (o.sharePercent || 0), 0) - 100) < 0.01 ? ' ✅' : ' (must be 100%)'}
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div className="flex gap-3">
                 <button
                   onClick={handleResolveDispute}
-                  disabled={isResolvingDispute || !disputeResolution.trim()}
+                  disabled={isResolvingDispute || !disputeOrderNumber.trim()}
                   className={`flex-1 px-6 py-3 rounded-xl font-bold transition-all ${
-                    isResolvingDispute || !disputeResolution.trim()
+                    isResolvingDispute || !disputeOrderNumber.trim()
                       ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                      : 'bg-red-600 hover:bg-red-500 text-white'
+                      : disputeAction === 'rectify_shares' ? 'bg-green-600 hover:bg-green-500 text-white' : 'bg-red-600 hover:bg-red-500 text-white'
                   }`}
                 >
                   <FaCheckCircle className="inline mr-2" />
-                  {isResolvingDispute ? 'Resolving...' : 'Mark as Resolved'}
+                  {isResolvingDispute ? 'Resolving...' : (disputeAction === 'rectify_shares' ? 'Rectify & Unfreeze' : 'Reject Dispute')}
                 </button>
                 <button
-                  onClick={() => { setDisputeApp(null); setDisputeResolution(''); }}
+                  onClick={() => { setDisputeApp(null); setDisputeResolution(''); setDisputeOrderNumber(''); setDisputeUpdatedOwners([]); }}
                   disabled={isResolvingDispute}
                   className="px-6 py-3 rounded-xl font-bold bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white border border-white/20 transition-all"
                 >

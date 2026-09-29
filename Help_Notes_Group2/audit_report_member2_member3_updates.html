@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Audit Report - Member 2 (API) & Member 3 (UI) Implementation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --bg-primary: #0a0f1e;
+      --bg-card: #111827;
+      --bg-card2: #1a2236;
+      --bg-code: #0d1117;
+      --accent-green: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-cyan: #06b6d4;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: #1e293b;
+      --border-glow: rgba(59, 130, 246, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0a0f1e 0%, #171d36 50%, #0a0f1e 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 40px 48px;
+    }
+
+    .hero-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-orange);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, #cbd5e1 60%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .meta-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+
+    .meta-pill .label {
+      color: var(--text-muted);
+    }
+
+    .meta-pill .value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .toc-bar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .toc-link:hover {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent-blue);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 48px 40px;
+    }
+
+    section {
+      margin-bottom: 64px;
+    }
+
+    section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .tag-pass {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .tag-fail {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .tag-warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-orange);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .code-block {
+      background: var(--bg-code);
+      border: 1px solid #21262d;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .code-block .cb-header {
+      background: #161b22;
+      border-bottom: 1px solid #21262d;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .code-block pre {
+      padding: 16px 20px;
+      overflow-x: auto;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.6;
+      color: #e6edf3;
+    }
+
+    .info-box {
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+
+    .ib-green {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #6ee7b7;
+    }
+
+    .ib-orange {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      color: #fcd34d;
+    }
+
+    .ib-red {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #fca5a5;
+    }
+
+    .ib-blue {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: #93c5fd;
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 13.5px;
+    }
+
+    .audit-table th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--bg-code);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .audit-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 12px 0;
+    }
+
+    .checklist li {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+      padding: 30px 40px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .score-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+
+    .score-val {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 6px 0;
+    }
+
+    .score-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge"><span class="dot"></span> Comprehensive Code &amp; UI Audit</div>
+      <h1>Member 2 (API) &amp; Member 3 (UI)<br>Implementation Review &amp; Gap Analysis</h1>
+      <p class="hero-sub">
+        In-depth verification against the agreed Joint Ownership smart contract specifications, workflow rules, and edge cases.
+        This document details what is working, what has mismatches, and what must be updated before production deployment.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-pill"><span class="label">Audit Scope:</span> <span class="value">Express API + Next.js UI</span></div>
+        <div class="meta-pill"><span class="label">Reference:</span> <span class="value">Updates_made.html &amp; Chaincode Specs</span></div>
+        <div class="meta-pill"><span class="label">Overall Status:</span> <span class="value" style="color:var(--accent-orange);">Partially Complete (Critical Gaps Found)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="toc-bar">
+    <a class="toc-link" href="#verdict">Verdict &amp; Scorecard</a>
+    <a class="toc-link" href="#working">What's Working</a>
+    <a class="toc-link" href="#critical-gaps">Critical Gaps &amp; Bugs</a>
+    <a class="toc-link" href="#edge-cases">Edge Cases Check</a>
+    <a class="toc-link" href="#dashboards">Dashboards Audit</a>
+    <a class="toc-link" href="#action-plan">Required Fixes</a>
+  </nav>
+
+  <div class="container">
+
+    <!-- Section 1: Verdict -->
+    <section id="verdict">
+      <h2>1. Audit Verdict &amp; Scorecard</h2>
+      
+      <div class="score-box">
+        <div class="score-card">
+          <div class="score-label">API Layer (Member 2)</div>
+          <div class="score-val" style="color: #60a5fa;">80%</div>
+          <p style="font-size: 12px; color: var(--text-secondary);">Endpoints created, but 1 critical method mismatch.</p>
+        </div>
+        <div class="score-card">
+          <div class="score-label">UI Pages (Member 3)</div>
+          <div class="score-val" style="color: #a78bfa;">70%</div>
+          <p style="font-size: 12px; color: var(--text-secondary);">3 new pages created, but navigation &amp; buttons disabled.</p>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Dispute Edge Cases</div>
+          <div class="score-val" style="color: #f87171;">40%</div>
+          <p style="font-size: 12px; color: var(--text-secondary);">Freeze guard missing in Official Dashboard, Collector UI wrong.</p>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Share Transfer</div>
+          <div class="score-val" style="color: #f87171;">20%</div>
+          <p style="font-size: 12px; color: var(--text-secondary);">API exists, but UI button is permanently disabled.</p>
+        </div>
+      </div>
+
+      <div class="info-box ib-orange">
+        <div>
+          <strong>Executive Summary (Hinglish):</strong><br>
+          Member 2 aur Member 3 ne kaam start karke basic structure khada kar diya hai: <code>jointOwnershipRoutes.js</code> banaya hai aur <code>/joint-application</code>, <code>/consent-panel</code>, <code>/ownership-dashboard</code> pages banaye hain. <strong>Lekin kaafi saari cheezein aadhe-adhure ya disconnected state me hain!</strong>
+          <br><br>
+          Khaaskar <strong>Dispute Resolution</strong> me API method aur payload match nahi kar rahe (API <code>PUT</code> mangti hai with <code>action</code> aur <code>orderNumber</code>, jabki UI <code>POST</code> bhejti hai without action), <strong>Official Dashboard</strong> me dispute aane par Forward button freeze nahi hota, aur <strong>Share Transfer</strong> ka button UI me hardcoded disabled hai bina kisi modal ya form ke.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: What's Working -->
+    <section id="working">
+      <h2>2. What Has Been Successfully Implemented</h2>
+      <div class="card">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Joint Application Creation</strong><br><code>POST /api/land/joint</code></td>
+              <td><span class="tag tag-pass">Pass</span></td>
+              <td>Page <code>/joint-application</code> allows adding 2 to 5 owners with share % sliders, validates 100% total, and submits to Fabric with transient encryption.</td>
+            </tr>
+            <tr>
+              <td><strong>Co-Owner Consent Backend</strong><br><code>POST /api/land/:id/consent</code></td>
+              <td><span class="tag tag-pass">Pass</span></td>
+              <td>Calls <code>addCoOwnerConsent</code> on smart contract. Flips owner consent to <code>approved</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>Consent Panel UI</strong><br><code>/consent-panel</code></td>
+              <td><span class="tag tag-pass">Pass</span></td>
+              <td>Displays co-owner status (Approved / Pending) and has one-click "Grant Digital Consent" button.</td>
+            </tr>
+            <tr>
+              <td><strong>Dispute Raising</strong><br><code>POST /api/land/:id/dispute</code></td>
+              <td><span class="tag tag-pass">Pass</span></td>
+              <td>Calls <code>raiseOwnershipDispute</code> on smart contract. Sets <code>isDisputed = true</code> on the ledger.</td>
+            </tr>
+            <tr>
+              <td><strong>Official Dashboard Consent Guard</strong></td>
+              <td><span class="tag tag-pass">Pass</span></td>
+              <td>In <code>official-dashboard/[receiptNumber]/page.tsx</code>, forward button is disabled with 🔒 icon if joint app has pending consents.</td>
+            </tr>
+            <tr>
+              <td><strong>Ownership Visuals</strong></td>
+              <td><span class="tag tag-pass">Pass</span></td>
+              <td><code>OwnershipPieChart.tsx</code> and <code>ConsentStatusBadge.tsx</code> cleanly render shares and statuses.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 3: Critical Gaps -->
+    <section id="critical-gaps">
+      <h2>3. Critical Gaps &amp; Bugs (High Priority)</h2>
+
+      <!-- Bug 1 -->
+      <div class="card" style="border-left: 4px solid var(--accent-red);">
+        <h3 style="color: var(--accent-red); margin-bottom: 8px;">🚨 Gap 1: Dispute Resolution Route &amp; Payload Mismatch (Will Crash / 404)</h3>
+        <p>In <code>admin-dashboard/page.tsx</code> (lines 287-294), the dispute resolve handler is coded as:</p>
+        <div class="code-block">
+          <div class="cb-header"><span>client/src/app/admin-dashboard/page.tsx (Line 287)</span><span>Broken Next.js Fetch</span></div>
+          <pre><code>// Frontend calls non-existent Next.js relative route with POST
+const response = await fetch('/api/land/dispute/resolve', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    receiptNumber: disputeApp.receiptNumber,
+    resolution: disputeResolution,
+  }),
+});</code></pre>
+        </div>
+        <p><strong>Why this fails:</strong></p>
+        <ul class="checklist">
+          <li>❌ <strong>Wrong URL &amp; Method:</strong> In Express <code>jointOwnershipRoutes.js</code>, the route is <code>PUT http://localhost:3001/api/land/:id/dispute/resolve</code>. Calling <code>POST /api/land/dispute/resolve</code> on Next.js port 3000 returns <strong>404 Not Found</strong>.</li>
+          <li>❌ <strong>Missing <code>action</code> Field:</strong> The chaincode requires <code>action: 'rectify_shares' | 'reject'</code>. Because <code>action</code> is missing, chaincode throws: <em>"Unknown resolution action 'undefined'"</em>.</li>
+          <li>❌ <strong>Missing <code>orderNumber</code> &amp; <code>updatedOwners</code>:</strong> The chaincode requires <code>updatedOwners: [{ ownerId, sharePercent }]</code> for rectification. None of this is passed from the UI.</li>
+        </ul>
+      </div>
+
+      <!-- Bug 2 -->
+      <div class="card" style="border-left: 4px solid var(--accent-red);">
+        <h3 style="color: var(--accent-red); margin-bottom: 8px;">🚨 Gap 2: Wrong Persona for Dispute Resolution (Admin vs District Collector)</h3>
+        <p>
+          In our legal/architectural design, <strong>Org3 District Collector (Quasi-judicial authority)</strong> resolves disputes.
+          Officials log into <code>/officiallogin</code> with designations like <code>districtcollector</code> or <code>jointcollector</code>.
+        </p>
+        <ul class="checklist">
+          <li>❌ Member 2/3 placed the "Resolve Dispute" modal in <code>admin-dashboard/page.tsx</code> (which is intended for Super Admin system maintenance).</li>
+          <li>❌ In <code>official-dashboard/page.tsx</code>, when a District Collector logs in, there is <strong>zero interface</strong> to filter or resolve disputed land applications!</li>
+          <li>❌ In <code>admin-dashboard/page.tsx</code>, applications are loaded from <strong>MongoDB</strong> (<code>/api/admin/applications</code>), but <code>isDisputed</code> is stored on <strong>Hyperledger Fabric</strong>! Therefore, <code>(app as any)?.isDisputed</code> will <strong>always evaluate to undefined</strong>, so the button never appears for blockchain records!</li>
+        </ul>
+      </div>
+
+      <!-- Bug 3 -->
+      <div class="card" style="border-left: 4px solid var(--accent-red);">
+        <h3 style="color: var(--accent-red); margin-bottom: 8px;">🚨 Gap 3: Official Dashboard Missing Dispute Freeze Guard</h3>
+        <p>In <code>official-dashboard/[receiptNumber]/page.tsx</code>:</p>
+        <div class="code-block">
+          <div class="cb-header"><span>client/src/app/official-dashboard/[receiptNumber]/page.tsx (Line 495)</span></div>
+          <pre><code>const isJoint = (application as any).ownershipType === 'joint';
+const allConsentsGiven = (application as any).allConsentsGiven;
+const isConsentBlocked = isJoint && !allConsentsGiven;
+
+// Notice: isDisputed is completely ignored!
+// If application.isDisputed === true, the Forward button remains ENABLED!</code></pre>
+        </div>
+        <ul class="checklist">
+          <li>❌ If a co-owner raises a dispute, the official can still click "Forward / Approve &amp; Forward".</li>
+          <li>❌ The UI doesn't show a red freeze banner ("APPLICATION FROZEN: Active Dispute").</li>
+          <li>❌ Clicking Forward triggers an unhandled smart contract error: <em>"Application is FROZEN due to an active ownership dispute"</em>.</li>
+        </ul>
+      </div>
+
+      <!-- Bug 4 -->
+      <div class="card" style="border-left: 4px solid var(--accent-red);">
+        <h3 style="color: var(--accent-red); margin-bottom: 8px;">🚨 Gap 4: Share Transfer UI is Hardcoded Disabled (Dummy Button)</h3>
+        <p>In <code>ownership-dashboard/page.tsx</code> (lines 119-123):</p>
+        <div class="code-block">
+          <div class="cb-header"><span>client/src/app/ownership-dashboard/page.tsx (Line 119)</span></div>
+          <pre><code>&lt;button disabled className="... opacity-60 cursor-not-allowed"&gt;
+  &lt;FaExchangeAlt className="text-2xl" /&gt;
+  &lt;span className="font-bold"&gt;Transfer Share&lt;/span&gt;
+  &lt;span className="text-xs"&gt;(Requires completed status)&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+        </div>
+        <ul class="checklist">
+          <li>❌ The button has <code>disabled</code> permanently set. Even if the application is <code>status === 'completed'</code>, user cannot click it.</li>
+          <li>❌ There is no modal to input buyer details (name, aadhaar, share %).</li>
+          <li>❌ No NOC checkbox/validation for other co-owners.</li>
+          <li>❌ The backend endpoint <code>POST /api/land/:id/transfer-share</code> is never called by any frontend code.</li>
+        </ul>
+      </div>
+
+      <!-- Bug 5 -->
+      <div class="card" style="border-left: 4px solid var(--accent-orange);">
+        <h3 style="color: var(--accent-orange); margin-bottom: 8px;">⚠️ Gap 5: Disconnected Navigation &amp; Orphaned Pages</h3>
+        <ul class="checklist">
+          <li>⚠️ <strong>User Dashboard Create Request Tab:</strong> The main registration form in <code>user-dashboard/page.tsx</code> only creates single-owner applications. It does NOT have a toggle or link to switch to Joint Ownership (<code>/joint-application</code>).</li>
+          <li>⚠️ <strong>Consent Panel Disconnected:</strong> There is no link or button anywhere in <code>user-dashboard</code> directing co-owners to <code>/consent-panel</code>. A co-owner has to manually type <code>localhost:3000/consent-panel</code> in the URL bar.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 4: Edge Cases Check -->
+    <section id="edge-cases">
+      <h2>4. Edge Cases Detailed Audit Table</h2>
+      <div class="card">
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>Edge Case As Discussed</th>
+              <th>Chaincode</th>
+              <th>API Layer</th>
+              <th>UI Layer</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Shares sum to exactly 100%</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Validated</span></td>
+              <td><span class="tag tag-pass">Validated</span></td>
+              <td><span class="tag tag-pass">Pass</span> Slider &amp; pie chart prevent submit if ≠ 100%.</td>
+            </tr>
+            <tr>
+              <td><strong>2. Min 2, Max 5 co-owners, Min 1% share</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Pass</span> Add/Remove buttons respect 2-5 boundary.</td>
+            </tr>
+            <tr>
+              <td><strong>3. Co-owner digital consent gate</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Exposed</span></td>
+              <td><span class="tag tag-pass">Guarded</span></td>
+              <td><span class="tag tag-pass">Pass</span> Forward button locked until all consent.</td>
+            </tr>
+            <tr>
+              <td><strong>4. Dispute freezes workflow immediately</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Exposed</span></td>
+              <td><span class="tag tag-fail">Missing in UI</span></td>
+              <td><span class="tag tag-fail">Fail</span> Official dashboard does not disable forward on dispute.</td>
+            </tr>
+            <tr>
+              <td><strong>5. Collector Option A: Rectify Shares (In-line update)</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Exposed</span></td>
+              <td><span class="tag tag-fail">Missing in UI</span></td>
+              <td><span class="tag tag-fail">Fail</span> UI has no share inputs, order number, or action selector.</td>
+            </tr>
+            <tr>
+              <td><strong>6. Collector Option B: Permanent Rejection</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Exposed</span></td>
+              <td><span class="tag tag-fail">Missing in UI</span></td>
+              <td><span class="tag tag-fail">Fail</span> UI only has "Mark as Resolved", no Reject action.</td>
+            </tr>
+            <tr>
+              <td><strong>7. Post-registration Share Transfer</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Exposed</span></td>
+              <td><span class="tag tag-fail">Disabled</span></td>
+              <td><span class="tag tag-fail">Fail</span> Button is static disabled. No modal or API call.</td>
+            </tr>
+            <tr>
+              <td><strong>8. Pre-emption NOC for new buyer transfer</strong></td>
+              <td><span class="tag tag-pass">Enforced</span></td>
+              <td><span class="tag tag-pass">Exposed</span></td>
+              <td><span class="tag tag-fail">Missing</span></td>
+              <td><span class="tag tag-fail">Fail</span> No UI for NOC collection.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 5: Dashboards Audit -->
+    <section id="dashboards">
+      <h2>5. Dashboard-by-Dashboard Review</h2>
+
+      <div class="card">
+        <h3 style="color: #60a5fa; margin-bottom: 8px;">User Dashboard (<code>/user-dashboard</code>)</h3>
+        <ul class="checklist">
+          <li>✅ Added "Joint Ownership" button in header linking to <code>/ownership-dashboard</code>.</li>
+          <li>✅ Added <code>👥 Joint Ownership</code> and <code>⚠️ Disputed</code> badges in Requests table.</li>
+          <li>❌ <strong>Missing:</strong> In the Requests table, when an application has pending consents, there should be a quick action button: <em>"Grant Consent"</em> linking directly to <code>/consent-panel?appId=...</code>.</li>
+          <li>❌ <strong>Missing:</strong> Inside "Create Request" tab, there is no switch to choose "Joint Ownership". User must separately know to go to <code>/joint-application</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #a78bfa; margin-bottom: 8px;">Official Dashboard (<code>/official-dashboard/[receiptNumber]</code>)</h3>
+        <ul class="checklist">
+          <li>✅ Correctly detects <code>isConsentBlocked</code> and disables Forward with a lock icon.</li>
+          <li>❌ <strong>Critical Missing:</strong> Does not check <code>application.isDisputed</code>. If disputed, Forward button is NOT blocked and no red alert is shown.</li>
+          <li>❌ <strong>Critical Missing:</strong> For District Collector (<code>official.designation === 'districtcollector'</code>), when an application is disputed, it should display the <strong>Quasi-Judicial Dispute Resolution Box</strong> (Rectify Shares vs Reject).</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #f59e0b; margin-bottom: 8px;">Ownership Dashboard (<code>/ownership-dashboard</code>)</h3>
+        <ul class="checklist">
+          <li>✅ Looks clean, shows pie chart and co-owners table with consent status.</li>
+          <li>✅ "Raise Dispute" works and triggers <code>POST /api/land/:id/dispute</code>.</li>
+          <li>❌ "Transfer Share" button is hardcoded disabled with no modal.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 6: Action Plan -->
+    <section id="action-plan">
+      <h2>6. Step-by-Step Fix Recommendations</h2>
+
+      <div class="card">
+        <h3 style="color: var(--accent-green); margin-bottom: 12px;">Step 1: Fix Dispute Freeze in <code>official-dashboard/[receiptNumber]/page.tsx</code></h3>
+        <p>Update lines 495-498 to check both consent and dispute:</p>
+        <div class="code-block">
+          <div class="cb-header"><span>Recommended Code Change</span><span>official-dashboard/[receiptNumber]/page.tsx</span></div>
+          <pre><code>const isJoint = (application as any).ownershipType === 'joint';
+const allConsentsGiven = (application as any).allConsentsGiven;
+const isDisputed = (application as any).isDisputed === true;
+
+const isConsentBlocked = isJoint && !allConsentsGiven;
+const isDisputeBlocked = isDisputed;
+const isForwardBlocked = isConsentBlocked || isDisputeBlocked;
+
+// In JSX:
+{isDisputed && (
+  &lt;div className="mb-4 bg-red-500/20 border border-red-500 rounded-xl p-4 text-red-200"&gt;
+    &lt;strong className="text-red-400 text-lg"&gt;⚠️ APPLICATION FROZEN — ACTIVE DISPUTE&lt;/strong&gt;
+    &lt;p className="text-sm mt-1"&gt;Reason: {(application as any).disputeDetails?.reason}&lt;/p&gt;
+    &lt;p className="text-xs text-red-300 mt-1"&gt;Raised by: {(application as any).disputeDetails?.raisedBy}&lt;/p&gt;
+    &lt;p className="text-xs text-yellow-300 mt-2"&gt;No forwarding allowed until District Collector resolves this dispute.&lt;/p&gt;
+  &lt;/div&gt;
+)}
+
+// Disable Forward button:
+disabled={isProcessing || isForwardBlocked}</code></pre>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="color: var(--accent-green); margin-bottom: 12px;">Step 2: Add Real Collector Dispute Resolution Modal</h3>
+        <p>In Collector view, provide the two explicit actions discussed:</p>
+        <ul class="checklist">
+          <li><strong>Action 1: Rectify Shares (In-line update)</strong> — Provide editable share inputs for each co-owner, enforce sum = 100%, input judicial order number (e.g. <code>DC/REV/2026/001</code>), and call <code>PUT http://localhost:3001/api/land/${appId}/dispute/resolve</code> with:
+            <code>{ action: 'rectify_shares', decision: '...', orderNumber: '...', updatedOwners: [...] }</code>.
+          </li>
+          <li><strong>Action 2: Reject Application</strong> — Input rejection reason and order number, and call <code>PUT http://localhost:3001/api/land/${appId}/dispute/resolve</code> with:
+            <code>{ action: 'reject', decision: '...', orderNumber: '...' }</code>.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 style="color: var(--accent-green); margin-bottom: 12px;">Step 3: Enable Share Transfer Modal in <code>/ownership-dashboard</code></h3>
+        <p>If <code>details.status === 'completed' &amp;&amp; !details.isDisputed</code>:</p>
+        <ul class="checklist">
+          <li>Enable the "Transfer Share" button.</li>
+          <li>When clicked, open modal to choose: (A) Transfer to existing co-owner, or (B) Transfer to new buyer (with Name, Aadhaar, and NOC verification checkboxes).</li>
+          <li>Submit to <code>POST http://localhost:3001/api/land/${appId}/transfer-share</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 style="color: var(--accent-green); margin-bottom: 12px;">Step 4: Connect User Dashboard Links</h3>
+        <ul class="checklist">
+          <li>In <code>user-dashboard/page.tsx</code>, add a radio toggle or link inside "Create Request" tab: <em>"Registering Joint Ownership? Click here to fill Joint Application Form →"</em>.</li>
+          <li>In <code>user-dashboard/page.tsx</code> table, if application has <code>ownershipType === 'joint' &amp;&amp; !allConsentsGiven</code>, add button: <em>"Consent Portal →"</em> linking to <code>/consent-panel</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    LandRecords PBL — Group 2 Code Audit Report | Chaincode, API &amp; UI Review &copy; 2026
+  </footer>
+
+</body>
+
+</html>

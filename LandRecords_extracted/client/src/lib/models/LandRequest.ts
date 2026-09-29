@@ -75,6 +75,30 @@ export interface ILandRequest extends Document {
     blockNumber?: number;
   }>;
 
+  // Joint Ownership & Dispute Fields
+  ownershipType?: 'single' | 'joint';
+  owners?: Array<{
+    ownerId: string;
+    name?: string;
+    aadhar?: string;
+    sharePercent: number;
+    consentStatus?: 'pending' | 'consented' | 'rejected';
+    consentTimestamp?: string;
+    remarks?: string;
+  }>;
+  allConsentsGiven?: boolean;
+  isDisputed?: boolean;
+  disputeDetails?: {
+    isDisputed: boolean;
+    raisedBy: string;
+    reason: string;
+    timestamp: string;
+    resolvedAt?: string;
+    resolvedBy?: string;
+    resolution?: string;
+    orderNumber?: string;
+  };
+
   // Additional Fields
   compNo?: string;
   fileNo?: string;
@@ -233,6 +257,44 @@ const landRequestSchema = new Schema<ILandRequest>(
         }], // Array of uploaded documents with IPFS links
       },
     ],
+    ownershipType: {
+      type: String,
+      enum: ['single', 'joint'],
+      default: 'single',
+    },
+    owners: [
+      {
+        ownerId: String,
+        name: String,
+        aadhar: String,
+        sharePercent: Number,
+        consentStatus: {
+          type: String,
+          enum: ['pending', 'consented', 'rejected'],
+          default: 'pending',
+        },
+        consentTimestamp: String,
+        remarks: String,
+      },
+    ],
+    allConsentsGiven: {
+      type: Boolean,
+      default: true,
+    },
+    isDisputed: {
+      type: Boolean,
+      default: false,
+    },
+    disputeDetails: {
+      isDisputed: Boolean,
+      raisedBy: String,
+      reason: String,
+      timestamp: String,
+      resolvedAt: String,
+      resolvedBy: String,
+      resolution: String,
+      orderNumber: String,
+    },
     compNo: String,
     fileNo: String,
     subject: String,

@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
       pincode,
       nature,
       ipfsHash,
+      ownershipType = 'single',
+      owners,
     } = body;
 
     // Validate required fields
@@ -31,6 +33,23 @@ export async function POST(req: NextRequest) {
         { message: 'Missing required fields: fullName, email, phoneNumber, aadharNumber, dob, ownerName, surveyNumber, area, address, state, city, pincode, ipfsHash' },
         { status: 400 }
       );
+    }
+
+    // Validate joint ownership owners if joint
+    if (ownershipType === 'joint') {
+      if (!owners || !Array.isArray(owners) || owners.length < 2) {
+        return NextResponse.json(
+          { message: 'Joint ownership requires at least 2 co-owners with valid share percentages.' },
+          { status: 400 }
+        );
+      }
+      const totalShare = owners.reduce((s: number, o: any) => s + parseFloat(o.sharePercent || 0), 0);
+      if (Math.abs(totalShare - 100) > 0.01) {
+        return NextResponse.json(
+          { message: `Co-owner shares must sum to exactly 100%. Current total: ${totalShare}%` },
+          { status: 400 }
+        );
+      }
     }
 
     // Validate date of birth
@@ -52,7 +71,19 @@ export async function POST(req: NextRequest) {
     const applicationId = 'APP-' + crypto.randomBytes(8).toString('hex').toUpperCase();
 
     // Prepare user data for blockchain
-    const userData = {
+    const formattedOwners = ownershipType === 'joint' && Array.isArray(owners)
+      ? owners.map((o: any, idx: number) => ({
+          ownerId: o.ownerId || (idx === 0 ? session.userId : `owner_${idx + 1}`),
+          name: o.name || (idx === 0 ? fullName : ''),
+          aadhar: o.aadhar || (idx === 0 ? aadharNumber : ''),
+          sharePercent: parseFloat(o.sharePercent),
+          consentStatus: idx === 0 ? 'consented' : 'pending',
+          consentTimestamp: idx === 0 ? new Date().toISOString() : '',
+          remarks: idx === 0 ? 'Primary applicant' : '',
+        }))
+      : [];
+
+    const userData: any = {
       fullName,
       email,
       phoneNumber,
@@ -67,20 +98,29 @@ export async function POST(req: NextRequest) {
       pincode,
       nature,
       ipfsHash,
+      ownershipType,
       status: 'pending',
       createdAt: new Date().toISOString(),
     };
 
-    // Call fabric-api to create application on blockchain
-    const result = await apiCall('/api/land/applications', {
-      method: 'POST',
-      body: JSON.stringify({
-        applicationId,
-        userData,
-      }),
-    }, req);
+    if (ownershipType === 'joint') {
+      userData.owners = formattedOwners;
+      userData.primaryOwner = session.userId;
+      userData.allConsentsGiven = false;
+    }
 
-    console.log(`Land application ${applicationId} created on blockchain`);
+    // Call fabric-api to create application on blockchain (non-fatal if offline)
+    let blockchainTxId = null;
+    try {
+      const result = await apiCall('/api/land/applications', {
+        method: 'POST',
+        body: JSON.stringify({ applicationId, userData }),
+      }, req);
+      blockchainTxId = result.data?.txId;
+      console.log(`Land application ${applicationId} created on blockchain`);
+    } catch (blockchainErr) {
+      console.warn('Blockchain call failed (non-fatal):', blockchainErr instanceof Error ? blockchainErr.message : blockchainErr);
+    }
 
     const docHash = crypto.createHash('sha256').update(surveyNumber + ownerName + ipfsHash).digest('hex');
 
@@ -104,6 +144,10 @@ export async function POST(req: NextRequest) {
       pincode,
       ipfsHash,
       docHash,
+      ownershipType,
+      owners: formattedOwners,
+      allConsentsGiven: ownershipType !== 'joint',
+      isDisputed: false,
       status: 'submitted',
     });
 
@@ -113,8 +157,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       receiptNumber: applicationId,
       id: applicationId,
-      message: 'Land application created successfully on blockchain',
-      blockchainTxId: result.data?.txId,
+      message: 'Land application created successfully',
+      blockchainTxId,
     });
   } catch (error) {
     console.error('Create land application error:', error);
