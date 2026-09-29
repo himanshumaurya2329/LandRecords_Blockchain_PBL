@@ -504,6 +504,9 @@ export default function UserDashboard() {
           <a href="/digilocker" className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold text-sm transition-all shadow-md">
             🔐 My DigiLocker
           </a>
+          <a href="/ownership-dashboard" className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm transition-all shadow-md">
+            📊 Joint Ownership
+          </a>
         </div>
 
         {/* Tab Navigation Cards */}
@@ -962,10 +965,22 @@ export default function UserDashboard() {
                               <span className="text-sm text-slate-500">{formatDate(req.createdAt)}</span>
                             </td>
                             <td className="px-6 py-4">
-                              <span className={`px-3 py-1.5 rounded-full text-xs font-bold ${statusBadge.bg} ${statusBadge.text} inline-flex items-center gap-1.5 border ${statusBadge.border}`}>
-                                <span>{statusBadge.icon}</span>
-                                {statusBadge.label}
-                              </span>
+                              <div className="flex flex-col items-start gap-1">
+                                <span className={`px-3 py-1.5 rounded-full text-xs font-bold ${statusBadge.bg} ${statusBadge.text} inline-flex items-center gap-1.5 border ${statusBadge.border}`}>
+                                  <span>{statusBadge.icon}</span>
+                                  {statusBadge.label}
+                                </span>
+                                {(req as any).ownershipType === 'joint' && (
+                                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 border border-indigo-200">
+                                    👥 Joint Ownership
+                                  </span>
+                                )}
+                                {(req as any).isDisputed && (
+                                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                                    ⚠️ Disputed
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td className="px-6 py-4">
                               <span className="text-sm text-slate-600 font-medium bg-slate-100 px-3 py-1 rounded-full">{req.currentlyWithName || 'Processing'}</span>

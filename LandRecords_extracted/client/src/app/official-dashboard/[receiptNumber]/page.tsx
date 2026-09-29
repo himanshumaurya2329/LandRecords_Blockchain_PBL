@@ -491,35 +491,58 @@ export default function ApplicationDetailsPage() {
 
         {/* Action Buttons */}
         {
-          isAssigned && (
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-blue-500/20 p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Take Action</h2>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => handleAction('forward', `Approved by ${official?.designation}`)}
-                  disabled={isProcessing}
-                  className={`flex-1 px-6 py-4 rounded-xl font-bold transition-all border ${isProcessing
-                    ? 'bg-gray-500/20 text-gray-300 border-gray-500/30 cursor-not-allowed opacity-50'
-                    : 'bg-linear-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 text-green-200 hover:text-white border-green-500/30'
+          isAssigned && (() => {
+            const isJoint = (application as any).ownershipType === 'joint';
+            const allConsentsGiven = (application as any).allConsentsGiven;
+            const isConsentBlocked = isJoint && !allConsentsGiven;
+
+            return (
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-blue-500/20 p-6">
+                <h2 className="text-xl font-bold text-white mb-4">Take Action</h2>
+
+                {/* Consent Guard Warning */}
+                {isConsentBlocked && (
+                  <div className="mb-4 flex items-start gap-3 bg-amber-500/15 border border-amber-500/40 rounded-xl px-4 py-3">
+                    <span className="text-amber-400 text-xl shrink-0 mt-0.5">⚠️</span>
+                    <div>
+                      <p className="text-amber-300 font-semibold text-sm">Joint Ownership — Consents Pending</p>
+                      <p className="text-amber-200/80 text-xs mt-0.5">
+                        All co-owners must provide consent before this application can be forwarded. Forwarding is locked until all consents are received.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => handleAction('forward', `Approved by ${official?.designation}`)}
+                    disabled={isProcessing || isConsentBlocked}
+                    title={isConsentBlocked ? 'Forwarding locked: joint ownership consents are pending' : ''}
+                    className={`flex-1 px-6 py-4 rounded-xl font-bold transition-all border ${
+                      isProcessing || isConsentBlocked
+                        ? 'bg-gray-500/20 text-gray-400 border-gray-500/30 cursor-not-allowed opacity-50'
+                        : 'bg-linear-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 text-green-200 hover:text-white border-green-500/30'
                     }`}
-                >
-                  <FaCheckCircle className="inline mr-2" />
-                  {isProcessing ? 'Processing...' : (official?.designation?.toLowerCase() === 'clerk' ? 'Forward' : 'Approve & Forward')}
-                </button>
-                <button
-                  onClick={() => handleAction('reject', `Rejected by ${official?.designation}`)}
-                  disabled={isProcessing}
-                  className={`flex-1 px-6 py-4 rounded-xl font-bold transition-all border ${isProcessing
-                    ? 'bg-gray-500/20 text-gray-300 border-gray-500/30 cursor-not-allowed opacity-50'
-                    : 'bg-linear-to-r from-red-500/20 to-rose-500/20 hover:from-red-500/30 hover:to-rose-500/30 text-red-200 hover:text-white border-red-500/30'
-                    }`}
-                >
-                  <FaExclamationTriangle className="inline mr-2" />
-                  {isProcessing ? 'Processing...' : 'Reject'}
-                </button>
+                  >
+                    <FaCheckCircle className="inline mr-2" />
+                    {isProcessing ? 'Processing...' : (official?.designation?.toLowerCase() === 'clerk' ? 'Forward' : 'Approve & Forward')}
+                    {isConsentBlocked && <span className="ml-2 text-xs">🔒</span>}
+                  </button>
+                  <button
+                    onClick={() => handleAction('reject', `Rejected by ${official?.designation}`)}
+                    disabled={isProcessing}
+                    className={`flex-1 px-6 py-4 rounded-xl font-bold transition-all border ${isProcessing
+                      ? 'bg-gray-500/20 text-gray-300 border-gray-500/30 cursor-not-allowed opacity-50'
+                      : 'bg-linear-to-r from-red-500/20 to-rose-500/20 hover:from-red-500/30 hover:to-rose-500/30 text-red-200 hover:text-white border-red-500/30'
+                      }`}
+                  >
+                    <FaExclamationTriangle className="inline mr-2" />
+                    {isProcessing ? 'Processing...' : 'Reject'}
+                  </button>
+                </div>
               </div>
-            </div>
-          )
+            );
+          })()
         }
 
         {
