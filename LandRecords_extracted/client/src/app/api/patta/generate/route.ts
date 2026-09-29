@@ -33,32 +33,6 @@ export async function POST(req: NextRequest) {
     // Generate certificate number
     const certificateNumber = `PATTA-TG-${Date.now()}-${landRequest.receiptNumber}`;
     
-    // Generate QR code data URL
-    let qrCodeDataUrl: string;
-    try {
-      const qrData = JSON.stringify({
-        certificateNumber,
-        receiptNumber: landRequest.receiptNumber,
-        ownerName: landRequest.ownerName || landRequest.fullName,
-        surveyNumber: landRequest.surveyNumber,
-        area: landRequest.area,
-        issuedDate: new Date().toLocaleDateString('en-IN'),
-        verifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/verify/${certificateNumber}`
-      });
-
-      qrCodeDataUrl = await QRCode.toDataURL(qrData, {
-        width: 300,
-        margin: 1,
-        color: {
-          dark: '#000000',
-          light: '#ffffff'
-        }
-      });
-    } catch (qrError) {
-      console.error('QR code generation failed:', qrError);
-      // Use a placeholder QR code or skip it
-      qrCodeDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
-    }
 
     // Get current date
     const issuedDate = new Date().toLocaleDateString('en-IN', {
@@ -68,6 +42,24 @@ export async function POST(req: NextRequest) {
     });
 
     // Generate HTML using the template
+    const owners = landRequest.owners || [];
+    const isJoint = landRequest.ownershipType === 'joint' && owners.length > 1;
+
+    const verifyUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/verify/${certificateNumber}`;
+
+    // Generate QR with plain URL (scannable by any QR reader)
+    let qrCodeDataUrl: string;
+    try {
+      qrCodeDataUrl = await QRCode.toDataURL(verifyUrl, {
+        width: 300,
+        margin: 1,
+        color: { dark: '#000000', light: '#ffffff' }
+      });
+    } catch (qrError) {
+      console.error('QR code generation failed:', qrError);
+      qrCodeDataUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+    }
+
     const pattaHTML = generatePattaHTML({
       certificateNumber,
       issuedDate,
@@ -82,7 +74,14 @@ export async function POST(req: NextRequest) {
       pattaNumber: `PATTA-${landRequest.receiptNumber}`,
       landArea: landRequest.area || 'N/A',
       landType: landRequest.nature || 'Agricultural',
-      qrCodeDataUrl
+      qrCodeDataUrl,
+      isJoint,
+      owners: owners.map((o: any) => ({
+        name: o.name || 'N/A',
+        aadhar: o.aadhar || 'N/A',
+        sharePercent: o.sharePercent || 0,
+      })),
+      verifyUrl,
     });
     
     console.log('Generated HTML length:', pattaHTML.length);
@@ -199,6 +198,9 @@ function generatePattaHTML(data: {
   landArea: string;
   landType: string;
   qrCodeDataUrl: string;
+  isJoint?: boolean;
+  owners?: { name: string; aadhar: string; sharePercent: number }[];
+  verifyUrl?: string;
 }): string {
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -330,9 +332,19 @@ function generatePattaHTML(data: {
 
     <table>
         <tr><th>Certificate Number</th><td>${data.certificateNumber}</td></tr>
+        <tr><th>Ownership Type</th><td>${data.isJoint ? '🤝 Joint Ownership' : 'Single Ownership'}</td></tr>
+        ${data.isJoint && data.owners && data.owners.length > 0 ? `
+        <tr><th colspan="2" style="background:#e3f2fd;text-align:center;font-size:17px;">👥 Co-Owners Details</th></tr>
+        ${data.owners.map((o, i) => `
+        <tr>
+          <th style="background:#f1f8ff;">Owner ${i + 1}${i === 0 ? ' (Primary)' : ''}</th>
+          <td><strong>${o.name}</strong> — Aadhaar: ${o.aadhar.slice(0,4)} **** ${o.aadhar.slice(-4)} — Share: <strong>${o.sharePercent}%</strong></td>
+        </tr>`).join('')}
+        ` : `
         <tr><th>Full Name</th><td>${data.fullName}</td></tr>
         <tr><th>Father / Husband Name</th><td>${data.fatherName}</td></tr>
         <tr><th>Aadhaar Number</th><td>${data.aadhaar}</td></tr>
+        `}
         <tr><th>Mobile Number</th><td>${data.mobile}</td></tr>
         <tr><th>District</th><td>${data.district}</td></tr>
         <tr><th>Mandal</th><td>${data.mandal}</td></tr>
@@ -362,7 +374,8 @@ function generatePattaHTML(data: {
 
         <!-- QR CODE (server-generated PNG data URI) -->
         <div class="barcode-section">
-            ${data.qrCodeDataUrl ? `<img src="${data.qrCodeDataUrl}" alt="QR Code" style="width:140px;height:140px;" />` : '<div style="font-size:12px;color:#666;padding-top:50px;">QR unavailable</div>'}
+            ${data.qrCodeDataUrl ? `<img src="${data.qrCodeDataUrl}" alt="Scan to verify" style="width:140px;height:140px;" />` : '<div style="font-size:12px;color:#666;padding-top:50px;">QR unavailable</div>'}
+            <p style="font-size:10px;color:#555;margin-top:5px;word-break:break-all;text-align:center;">Scan to verify</p>
         </div>
     </div>
 

@@ -51,6 +51,10 @@ interface Application {
   aadharNumber?: string;
   currentlyWith?: string;
   currentStage?: string;
+  isDisputed?: boolean;
+  ownershipType?: string;
+  disputeDetails?: { reason: string; raisedBy: string };
+  allConsentsGiven?: boolean;
   actionHistory?: Array<{
     officialId: string;
     officialName: string;
@@ -321,6 +325,25 @@ export default function ApplicationDetailsPage() {
           </div>
         </div>
 
+        {/* FROZEN: Dispute Alert Banner */}
+        {application.isDisputed && (
+          <div className="bg-red-500/20 border-2 border-red-500/60 rounded-2xl p-6 mb-6 flex items-start gap-4 animate-pulse-slow">
+            <div className="text-4xl shrink-0">🚫</div>
+            <div>
+              <h2 className="text-xl font-bold text-red-300 mb-1">APPLICATION FROZEN — Active Dispute</h2>
+              <p className="text-red-200 text-sm">
+                A co-owner has raised an ownership dispute. This application is <strong>frozen</strong> and cannot be forwarded until the District Collector resolves the dispute.
+              </p>
+              {application.disputeDetails && (
+                <div className="mt-3 bg-red-500/10 border border-red-500/30 rounded-xl p-3">
+                  <p className="text-red-300 text-xs font-semibold">Dispute Reason: <span className="text-white font-normal">{application.disputeDetails.reason}</span></p>
+                  <p className="text-red-400 text-xs mt-1">Raised by: {application.disputeDetails.raisedBy}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Applicant Information */}
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-blue-500/20 p-6 mb-6">
           <h2 className="text-xl font-bold text-blue-300 mb-4 flex items-center gap-2">
@@ -486,6 +509,54 @@ export default function ApplicationDetailsPage() {
         {/* Application History Timeline */}
         <ApplicationHistory history={application.actionHistory} />
 
+        {/* Co-Owners & Consent Status (Joint Ownership) */}
+        {application.ownershipType === 'joint' && (application as any).owners && (application as any).owners.length > 0 && (
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-indigo-500/20 p-6 mb-6">
+            <h2 className="text-xl font-bold text-indigo-300 mb-2 flex items-center gap-2">
+              👥 Joint Ownership — Co-Owners &amp; Consent Status
+            </h2>
+            {!application.allConsentsGiven && (
+              <div className="mb-4 bg-amber-500/15 border border-amber-500/30 rounded-xl p-3 text-sm text-amber-200">
+                ⚠️ <strong>Forwarding is blocked</strong> until all co-owners grant consent. 
+                Co-owners can visit <code className="bg-black/30 px-1 rounded">/consent-panel</code> from their User Dashboard → Inbox to give consent.
+              </div>
+            )}
+            {application.allConsentsGiven && (
+              <div className="mb-4 bg-green-500/10 border border-green-500/30 rounded-xl p-3 text-sm text-green-200">
+                ✅ All co-owners have given consent. Forwarding is allowed.
+              </div>
+            )}
+            <div className="overflow-hidden rounded-xl border border-indigo-500/20">
+              <table className="min-w-full divide-y divide-indigo-500/20">
+                <thead className="bg-indigo-500/10">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-indigo-300 uppercase">Name</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-indigo-300 uppercase">Aadhaar</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-indigo-300 uppercase">Share %</th>
+                    <th className="px-4 py-3 text-left text-xs font-bold text-indigo-300 uppercase">Consent Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-indigo-500/10">
+                  {((application as any).owners || []).map((owner: any, idx: number) => (
+                    <tr key={idx} className="hover:bg-white/5">
+                      <td className="px-4 py-3 text-sm text-white font-medium">{owner.name || '-'}</td>
+                      <td className="px-4 py-3 text-sm text-slate-300 font-mono text-xs">{owner.aadhar ? owner.aadhar.slice(0,4)+'****'+owner.aadhar.slice(-4) : '-'}</td>
+                      <td className="px-4 py-3 text-sm text-indigo-200 font-bold">{owner.sharePercent}%</td>
+                      <td className="px-4 py-3 text-sm">
+                        {(owner.consentStatus === 'consented' || owner.consentStatus === 'approved') ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs font-bold"><FaCheckCircle className="text-green-400" /> Consented</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs font-bold">⏳ Pending</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         {/* Role-Specific Fields */}
         {getRoleComponent()}
 
@@ -495,13 +566,27 @@ export default function ApplicationDetailsPage() {
             const isJoint = (application as any).ownershipType === 'joint';
             const allConsentsGiven = (application as any).allConsentsGiven;
             const isConsentBlocked = isJoint && !allConsentsGiven;
+            const isDisputeFrozen = !!(application as any).isDisputed;
 
             return (
               <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-blue-500/20 p-6">
                 <h2 className="text-xl font-bold text-white mb-4">Take Action</h2>
 
+                {/* Dispute Frozen Warning */}
+                {isDisputeFrozen && (
+                  <div className="mb-4 flex items-start gap-3 bg-red-500/15 border border-red-500/40 rounded-xl px-4 py-3">
+                    <span className="text-red-400 text-xl shrink-0 mt-0.5">🚫</span>
+                    <div>
+                      <p className="text-red-300 font-semibold text-sm">Application Frozen — Ownership Dispute Active</p>
+                      <p className="text-red-200/80 text-xs mt-0.5">
+                        All actions are locked until the District Collector resolves the dispute.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
                 {/* Consent Guard Warning */}
-                {isConsentBlocked && (
+                {isConsentBlocked && !isDisputeFrozen && (
                   <div className="mb-4 flex items-start gap-3 bg-amber-500/15 border border-amber-500/40 rounded-xl px-4 py-3">
                     <span className="text-amber-400 text-xl shrink-0 mt-0.5">⚠️</span>
                     <div>
@@ -516,17 +601,20 @@ export default function ApplicationDetailsPage() {
                 <div className="flex gap-4">
                   <button
                     onClick={() => handleAction('forward', `Approved by ${official?.designation}`)}
-                    disabled={isProcessing || isConsentBlocked}
-                    title={isConsentBlocked ? 'Forwarding locked: joint ownership consents are pending' : ''}
+                    disabled={isProcessing || isConsentBlocked || isDisputeFrozen}
+                    title={
+                      isDisputeFrozen ? 'Forwarding locked: active ownership dispute' :
+                      isConsentBlocked ? 'Forwarding locked: joint ownership consents are pending' : ''
+                    }
                     className={`flex-1 px-6 py-4 rounded-xl font-bold transition-all border ${
-                      isProcessing || isConsentBlocked
+                      isProcessing || isConsentBlocked || isDisputeFrozen
                         ? 'bg-gray-500/20 text-gray-400 border-gray-500/30 cursor-not-allowed opacity-50'
                         : 'bg-linear-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 text-green-200 hover:text-white border-green-500/30'
                     }`}
                   >
                     <FaCheckCircle className="inline mr-2" />
                     {isProcessing ? 'Processing...' : (official?.designation?.toLowerCase() === 'clerk' ? 'Forward' : 'Approve & Forward')}
-                    {isConsentBlocked && <span className="ml-2 text-xs">🔒</span>}
+                    {(isConsentBlocked || isDisputeFrozen) && <span className="ml-2 text-xs">🔒</span>}
                   </button>
                   <button
                     onClick={() => handleAction('reject', `Rejected by ${official?.designation}`)}

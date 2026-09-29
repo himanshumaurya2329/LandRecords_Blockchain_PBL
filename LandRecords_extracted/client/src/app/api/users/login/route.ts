@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { compare } from 'bcryptjs';
-import connectDB from '@/lib/db/connect';
-import User from '@/lib/models/User';
-import { createSession, getSessionCookieOptions } from '@/lib/utils/session';
-import { getSessionCookieName } from '@/lib/utils/auth';
+﻿import { NextRequest, NextResponse } from "next/server";
+import { compare } from "bcryptjs";
+import connectDB from "@/lib/db/connect";
+import User from "@/lib/models/User";
+import { createSession, deleteSession, getSessionCookieOptions } from "@/lib/utils/session";
+import { getSessionCookieName } from "@/lib/utils/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,41 +12,32 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { username, password } = body;
 
-    // Validate input
     if (!username || !password) {
-      return NextResponse.json(
-        { error: 'Username and password are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Username and password are required" }, { status: 400 });
     }
 
-    // Find user
-    const user = await User.findOne({ username }).select('+password');
+    // Delete any existing session first (prevents cross-user data contamination)
+    const existingToken = req.cookies.get(getSessionCookieName())?.value;
+    if (existingToken) {
+      try { await deleteSession(existingToken); } catch {}
+    }
 
+    const user = await User.findOne({ username }).select("+password");
     if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid username or password' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
     }
 
-    // Verify password
     const isPasswordValid = await compare(password, user.password);
-
     if (!isPasswordValid) {
-      return NextResponse.json(
-        { error: 'Invalid username or password' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
     }
 
-    // Create session
-    const session = await createSession(user._id.toString(), undefined, 'user');
+    // Create fresh session for this user
+    const session = await createSession(user._id.toString(), undefined, "user");
 
-    // Create response
     const response = NextResponse.json(
       {
-        message: 'Login successful',
+        message: "Login successful",
         user: {
           id: user._id,
           username: user.username,
@@ -58,19 +49,12 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
 
-    // Set session cookie
-    response.cookies.set(
-      getSessionCookieName(),
-      session.sessionToken,
-      getSessionCookieOptions()
-    );
+    // Set new session cookie (overwrites any old one)
+    response.cookies.set(getSessionCookieName(), session.sessionToken, getSessionCookieOptions());
 
     return response;
   } catch (error) {
-    console.error('User login error:', error);
-    return NextResponse.json(
-      { error: 'An error occurred during login' },
-      { status: 500 }
-    );
+    console.error("User login error:", error);
+    return NextResponse.json({ error: "An error occurred during login" }, { status: 500 });
   }
 }

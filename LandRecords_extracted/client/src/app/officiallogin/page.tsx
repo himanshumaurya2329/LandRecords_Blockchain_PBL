@@ -207,14 +207,15 @@ export default function OfficialLogin() {
                     name="designation"
                     value={formData.designation}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white ${errors.designation
+                    style={{ backgroundColor: '#2d1f4e', color: 'white' }}
+                    className={`w-full px-4 py-3 rounded-lg border transition focus:outline-none focus:ring-2 text-white ${errors.designation
                         ? 'border-red-500 focus:ring-red-500'
                         : 'border-purple-500/30 focus:ring-purple-500'
                       }`}
                   >
-                    <option value="">Select Your Role</option>
+                    <option value="" style={{ backgroundColor: '#2d1f4e', color: 'white' }}>Select Your Role</option>
                     {DESIGNATIONS.map((designation) => (
-                      <option key={designation} value={designation}>
+                      <option key={designation} value={designation} style={{ backgroundColor: '#2d1f4e', color: 'white' }}>
                         {DESIGNATION_LABELS[designation]}
                       </option>
                     ))}
