@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Patta Certificate - Single Ownership (Demo)</title>
+
+<style>
+    @page { size: A4; margin: 15mm; }
+    html, body { margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        background-color: #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 10px;
+    }
+
+    .preview-banner {
+        background: #1e3a8a;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        max-width: 170mm;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .preview-banner strong {
+        color: #93c5fd;
+    }
+
+    .certificate-container {
+        position: relative;
+        width: 170mm;
+        border: 8px double #4a7c59;
+        padding: 24px;
+        background-color: #fcfcf0;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .watermark {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 440px;
+        opacity: 0.07;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .header { text-align: center; z-index: 1; position: relative; }
+    .header-emblem { width: 75px; }
+
+    .header h1 { margin: 2px 0; font-size: 21px; font-weight: bold; letter-spacing: 0.5px; color: #1f2937; }
+    .header h2 { margin: 2px 0; font-size: 17px; font-weight: bold; color: #374151; }
+    .header h3 {
+        margin-top: 6px;
+        font-size: 23px;
+        font-weight: bold;
+        color: #2b5329;
+        border-bottom: 2px solid #4a7c59;
+        display: inline-block;
+        padding-bottom: 4px;
+        letter-spacing: 1px;
+    }
+
+    .issued-date { 
+        text-align: right; 
+        font-size: 15px; 
+        font-weight: bold; 
+        margin-top: 10px;
+        color: #374151;
+    }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    table, th, td { border: 1px solid #4a7c59; }
+    th { background: #e8f5e9; width: 34%; text-align: left; color: #1e3a1e; font-weight: bold; }
+    th, td { padding: 6px 10px; font-size: 15px; }
+    td { background: #ffffff; color: #111827; }
+
+    .signature-section {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .digital-signature-box {
+        flex: 1 1 58%;
+        border: 2px solid #006400;
+        background-color: #f4fcf4;
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .ds-header {
+        display: flex;
+        align-items: center;
+        font-size: 17px;
+        font-weight: bold;
+        color: #006400;
+        margin-bottom: 6px;
+    }
+
+    .ds-header img {
+        width: 22px;
+        height: 22px;
+        margin-right: 8px;
+    }
+
+    .ds-body p { margin: 3px 0; font-size: 14px; color: #333; }
+    .ds-body p strong { color: #000; }
+
+    .barcode-section {
+        width: 140px;
+        text-align: center;
+        min-width: 140px;
+    }
+
+    .barcode-section img {
+        width: 130px;
+        height: 130px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 4px;
+        background: #fff;
+    }
+
+    .scan-note {
+        font-size: 11px;
+        color: #4b5563;
+        margin-top: 4px;
+        font-weight: bold;
+    }
+
+    @media print {
+        body { background: none; padding: 0; }
+        .preview-banner { display: none; }
+        .certificate-container { margin: 0; box-shadow: none; width: 100%; border-width: 6px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="preview-banner">
+    📄 <strong>DEMO PREVIEW: Single Ownership Patta Certificate</strong><br>
+    Rendered strictly according to <code>client/src/app/api/patta/generate/route.ts</code> template with sample data.
+</div>
+
+<div class="certificate-container">
+
+    <!-- Government Watermark -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/500px-Emblem_of_India.svg.png"
+         class="watermark" alt="Watermark">
+
+    <!-- Header Section -->
+    <div class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/120px-Emblem_of_India.svg.png"
+             class="header-emblem" alt="Emblem of India">
+        <h1>GOVERNMENT OF TELANGANA</h1>
+        <h2>REVENUE DEPARTMENT</h2>
+        <h3>LAND PATTA CERTIFICATE</h3>
+    </div>
+
+    <!-- Issue Date -->
+    <div class="issued-date">
+        Issued Date: <span id="issuedDate">05/10/2026</span>
+    </div>
+
+    <!-- Certificate Details Table -->
+    <table>
+        <tr><th>Certificate Number</th><td>PATTA-TG-1790708029-APP-98214</td></tr>
+        <tr><th>Ownership Type</th><td>Single Ownership</td></tr>
+        <tr><th>Full Name</th><td>Tushar Verma</td></tr>
+        <tr><th>Father / Husband Name</th><td>Ramesh Verma</td></tr>
+        <tr><th>Aadhaar Number</th><td>2222 3333 4444</td></tr>
+        <tr><th>Mobile Number</th><td>+91 98765 43210</td></tr>
+        <tr><th>District</th><td>Rangareddy</td></tr>
+        <tr><th>Mandal</th><td>Serilingampally</td></tr>
+        <tr><th>Village</th><td>Madhapur</td></tr>
+        <tr><th>Survey Number</th><td>SY-102/B</td></tr>
+        <tr><th>Patta Number</th><td>PATTA-APP-98214</td></tr>
+        <tr><th>Total Land Area</th><td>547 sq. yards</td></tr>
+        <tr><th>Land Type</th><td>Agricultural</td></tr>
+    </table>
+
+    <!-- Digital Signature & QR Verification Section -->
+    <div class="signature-section">
+
+        <!-- Digital Signature Box -->
+        <div class="digital-signature-box">
+            <div class="ds-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Check_icon.svg/48px-Check_icon.svg.png" alt="Checked">
+                <span>Digitally Signed</span>
+            </div>
+
+            <div class="ds-body">
+                <p><strong>Name:</strong> K. Chandrasekhar</p>
+                <p><strong>Designation:</strong> Tahsildar, Serilingampally</p>
+                <p><strong>Date:</strong> 05/10/2026</p>
+                <p><strong>Status:</strong> Verified on Hyperledger Fabric Ledger</p>
+            </div>
+        </div>
+
+        <!-- QR Code (Real Scannable QR) -->
+        <div class="barcode-section">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http%3A%2F%2Flocalhost%3A3000%2Fverify%2FPATTA-TG-1790708029-APP-98214"
+                 alt="Scan to verify certificate" />
+            <p class="scan-note">Scan to verify</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -183,7 +183,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function generatePattaHTML(data: {
+export function generatePattaHTML(data: {
   certificateNumber: string;
   issuedDate: string;
   fullName: string;

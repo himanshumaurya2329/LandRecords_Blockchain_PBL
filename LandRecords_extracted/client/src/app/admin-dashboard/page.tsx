@@ -296,13 +296,33 @@ export default function AdminDashboard() {
         payload.updatedOwners = disputeUpdatedOwners;
       }
 
-      const response = await fetch(`http://localhost:3001/api/land/${disputeApp.receiptNumber}/dispute/resolve`, {
+      // Update MongoDB first
+      const mongoRes = await fetch(`/api/land-requests/dispute`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        credentials: 'include',
+        body: JSON.stringify({
+          receiptNumber: disputeApp.receiptNumber,
+          action: disputeAction,
+          decision: disputeResolution || 'Dispute resolved by District Collector',
+          orderNumber: disputeOrderNumber,
+          updatedOwners: disputeAction === 'rectify_shares' ? disputeUpdatedOwners : undefined,
+        }),
       });
-      if (response.ok) {
-        alert('Dispute resolved successfully!');
+
+      // Also forward to Fabric API if running
+      try {
+        await fetch(`http://localhost:3001/api/land/${disputeApp.receiptNumber}/dispute/resolve`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } catch (fabricErr) {
+        console.warn('Fabric API dispute/resolve skipped or offline:', fabricErr);
+      }
+
+      if (mongoRes.ok) {
+        alert('Dispute resolved successfully! Application unfrozen.');
         setDisputeApp(null);
         setDisputeResolution('');
         setDisputeOrderNumber('');
@@ -314,8 +334,8 @@ export default function AdminDashboard() {
           setApplications(data.applications);
         }
       } else {
-        const err = await response.json();
-        alert(`Failed: ${err.error || 'Could not resolve dispute'}`);
+        const err = await mongoRes.json();
+        alert(`Failed: ${err.error || err.message || 'Could not resolve dispute'}`);
       }
     } catch (e) {
       console.error('Error resolving dispute:', e);
