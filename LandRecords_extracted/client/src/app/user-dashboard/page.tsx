@@ -1345,7 +1345,7 @@ export default function UserDashboard() {
                 <p className="text-lg text-slate-700 font-bold mb-1">Loading Notifications</p>
                 <p className="text-slate-400 text-sm">Please wait while we fetch your messages...</p>
               </div>
-            ) : notifications.length === 0 ? (
+            ) : (notifications.length === 0 && requests.filter((req: any) => req.ownershipType === 'joint' && !req.allConsentsGiven && req.isCoOwnerView).length === 0) ? (
               <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-16 text-center">
                 <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-purple-100">
                   <FiInbox className="text-4xl text-purple-400" />

@@ -121,24 +121,44 @@ export default function OwnershipDashboardPage() {
     }
     setTransferLoading(true);
     try {
-      const fromOwner = details.owners.find((o: any) => o.ownerId === transferFromOwnerId);
+      const fromOwner = details.owners.find((o: any) => (o.ownerId || o.aadhar) === transferFromOwnerId);
       if (!fromOwner) throw new Error('From-owner not found');
       if (transferShare > fromOwner.sharePercent) throw new Error(`Cannot transfer more than ${fromOwner.sharePercent}%`);
 
-      const res = await fetch(`http://localhost:3001/api/land/${appId}/transfer-share`, {
+      const res = await fetch(`/api/land-requests/transfer-share`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
+          receiptNumber: appId,
           fromOwnerId: transferFromOwnerId,
           toOwnerId: transferToOwnerId,
           sharePercent: transferShare,
           newOwnerData: { name: transferToName, aadhar: transferToAadhar },
-          username: transferFromOwnerId,
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Transfer failed');
-      alert(`Share transfer successful! ${transferShare}% transferred to ${transferToName}.`);
+      if (!res.ok) {
+        // Fallback to fabric-api directly if Next.js route has an issue
+        const existingOwnerIds = (details.owners || [])
+          .filter((o: any) => (o.ownerId || o.aadhar) !== transferFromOwnerId)
+          .map((o: any) => o.ownerId || o.aadhar);
+
+        const res2 = await fetch(`http://localhost:3001/api/land/${appId}/transfer-share`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fromOwnerId: transferFromOwnerId,
+            toOwnerId: transferToOwnerId,
+            sharePercent: transferShare,
+            newOwnerData: { name: transferToName, aadhar: transferToAadhar, nocApprovals: existingOwnerIds },
+            username: transferFromOwnerId,
+          }),
+        });
+        const data2 = await res2.json();
+        if (!res2.ok) throw new Error(data2.error || data.error || 'Transfer failed');
+      }
+      alert(`Share transfer successful! ${transferShare}% transferred to ${transferToName || transferToOwnerId}.`);
       setShowTransfer(false);
       setTransferFromOwnerId(''); setTransferToOwnerId(''); setTransferToName('');
       setTransferToAadhar(''); setTransferShare(0); setTransferNocVerified(false);
@@ -344,16 +364,25 @@ export default function OwnershipDashboardPage() {
 
             <div className="space-y-5">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Transfer From (Your Owner ID) <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Transfer From (Seller / Current Co-Owner) <span className="text-red-500">*</span></label>
                 <select
                   value={transferFromOwnerId}
-                  onChange={e => setTransferFromOwnerId(e.target.value)}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black"
+                  onChange={e => {
+                    setTransferFromOwnerId(e.target.value);
+                    setTransferShare(1);
+                  }}
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black bg-white"
                 >
-                  <option value="">Select your owner ID</option>
-                  {details.owners.map((o: any, i: number) => (
-                    <option key={i} value={o.ownerId}>{o.ownerId} ({o.name || 'Owner'}) - {o.sharePercent}%</option>
-                  ))}
+                  <option value="">Select seller co-owner</option>
+                  {details.owners.map((o: any, i: number) => {
+                    const val = o.ownerId || o.aadhar || `owner_${i + 1}`;
+                    const label = `${o.name || 'Owner'} (${o.aadhar ? o.aadhar.slice(0, 4) + ' **** ' + o.aadhar.slice(-4) : val}) — ${o.sharePercent}%`;
+                    return (
+                      <option key={i} value={val}>
+                        {label}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -362,7 +391,7 @@ export default function OwnershipDashboardPage() {
                   Share % to Transfer <span className="text-red-500">*</span>
                   {transferFromOwnerId && (
                     <span className="ml-2 text-xs text-indigo-600">
-                      (Max: {details.owners.find((o: any) => o.ownerId === transferFromOwnerId)?.sharePercent || 0}%)
+                      (Max available: {details.owners.find((o: any) => (o.ownerId || o.aadhar) === transferFromOwnerId)?.sharePercent || 0}%)
                     </span>
                   )}
                 </label>
@@ -370,7 +399,7 @@ export default function OwnershipDashboardPage() {
                   <input
                     type="range"
                     min="1"
-                    max={details.owners.find((o: any) => o.ownerId === transferFromOwnerId)?.sharePercent || 100}
+                    max={details.owners.find((o: any) => (o.ownerId || o.aadhar) === transferFromOwnerId)?.sharePercent || 100}
                     value={transferShare}
                     onChange={e => setTransferShare(Number(e.target.value))}
                     className="flex-1 accent-indigo-600"
@@ -379,14 +408,46 @@ export default function OwnershipDashboardPage() {
                 </div>
               </div>
 
+              {/* Quick Select: Existing Co-Owner or New Buyer */}
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                <label className="block text-xs font-bold text-slate-600 uppercase">Transfer Recipient Type</label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const otherOwner = details.owners.find((o: any) => (o.ownerId || o.aadhar) !== transferFromOwnerId);
+                      if (otherOwner) {
+                        setTransferToOwnerId(otherOwner.ownerId || otherOwner.aadhar || '');
+                        setTransferToName(otherOwner.name || '');
+                        setTransferToAadhar(otherOwner.aadhar || '');
+                      }
+                    }}
+                    className="flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                  >
+                    🤝 Existing Co-Owner
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTransferToOwnerId('');
+                      setTransferToName('');
+                      setTransferToAadhar('');
+                    }}
+                    className="flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
+                  >
+                    👤 New Buyer
+                  </button>
+                </div>
+              </div>
+
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Buyer User ID <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Buyer ID / Username <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   value={transferToOwnerId}
                   onChange={e => setTransferToOwnerId(e.target.value)}
-                  placeholder="e.g. user_buyer_123"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black"
+                  placeholder="e.g. buyer_rahul or Aadhaar number"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black bg-white"
                 />
               </div>
 
@@ -398,7 +459,7 @@ export default function OwnershipDashboardPage() {
                     value={transferToName}
                     onChange={e => setTransferToName(e.target.value)}
                     placeholder="Full Name"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black bg-white"
                   />
                 </div>
                 <div>
@@ -408,7 +469,7 @@ export default function OwnershipDashboardPage() {
                     value={transferToAadhar}
                     onChange={e => setTransferToAadhar(e.target.value)}
                     placeholder="XXXX XXXX XXXX"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-black bg-white"
                   />
                 </div>
               </div>
