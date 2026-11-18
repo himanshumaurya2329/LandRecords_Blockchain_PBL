@@ -79,24 +79,24 @@ const RevenueDeptOfficerFields = forwardRef<RevenueDeptOfficerFieldsHandle, any>
   }));
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-purple-500/20 p-6 mb-6">
-      <h2 className="text-xl font-bold text-purple-300 mb-4 flex items-center gap-2">
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-teal-500/20 p-6 mb-6">
+      <h2 className="text-xl font-bold text-teal-300 mb-4 flex items-center gap-2">
         <FaClipboardList />
-        📊 Revenue Department Officer
+         Revenue Department Officer
       </h2>
 
       {/* District-Level Audit Log Review */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-purple-200 mb-3">1. District-Level Audit Log Review</h3>
-        <p className="text-sm text-purple-300/70 mb-3">Full timeline of approvals: Clerk → Superintendent → MRO → etc.</p>
+        <h3 className="text-lg font-semibold text-teal-200 mb-3">1. District-Level Audit Log Review</h3>
+        <p className="text-sm text-teal-300/70 mb-3">Full timeline of approvals: Clerk → Superintendent → MRO → etc.</p>
         <select
           value={auditStatus}
           onChange={(e) => setAuditStatus(e.target.value)}
-          className="w-full px-4 py-3 bg-slate-900/50 border border-purple-500/20 rounded-lg text-white mb-3"
+          className="w-full px-4 py-3 bg-slate-900/50 border border-teal-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Audit Status</option>
-          <option value="passed">✅ Audit Passed</option>
-          <option value="corrections_needed">⚠️ Corrections Needed</option>
+          <option value="passed"> Audit Passed</option>
+          <option value="corrections_needed"> Corrections Needed</option>
           <option value="under_review">⏳ Under Review</option>
         </select>
         <textarea
@@ -104,7 +104,7 @@ const RevenueDeptOfficerFields = forwardRef<RevenueDeptOfficerFieldsHandle, any>
           onChange={(e) => setAuditRemarks(e.target.value)}
           placeholder="Add audit remarks or required corrections..."
           rows={3}
-          className="w-full px-4 py-3 bg-slate-900/50 border border-purple-500/20 rounded-lg text-white resize-none"
+          className="w-full px-4 py-3 bg-slate-900/50 border border-teal-500/20 rounded-lg text-white resize-none"
         />
       </div>
 
@@ -112,7 +112,7 @@ const RevenueDeptOfficerFields = forwardRef<RevenueDeptOfficerFieldsHandle, any>
       {requiresHighLevelApproval && (
         <div className="mb-6 bg-orange-500/10 border border-orange-500/30 rounded-xl p-4">
           <h3 className="text-lg font-semibold text-orange-300 mb-3">
-            ⚠️ 2. High-Level Approval Required (Land &gt; 10 acres)
+             2. High-Level Approval Required (Land &gt; 10 acres)
           </h3>
           <p className="text-sm text-orange-200 mb-3">Land Area: {application.area}</p>
           <select
@@ -121,9 +121,9 @@ const RevenueDeptOfficerFields = forwardRef<RevenueDeptOfficerFieldsHandle, any>
             className="w-full px-4 py-3 bg-slate-900/50 border border-orange-500/20 rounded-lg text-white mb-3"
           >
             <option value="">Select Decision</option>
-            <option value="approve">✅ Approve</option>
-            <option value="reject">❌ Reject</option>
-            <option value="escalate">⬆️ Escalate to Higher Authority</option>
+            <option value="approve"> Approve</option>
+            <option value="reject"> Reject</option>
+            <option value="escalate">⬆ Escalate to Higher Authority</option>
           </select>
           <textarea
             value={approvalNote}
@@ -135,9 +135,9 @@ const RevenueDeptOfficerFields = forwardRef<RevenueDeptOfficerFieldsHandle, any>
         </div>
       )}
 
-      <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
-        <p className="text-sm text-purple-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+      <div className="bg-teal-500/10 border border-teal-500/20 rounded-lg p-4">
+        <p className="text-sm text-teal-200">
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

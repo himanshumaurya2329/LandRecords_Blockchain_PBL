@@ -95,7 +95,7 @@ export default function ConsentPanelPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || data.message || 'Failed to grant consent');
-      setConsentMsg('✅ Consent granted successfully! The clerk has been notified.');
+      setConsentMsg(' Consent granted successfully! The clerk has been notified.');
       fetchDetails();
     } catch (err: any) {
       setError(err.message);
@@ -117,7 +117,7 @@ export default function ConsentPanelPage() {
         {/* Info Banner */}
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 text-xs text-indigo-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2">
-            <span className="text-base">💡</span>
+            <span className="text-base"></span>
             <span><strong>Co-Owner Consent Portal</strong> — Your session is auto-detected. Enter the Application ID shared by the primary applicant and click Find.</span>
           </div>
           <a href="/user-dashboard" className="font-bold underline text-indigo-700 hover:text-indigo-900 whitespace-nowrap">
@@ -133,7 +133,7 @@ export default function ConsentPanelPage() {
 
           {userId && (
             <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
-              ✅ Logged in as: <span className="font-bold">{userId}</span>
+               Logged in as: <span className="font-bold">{userId}</span>
               {userAadhar && <span className="ml-2 text-green-600">(Aadhaar: {userAadhar.slice(0,4)}****{userAadhar.slice(-4)})</span>}
             </div>
           )}
@@ -177,7 +177,7 @@ export default function ConsentPanelPage() {
 
             {details.isDisputed && (
               <div className="bg-red-100 text-red-800 p-3 rounded mb-4 font-bold border border-red-300">
-                ⚠️ This application is currently FROZEN due to a dispute.
+                 This application is currently FROZEN due to a dispute.
               </div>
             )}
 
@@ -203,7 +203,7 @@ export default function ConsentPanelPage() {
 
             {!currentUser && (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-                ℹ️ Your account (Aadhaar: {userAadhar || 'not found'}) is not listed as a co-owner on this application.
+                ℹ Your account (Aadhaar: {userAadhar || 'not found'}) is not listed as a co-owner on this application.
                 Please check the Application ID with the primary applicant.
               </div>
             )}

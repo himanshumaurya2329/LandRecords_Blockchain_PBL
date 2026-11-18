@@ -96,7 +96,7 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-indigo-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-indigo-300 mb-4 flex items-center gap-2">
         <FaCrown />
-        👑 District Collector - Final Authorization
+         District Collector - Final Authorization
       </h2>
 
       {/* District-Level Final Authorization */}
@@ -108,9 +108,9 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Decision</option>
-          <option value="authorize">✅ Authorize</option>
-          <option value="reject">❌ Reject</option>
-          <option value="send_back">⬅️ Send Back for Corrections</option>
+          <option value="authorize"> Authorize</option>
+          <option value="reject"> Reject</option>
+          <option value="send_back">⬅ Send Back for Corrections</option>
         </select>
         <textarea
           value={authorizationComment}
@@ -130,9 +130,9 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Order Type</option>
-          <option value="government_order">📜 Government Order (GO)</option>
-          <option value="memo">📝 Memo</option>
-          <option value="permission_letter">📄 Permission Letter</option>
+          <option value="government_order"> Government Order (GO)</option>
+          <option value="memo"> Memo</option>
+          <option value="permission_letter"> Permission Letter</option>
         </select>
         <label className="text-sm text-indigo-300/70 mb-2 flex items-center gap-2">
           <FaUpload />
@@ -145,13 +145,13 @@ const DistrictCollectorFields = forwardRef<DistrictCollectorFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-indigo-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-500/20 file:text-indigo-200"
         />
         {officialOrderFile && (
-          <p className="mt-2 text-sm text-green-400">✅ {officialOrderFile.name}</p>
+          <p className="mt-2 text-sm text-green-400"> {officialOrderFile.name}</p>
         )}
       </div>
 
       <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-lg p-4">
         <p className="text-sm text-indigo-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

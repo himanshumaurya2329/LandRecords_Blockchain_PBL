@@ -93,26 +93,26 @@ const MinistryWelfareFields = forwardRef<MinistryWelfareFieldsHandle, any>(
   }));
 
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-pink-500/20 p-6 mb-6">
-      <h2 className="text-xl font-bold text-pink-300 mb-4 flex items-center gap-2">
+    <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-emerald-500/20 p-6 mb-6">
+      <h2 className="text-xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
         <FaCheckCircle />
-        🏛️ Ministry of Welfare - Final Approval
+         Ministry of Welfare - Final Approval
       </h2>
 
       {/* Publish Policies or Guidelines */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-pink-200 mb-3">1. Publish Policies/Guidelines</h3>
+        <h3 className="text-lg font-semibold text-emerald-200 mb-3">1. Publish Policies/Guidelines</h3>
         <select
           value={policyType}
           onChange={(e) => setPolicyType(e.target.value)}
-          className="w-full px-4 py-3 bg-slate-900/50 border border-pink-500/20 rounded-lg text-white mb-3"
+          className="w-full px-4 py-3 bg-slate-900/50 border border-emerald-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Policy Type</option>
-          <option value="welfare_policy">🏛️ New Welfare Policy</option>
-          <option value="land_support_guideline">📋 Land Support Guideline</option>
-          <option value="circular">📢 Circular</option>
+          <option value="welfare_policy"> New Welfare Policy</option>
+          <option value="land_support_guideline"> Land Support Guideline</option>
+          <option value="circular"> Circular</option>
         </select>
-        <label className="text-sm text-pink-300/70 mb-2 flex items-center gap-2">
+        <label className="text-sm text-emerald-300/70 mb-2 flex items-center gap-2">
           <FaFileUpload />
           Upload Policy/Guideline Document
         </label>
@@ -120,39 +120,39 @@ const MinistryWelfareFields = forwardRef<MinistryWelfareFieldsHandle, any>(
           type="file"
           accept=".pdf,.html"
           onChange={(e) => setPolicyFile(e.target.files?.[0] || null)}
-          className="w-full px-4 py-3 bg-slate-900/50 border border-pink-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-pink-500/20 file:text-pink-200"
+          className="w-full px-4 py-3 bg-slate-900/50 border border-emerald-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-emerald-500/20 file:text-emerald-200"
         />
         {policyFile && (
-          <p className="mt-2 text-sm text-green-400">✅ {policyFile.name}</p>
+          <p className="mt-2 text-sm text-green-400"> {policyFile.name}</p>
         )}
       </div>
 
       {/* Approve Special Welfare Applications */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-pink-200 mb-3">2. Approve Special Welfare Applications</h3>
-        <p className="text-sm text-pink-300/70 mb-3">Review applications under welfare category</p>
+        <h3 className="text-lg font-semibold text-emerald-200 mb-3">2. Approve Special Welfare Applications</h3>
+        <p className="text-sm text-emerald-300/70 mb-3">Review applications under welfare category</p>
         <select
           value={welfareEligibility}
           onChange={(e) => setWelfareEligibility(e.target.value)}
-          className="w-full px-4 py-3 bg-slate-900/50 border border-pink-500/20 rounded-lg text-white mb-3"
+          className="w-full px-4 py-3 bg-slate-900/50 border border-emerald-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Eligibility</option>
-          <option value="eligible">✅ Eligible for Welfare Scheme</option>
-          <option value="not_eligible">❌ Not Eligible</option>
-          <option value="conditional">⚠️ Conditionally Eligible</option>
+          <option value="eligible"> Eligible for Welfare Scheme</option>
+          <option value="not_eligible"> Not Eligible</option>
+          <option value="conditional"> Conditionally Eligible</option>
         </select>
         <textarea
           value={eligibilityNote}
           onChange={(e) => setEligibilityNote(e.target.value)}
           placeholder="Add short note about welfare eligibility..."
           rows={3}
-          className="w-full px-4 py-3 bg-slate-900/50 border border-pink-500/20 rounded-lg text-white resize-none"
+          className="w-full px-4 py-3 bg-slate-900/50 border border-emerald-500/20 rounded-lg text-white resize-none"
         />
       </div>
 
-      <div className="bg-pink-500/10 border border-pink-500/20 rounded-lg p-4">
-        <p className="text-sm text-pink-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
+        <p className="text-sm text-emerald-200">
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

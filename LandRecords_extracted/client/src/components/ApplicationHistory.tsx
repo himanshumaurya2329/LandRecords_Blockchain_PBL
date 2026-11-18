@@ -90,7 +90,7 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-xs text-blue-300 hover:text-blue-200 p-2 bg-slate-800/50 rounded border border-blue-500/20 hover:border-blue-500/50 transition-all"
                   >
-                    {isIpfs ? <FaImage className="text-purple-400" /> : <FaFile className="text-blue-400" />}
+                    {isIpfs ? <FaImage className="text-teal-400" /> : <FaFile className="text-blue-400" />}
                     <span className="truncate">{isIpfs ? `IPFS: ${item.substring(0, 20)}...` : item}</span>
                   </a>
                 );
@@ -139,7 +139,7 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-indigo-300 flex items-center gap-2">
           <FaClock />
-          📜 Application Timeline ({history.length} {history.length === 1 ? 'Action' : 'Actions'})
+           Application Timeline ({history.length} {history.length === 1 ? 'Action' : 'Actions'})
         </h2>
         <button
           onClick={() => setIsTimelineOpen(!isTimelineOpen)}
@@ -166,7 +166,7 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
       {isTimelineOpen && (
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-indigo-500 via-purple-500 to-pink-500"></div>
+          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-indigo-500 via-teal-500 to-emerald-500"></div>
 
           {/* Timeline items */}
           <div className="space-y-6">
@@ -186,8 +186,8 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
                     </div>
                     <div className="text-right">
                       {entry.transactionId && (
-                        <p className="text-xs text-purple-300 font-mono mb-1">
-                          🔑 TX: {entry.transactionId.substring(0, 16)}...
+                        <p className="text-xs text-teal-300 font-mono mb-1">
+                           TX: {entry.transactionId.substring(0, 16)}...
                         </p>
                       )}
                       <span className="text-xs text-gray-400">
@@ -214,7 +214,7 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
                   {entry.documents && entry.documents.length > 0 && (
                     <details className="mt-3" open>
                       <summary className="text-sm text-green-300 cursor-pointer hover:text-green-200 font-semibold mb-2">
-                        📎 Documents ({entry.documents.length} file{entry.documents.length !== 1 ? 's' : ''})
+                         Documents ({entry.documents.length} file{entry.documents.length !== 1 ? 's' : ''})
                       </summary>
                       <div className="mt-2 space-y-2">
                         {entry.documents.map((doc, idx) => (
@@ -226,7 +226,7 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
                             className="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg border border-green-500/20 hover:border-green-500/50 transition-all"
                           >
                             {doc.fileType === 'image' ? (
-                              <FaImage className="text-purple-400 shrink-0" />
+                              <FaImage className="text-teal-400 shrink-0" />
                             ) : doc.fileType === 'pdf' ? (
                               <FaFile className="text-red-400 shrink-0" />
                             ) : (
@@ -249,7 +249,7 @@ export default function ApplicationHistory({ history }: ApplicationHistoryProps)
                   {entry.data && Object.keys(entry.data).length > 0 && (
                     <details className="mt-3" open>
                       <summary className="text-sm text-indigo-300 cursor-pointer hover:text-indigo-200 font-semibold mb-2">
-                        📋 Data Added ({Object.keys(entry.data).length} fields)
+                         Data Added ({Object.keys(entry.data).length} fields)
                       </summary>
                       <div className="mt-2 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50">
                         {Object.entries(entry.data).map(([key, value]) => renderDataField(key, value))}

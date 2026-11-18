@@ -180,7 +180,7 @@ export default function OwnershipDashboardPage() {
         {/* Info Banner */}
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 text-xs text-indigo-900 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2">
-            <span className="text-base">💡</span>
+            <span className="text-base"></span>
             <span><strong>Where to find Application ID?</strong> Check the <strong>Track Status</strong> tab in your User Dashboard to copy your Receipt Number / Application ID.</span>
           </div>
           <a href="/user-dashboard" className="font-bold underline text-indigo-700 hover:text-indigo-900 whitespace-nowrap">
@@ -239,7 +239,7 @@ export default function OwnershipDashboardPage() {
               <p className="text-xs text-gray-500 mb-4">
                 Consent Status is fetched live from the database.
                 {details.allConsentsGiven
-                  ? ' ✅ All consents received — application can proceed.'
+                  ? '  All consents received — application can proceed.'
                   : ' ⏳ Waiting for all co-owners to give consent.'}
               </p>
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
@@ -424,7 +424,7 @@ export default function OwnershipDashboardPage() {
                     }}
                     className="flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
                   >
-                    🤝 Existing Co-Owner
+                     Existing Co-Owner
                   </button>
                   <button
                     type="button"
@@ -435,7 +435,7 @@ export default function OwnershipDashboardPage() {
                     }}
                     className="flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
                   >
-                    👤 New Buyer
+                     New Buyer
                   </button>
                 </div>
               </div>

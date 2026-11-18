@@ -22,20 +22,20 @@ export default function DashboardHeader({
   };
 
   return (
-    <div className="bg-linear-to-r from-slate-900 to-slate-800 border-b border-purple-500/20 sticky top-0 z-50">
+    <div className="bg-linear-to-r from-slate-900 to-slate-800 border-b border-teal-500/20 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-6">
         <div className="flex items-center justify-between">
           {/* Left: Title */}
           <div>
             <h1 className="text-3xl font-bold text-white">{title}</h1>
-            <p className="text-purple-200 text-sm mt-1">{subtitle}</p>
+            <p className="text-teal-200 text-sm mt-1">{subtitle}</p>
           </div>
 
           {/* Right: User Info & Actions */}
           <div className="flex items-center gap-6">
             <div className="text-right">
               <p className="text-white font-semibold">{officialName}</p>
-              <p className="text-purple-300 text-sm">{designation}</p>
+              <p className="text-teal-300 text-sm">{designation}</p>
             </div>
 
             <div className="flex gap-3">

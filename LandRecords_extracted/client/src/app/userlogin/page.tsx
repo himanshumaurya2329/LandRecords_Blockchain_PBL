@@ -67,7 +67,7 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 login-page">
       <div className="w-full max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left Section - Land Icons & Decoration */}
@@ -88,7 +88,7 @@ export default function UserLogin() {
 
               {/* Top Left */}
               <div className="absolute top-20 left-0 animate-pulse">
-                <div className="w-16 h-16 bg-linear-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 bg-linear-to-br from-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <FaLandmark className="text-3xl text-white" />
                 </div>
               </div>
@@ -129,7 +129,7 @@ export default function UserLogin() {
               </div>
               <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-white/20">
                 <p className="text-blue-200 flex items-center gap-2">
-                  <FaLandmark className="text-purple-400" /> Digital Records
+                  <FaLandmark className="text-teal-400" /> Digital Records
                 </p>
               </div>
               <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-white/20">

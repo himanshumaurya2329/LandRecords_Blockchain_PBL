@@ -328,7 +328,7 @@ export default function ApplicationDetailsPage() {
         {/* FROZEN: Dispute Alert Banner */}
         {application.isDisputed && (
           <div className="bg-red-500/20 border-2 border-red-500/60 rounded-2xl p-6 mb-6 flex items-start gap-4 animate-pulse-slow">
-            <div className="text-4xl shrink-0">🚫</div>
+            <div className="text-4xl shrink-0"></div>
             <div>
               <h2 className="text-xl font-bold text-red-300 mb-1">APPLICATION FROZEN — Active Dispute</h2>
               <p className="text-red-200 text-sm">
@@ -401,26 +401,26 @@ export default function ApplicationDetailsPage() {
         </div>
 
         {/* Address */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-purple-500/20 p-6 mb-6">
-          <h2 className="text-xl font-bold text-purple-300 mb-4 flex items-center gap-2">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-teal-500/20 p-6 mb-6">
+          <h2 className="text-xl font-bold text-teal-300 mb-4 flex items-center gap-2">
             <FaHome />
             Address Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-3 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-              <label className="text-xs text-purple-300/70 uppercase tracking-wider">Full Address</label>
+              <label className="text-xs text-teal-300/70 uppercase tracking-wider">Full Address</label>
               <p className="text-white font-semibold mt-1">{application.address || 'N/A'}</p>
             </div>
             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-              <label className="text-xs text-purple-300/70 uppercase tracking-wider">City</label>
+              <label className="text-xs text-teal-300/70 uppercase tracking-wider">City</label>
               <p className="text-white font-semibold mt-1">{application.city || 'N/A'}</p>
             </div>
             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-              <label className="text-xs text-purple-300/70 uppercase tracking-wider">State</label>
+              <label className="text-xs text-teal-300/70 uppercase tracking-wider">State</label>
               <p className="text-white font-semibold mt-1">{application.state || 'N/A'}</p>
             </div>
             <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-              <label className="text-xs text-purple-300/70 uppercase tracking-wider">Pincode</label>
+              <label className="text-xs text-teal-300/70 uppercase tracking-wider">Pincode</label>
               <p className="text-white font-semibold mt-1">{application.pincode || 'N/A'}</p>
             </div>
           </div>
@@ -433,14 +433,14 @@ export default function ApplicationDetailsPage() {
             Documents & Security
           </h2>
           <div className="space-y-4">
-            <div className="bg-slate-800/70 p-5 rounded-xl border border-purple-500/30">
+            <div className="bg-slate-800/70 p-5 rounded-xl border border-teal-500/30">
               <div className="flex items-center justify-between">
                 <span className="text-white font-semibold">Land Request Application Form</span>
                 <a
                   href={`/api/land-requests/generate-form?receipt=${receiptNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 hover:text-white rounded-lg transition-all"
+                  className="px-4 py-2 bg-teal-500/20 hover:bg-teal-500/40 text-teal-200 hover:text-white rounded-lg transition-all"
                 >
                   View Form
                 </a>
@@ -513,17 +513,17 @@ export default function ApplicationDetailsPage() {
         {application.ownershipType === 'joint' && (application as any).owners && (application as any).owners.length > 0 && (
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-indigo-500/20 p-6 mb-6">
             <h2 className="text-xl font-bold text-indigo-300 mb-2 flex items-center gap-2">
-              👥 Joint Ownership — Co-Owners &amp; Consent Status
+               Joint Ownership — Co-Owners &amp; Consent Status
             </h2>
             {!application.allConsentsGiven && (
               <div className="mb-4 bg-amber-500/15 border border-amber-500/30 rounded-xl p-3 text-sm text-amber-200">
-                ⚠️ <strong>Forwarding is blocked</strong> until all co-owners grant consent. 
+                 <strong>Forwarding is blocked</strong> until all co-owners grant consent.
                 Co-owners can visit <code className="bg-black/30 px-1 rounded">/consent-panel</code> from their User Dashboard → Inbox to give consent.
               </div>
             )}
             {application.allConsentsGiven && (
               <div className="mb-4 bg-green-500/10 border border-green-500/30 rounded-xl p-3 text-sm text-green-200">
-                ✅ All co-owners have given consent. Forwarding is allowed.
+                 All co-owners have given consent. Forwarding is allowed.
               </div>
             )}
             <div className="overflow-hidden rounded-xl border border-indigo-500/20">
@@ -575,7 +575,7 @@ export default function ApplicationDetailsPage() {
                 {/* Dispute Frozen Warning */}
                 {isDisputeFrozen && (
                   <div className="mb-4 flex items-start gap-3 bg-red-500/15 border border-red-500/40 rounded-xl px-4 py-3">
-                    <span className="text-red-400 text-xl shrink-0 mt-0.5">🚫</span>
+                    <span className="text-red-400 text-xl shrink-0 mt-0.5"></span>
                     <div>
                       <p className="text-red-300 font-semibold text-sm">Application Frozen — Ownership Dispute Active</p>
                       <p className="text-red-200/80 text-xs mt-0.5">
@@ -588,7 +588,7 @@ export default function ApplicationDetailsPage() {
                 {/* Consent Guard Warning */}
                 {isConsentBlocked && !isDisputeFrozen && (
                   <div className="mb-4 flex items-start gap-3 bg-amber-500/15 border border-amber-500/40 rounded-xl px-4 py-3">
-                    <span className="text-amber-400 text-xl shrink-0 mt-0.5">⚠️</span>
+                    <span className="text-amber-400 text-xl shrink-0 mt-0.5"></span>
                     <div>
                       <p className="text-amber-300 font-semibold text-sm">Joint Ownership — Consents Pending</p>
                       <p className="text-amber-200/80 text-xs mt-0.5">
@@ -614,14 +614,14 @@ export default function ApplicationDetailsPage() {
                   >
                     <FaCheckCircle className="inline mr-2" />
                     {isProcessing ? 'Processing...' : (official?.designation?.toLowerCase() === 'clerk' ? 'Forward' : 'Approve & Forward')}
-                    {(isConsentBlocked || isDisputeFrozen) && <span className="ml-2 text-xs">🔒</span>}
+                    {(isConsentBlocked || isDisputeFrozen) && <span className="ml-2 text-xs"></span>}
                   </button>
                   <button
                     onClick={() => handleAction('reject', `Rejected by ${official?.designation}`)}
                     disabled={isProcessing}
                     className={`flex-1 px-6 py-4 rounded-xl font-bold transition-all border ${isProcessing
                       ? 'bg-gray-500/20 text-gray-300 border-gray-500/30 cursor-not-allowed opacity-50'
-                      : 'bg-linear-to-r from-red-500/20 to-rose-500/20 hover:from-red-500/30 hover:to-rose-500/30 text-red-200 hover:text-white border-red-500/30'
+                      : 'bg-linear-to-r from-red-500/20 to-red-500/20 hover:from-red-500/30 hover:to-red-500/30 text-red-200 hover:text-white border-red-500/30'
                       }`}
                   >
                     <FaExclamationTriangle className="inline mr-2" />
@@ -646,7 +646,7 @@ export default function ApplicationDetailsPage() {
                   <>
                     <FaCheckCircle className="text-green-400 text-3xl shrink-0" />
                     <div>
-                      <h3 className="text-xl font-bold text-green-300">✅ Application Approved</h3>
+                      <h3 className="text-xl font-bold text-green-300"> Application Approved</h3>
                       <p className="text-sm text-green-200 mt-1">
                         This application has been successfully approved and completed through all required stages.
                       </p>
@@ -656,7 +656,7 @@ export default function ApplicationDetailsPage() {
                   <>
                     <FaExclamationTriangle className="text-red-400 text-3xl shrink-0" />
                     <div>
-                      <h3 className="text-xl font-bold text-red-300">❌ Application Rejected</h3>
+                      <h3 className="text-xl font-bold text-red-300"> Application Rejected</h3>
                       <p className="text-sm text-red-200 mt-1">
                         This application has been rejected. Please check the application history for rejection details and reasons.
                       </p>
@@ -666,7 +666,7 @@ export default function ApplicationDetailsPage() {
                   <>
                     <FaClock className="text-yellow-400 text-3xl shrink-0" />
                     <div>
-                      <h3 className="text-xl font-bold text-yellow-300">ℹ️ Application In Progress</h3>
+                      <h3 className="text-xl font-bold text-yellow-300">ℹ Application In Progress</h3>
                       <p className="text-sm text-yellow-200 mt-1">
                         This application is not currently assigned to you. You can view the details but cannot take action.
                       </p>
@@ -764,7 +764,7 @@ export default function ApplicationDetailsPage() {
                 <div className="flex gap-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
                   <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+                  <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
                 </div>
               </div>
 

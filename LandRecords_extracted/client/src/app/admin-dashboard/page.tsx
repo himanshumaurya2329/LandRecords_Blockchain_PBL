@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FaCrown, FaUsers, FaShieldAlt, FaFileAlt, FaChartBar, FaSignOutAlt, FaKey, FaSearch, FaEye, FaEdit, FaTrash, FaHistory, FaClock, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
+import { FaCrown, FaUsers, FaShieldAlt, FaFileAlt, FaChartBar, FaSignOutAlt, FaKey, FaSearch, FaEye, FaEdit, FaTrash, FaHistory, FaClock, FaExclamationTriangle, FaCheckCircle, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
 
 interface Admin {
@@ -428,12 +428,12 @@ export default function AdminDashboard() {
                 <p className="text-gray-400 text-sm mt-2">Registered citizens</p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20">
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-teal-500/20">
                 <div className="flex items-center justify-between mb-4">
-                  <FaShieldAlt className="text-3xl text-purple-400" />
+                  <FaShieldAlt className="text-3xl text-teal-400" />
                   <span className="text-3xl font-bold text-white">{stats.totalOfficials}</span>
                 </div>
-                <h3 className="text-purple-200 text-lg font-medium">Total Officials</h3>
+                <h3 className="text-teal-200 text-lg font-medium">Total Officials</h3>
                 <p className="text-gray-400 text-sm mt-2">Government officials</p>
               </div>
 
@@ -516,9 +516,9 @@ export default function AdminDashboard() {
             {/* Detailed Insights */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
               {/* Officials by Designation */}
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20">
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-teal-500/20">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                  <FaShieldAlt className="text-purple-400" />
+                  <FaShieldAlt className="text-teal-400" />
                   Officials by Designation
                 </h3>
                 <div className="space-y-3">
@@ -663,7 +663,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4">
                           <button
                             onClick={() => handleViewOfficial(official)}
-                            className="p-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors"
+                            className="p-2 bg-teal-600 hover:bg-teal-700 rounded-lg transition-colors"
                             title="View official details and activity"
                           >
                             <FaEye className="text-white" />
@@ -723,7 +723,7 @@ export default function AdminDashboard() {
                             </span>
                             {(app as any)?.isDisputed && (
                               <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30">
-                                ⚠️ Disputed
+                                 Disputed
                               </span>
                             )}
                           </div>
@@ -786,7 +786,7 @@ export default function AdminDashboard() {
                         : 'border-white/20 bg-white/5 text-gray-300 hover:border-green-500/50'
                     }`}
                   >
-                    <div className="font-bold text-sm mb-1">✅ Rectify Shares</div>
+                    <div className="font-bold text-sm mb-1"> Rectify Shares</div>
                     <div className="text-xs opacity-70">Update co-owner percentages and unfreeze</div>
                   </button>
                   <button
@@ -798,7 +798,7 @@ export default function AdminDashboard() {
                         : 'border-white/20 bg-white/5 text-gray-300 hover:border-red-500/50'
                     }`}
                   >
-                    <div className="font-bold text-sm mb-1">❌ Reject Dispute</div>
+                    <div className="font-bold text-sm mb-1"> Reject Dispute</div>
                     <div className="text-xs opacity-70">Dismiss dispute, keep original shares</div>
                   </button>
                 </div>
@@ -864,7 +864,7 @@ export default function AdminDashboard() {
                         type="button"
                         onClick={() => setDisputeUpdatedOwners(disputeUpdatedOwners.filter((_, i) => i !== idx))}
                         className="text-red-400 hover:text-red-300 text-xs px-2"
-                      >✕</button>
+                      ><FaTimes aria-hidden="true" /></button>
                     </div>
                   ))}
                   {disputeUpdatedOwners.length > 0 && (
@@ -882,7 +882,7 @@ export default function AdminDashboard() {
                         ? 'text-green-400' : 'text-red-400'
                     }`}>
                       Total: {disputeUpdatedOwners.reduce((s, o) => s + (o.sharePercent || 0), 0)}%
-                      {Math.abs(disputeUpdatedOwners.reduce((s, o) => s + (o.sharePercent || 0), 0) - 100) < 0.01 ? ' ✅' : ' (must be 100%)'}
+                      {Math.abs(disputeUpdatedOwners.reduce((s, o) => s + (o.sharePercent || 0), 0) - 100) < 0.01 ? ' ' : ' (must be 100%)'}
                     </p>
                   )}
                 </div>
@@ -1074,7 +1074,7 @@ export default function AdminDashboard() {
                             {rejectedAction && (
                               <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
                                 <p className="text-red-300 text-sm font-medium">
-                                  ❌ Rejected by: {rejectedAction.officialName} ({rejectedAction.designation})
+                                   Rejected by: {rejectedAction.officialName} ({rejectedAction.designation})
                                 </p>
                                 {rejectedAction.remarks && (
                                   <p className="text-red-200 text-xs mt-1">Reason: {rejectedAction.remarks}</p>
@@ -1105,7 +1105,7 @@ export default function AdminDashboard() {
       {/* Official Details Modal */}
       {selectedOfficial && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 rounded-xl p-8 max-w-4xl w-full max-h-[80vh] overflow-y-auto border border-purple-500/20">
+          <div className="bg-slate-900 rounded-xl p-8 max-w-4xl w-full max-h-[80vh] overflow-y-auto border border-teal-500/20">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-white">Official Details & Activity</h3>
               <button
@@ -1151,8 +1151,8 @@ export default function AdminDashboard() {
                 <div className="border-t border-gray-700 pt-6 mb-6">
                   <h4 className="text-xl font-bold text-white mb-4">Work Summary</h4>
                   <div className="grid grid-cols-4 gap-4">
-                    <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/20">
-                      <p className="text-purple-300 text-sm">Total Processed</p>
+                    <div className="bg-teal-500/10 rounded-lg p-4 border border-teal-500/20">
+                      <p className="text-teal-300 text-sm">Total Processed</p>
                       <p className="text-white text-2xl font-bold">{officialActivity.summary.totalProcessed}</p>
                     </div>
                     <div className="bg-green-500/10 rounded-lg p-4 border border-green-500/20">
@@ -1322,7 +1322,7 @@ export default function AdminDashboard() {
                               } else if (typeof value === 'object' && value !== null) {
                                 displayValue = JSON.stringify(value, null, 2);
                               } else if (typeof value === 'boolean') {
-                                displayValue = value ? '✓ Yes' : '✗ No';
+                                displayValue = value ? ' Yes' : ' No';
                               } else {
                                 displayValue = String(value || 'N/A');
                               }

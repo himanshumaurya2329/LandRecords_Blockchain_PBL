@@ -133,21 +133,21 @@ export default function OfficialRegistration() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-900 via-teal-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-8 items-center">
           {/* Left Section - Government Icons & Decoration (30%) */}
           <div className="hidden lg:flex lg:col-span-3 flex-col justify-center items-center space-y-8 py-8">
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold text-white mb-2">Official Registration</h2>
-              <p className="text-purple-200 text-lg">Government Portal Access</p>
+              <p className="text-teal-200 text-lg">Government Portal Access</p>
             </div>
 
             {/* Floating Icons */}
             <div className="relative w-full h-96">
               {/* Main Icon */}
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <div className="w-24 h-24 bg-linear-to-br from-purple-400 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl">
+                <div className="w-24 h-24 bg-linear-to-br from-teal-400 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl">
                   <FaShieldAlt className="text-5xl text-white" />
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function OfficialRegistration() {
 
               {/* Bottom Right */}
               <div className="absolute bottom-0 right-8 animate-pulse animation-delay-600">
-                <div className="w-14 h-14 bg-linear-to-br from-red-400 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="w-14 h-14 bg-linear-to-br from-red-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                   <FaFileAlt className="text-2xl text-white" />
                 </div>
               </div>
@@ -183,23 +183,23 @@ export default function OfficialRegistration() {
 
             {/* Features List */}
             <div className="grid grid-cols-2 gap-4 text-sm w-full">
-              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-purple-500/20">
-                <p className="text-purple-200 flex items-center gap-2">
-                  <FaShieldAlt className="text-purple-400" /> Secure Access
+              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-teal-500/20">
+                <p className="text-teal-200 flex items-center gap-2">
+                  <FaShieldAlt className="text-teal-400" /> Secure Access
                 </p>
               </div>
-              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-purple-500/20">
-                <p className="text-purple-200 flex items-center gap-2">
+              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-teal-500/20">
+                <p className="text-teal-200 flex items-center gap-2">
                   <FaMapPin className="text-green-400" /> Land Management
                 </p>
               </div>
-              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-purple-500/20">
-                <p className="text-purple-200 flex items-center gap-2">
+              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-teal-500/20">
+                <p className="text-teal-200 flex items-center gap-2">
                   <FaBriefcase className="text-blue-400" /> Official Portal
                 </p>
               </div>
-              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-purple-500/20">
-                <p className="text-purple-200 flex items-center gap-2">
+              <div className="bg-white/10 backdrop-blur p-4 rounded-lg border border-teal-500/20">
+                <p className="text-teal-200 flex items-center gap-2">
                   <FaFileAlt className="text-yellow-400" /> Record Tracking
                 </p>
               </div>
@@ -208,14 +208,14 @@ export default function OfficialRegistration() {
 
           {/* Right Section - Registration Form in Table Format (70%) */}
           <div className="lg:col-span-7 flex justify-center items-center">
-            <div className="w-full bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-purple-500/20">
+            <div className="w-full bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-teal-500/20">
               {/* Header */}
               <div className="text-center mb-8">
-                <div className="inline-block p-3 bg-linear-to-r from-purple-500 to-indigo-600 rounded-full mb-4 shadow-xl">
+                <div className="inline-block p-3 bg-linear-to-r from-teal-500 to-indigo-600 rounded-full mb-4 shadow-xl">
                   <FaShieldAlt className="text-3xl text-white" />
                 </div>
                 <h1 className="text-3xl font-bold text-white mb-2">Create Official Account</h1>
-                <p className="text-purple-200">Register with email verification</p>
+                <p className="text-teal-200">Register with email verification</p>
               </div>
 
               {/* Error Message */}
@@ -232,10 +232,10 @@ export default function OfficialRegistration() {
                   <table className="w-full">
                     <tbody>
                       {/* Row 1: First Name, Designation, Email */}
-                      <tr className="border-b border-purple-500/20">
+                      <tr className="border-b border-teal-500/20">
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaUser className="text-purple-400" />
+                            <FaUser className="text-teal-400" />
                             First Name <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -245,7 +245,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.firstName
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="John"
                           />
@@ -253,7 +253,7 @@ export default function OfficialRegistration() {
                         </td>
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaBuilding className="text-purple-400" />
+                            <FaBuilding className="text-teal-400" />
                             Designation <span className="text-red-400">*</span>
                           </label>
                           <select
@@ -262,7 +262,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white text-sm ${errors.designation
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                           >
                             <option value="">Select Role</option>
@@ -276,7 +276,7 @@ export default function OfficialRegistration() {
                         </td>
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaEnvelope className="text-purple-400" />
+                            <FaEnvelope className="text-teal-400" />
                             Email <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -286,7 +286,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.email
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="official@email.com"
                           />
@@ -295,10 +295,10 @@ export default function OfficialRegistration() {
                       </tr>
 
                       {/* Row 2: Last Name, Department, Phone */}
-                      <tr className="border-b border-purple-500/20">
+                      <tr className="border-b border-teal-500/20">
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaUser className="text-purple-400" />
+                            <FaUser className="text-teal-400" />
                             Last Name <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -308,7 +308,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.lastName
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="Doe"
                           />
@@ -316,7 +316,7 @@ export default function OfficialRegistration() {
                         </td>
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaBuilding className="text-purple-400" />
+                            <FaBuilding className="text-teal-400" />
                             Department <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -326,7 +326,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.department
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="Revenue"
                           />
@@ -334,7 +334,7 @@ export default function OfficialRegistration() {
                         </td>
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaPhone className="text-purple-400" />
+                            <FaPhone className="text-teal-400" />
                             Phone <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -344,7 +344,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.phone
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="1234567890"
                           />
@@ -353,10 +353,10 @@ export default function OfficialRegistration() {
                       </tr>
 
                       {/* Row 3: Office ID, Username, Password */}
-                      <tr className="border-b border-purple-500/20">
+                      <tr className="border-b border-teal-500/20">
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaBuilding className="text-purple-400" />
+                            <FaBuilding className="text-teal-400" />
                             Office ID <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -366,7 +366,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.officeId
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="OFF-001"
                           />
@@ -374,7 +374,7 @@ export default function OfficialRegistration() {
                         </td>
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaUser className="text-purple-400" />
+                            <FaUser className="text-teal-400" />
                             Username <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -384,7 +384,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.username
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="username"
                           />
@@ -392,7 +392,7 @@ export default function OfficialRegistration() {
                         </td>
                         <td className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaLock className="text-purple-400" />
+                            <FaLock className="text-teal-400" />
                             Password <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -402,7 +402,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 text-sm ${errors.password
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="••••••"
                           />
@@ -414,7 +414,7 @@ export default function OfficialRegistration() {
                       <tr>
                         <td colSpan={3} className="p-4">
                           <label className="block text-gray-200 font-medium mb-2 flex items-center gap-2">
-                            <FaLock className="text-purple-400" />
+                            <FaLock className="text-teal-400" />
                             Confirm Password <span className="text-red-400">*</span>
                           </label>
                           <input
@@ -424,7 +424,7 @@ export default function OfficialRegistration() {
                             onChange={handleChange}
                             className={`w-full px-3 py-2 rounded-lg bg-white/10 border transition focus:outline-none focus:ring-2 text-white placeholder-gray-400 ${errors.password2
                                 ? 'border-red-500 focus:ring-red-500'
-                                : 'border-purple-500/30 focus:ring-purple-500'
+                                : 'border-teal-500/30 focus:ring-teal-500'
                               }`}
                             placeholder="••••••"
                           />
@@ -439,7 +439,7 @@ export default function OfficialRegistration() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl mt-8"
+                  className="w-full bg-linear-to-r from-teal-600 to-indigo-600 hover:from-teal-700 hover:to-indigo-700 disabled:from-gray-500 disabled:to-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl mt-8"
                 >
                   {loading ? 'Sending OTP...' : 'Create Account'}
                   {!loading && <FaArrowRight />}
@@ -449,12 +449,12 @@ export default function OfficialRegistration() {
                 <div className="space-y-3 text-center text-sm">
                   <p className="text-gray-400">
                     Already have an account?{' '}
-                    <Link href="/officiallogin" className="text-purple-400 hover:text-purple-300 font-semibold">
+                    <Link href="/officiallogin" className="text-teal-400 hover:text-teal-300 font-semibold">
                       Login here
                     </Link>
                   </p>
                   <p className="text-gray-400">
-                    <Link href="/" className="text-purple-400 hover:text-purple-300 font-semibold">
+                    <Link href="/" className="text-teal-400 hover:text-teal-300 font-semibold">
                       ← Back to Home
                     </Link>
                   </p>

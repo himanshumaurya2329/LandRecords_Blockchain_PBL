@@ -79,7 +79,7 @@ const JointCollectorFields = forwardRef<JointCollectorFieldsHandle, any>(
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-red-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-red-300 mb-4 flex items-center gap-2">
         <FaGavel />
-        ⚖️ Joint Collector
+         Joint Collector
       </h2>
 
       {/* Dispute Review Decision */}
@@ -91,9 +91,9 @@ const JointCollectorFields = forwardRef<JointCollectorFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-red-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Decision</option>
-          <option value="favor_applicant">✅ Resolve in Favor of Applicant</option>
-          <option value="reject_claim">❌ Reject Claim</option>
-          <option value="further_investigation">🔍 Requires Further Investigation</option>
+          <option value="favor_applicant"> Resolve in Favor of Applicant</option>
+          <option value="reject_claim"> Reject Claim</option>
+          <option value="further_investigation"> Requires Further Investigation</option>
         </select>
         <textarea
           value={disputeJustification}
@@ -113,9 +113,9 @@ const JointCollectorFields = forwardRef<JointCollectorFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-red-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Status</option>
-          <option value="approved">✅ Approved</option>
-          <option value="needs_changes">⚠️ Needs Changes</option>
-          <option value="rejected">❌ Rejected</option>
+          <option value="approved"> Approved</option>
+          <option value="needs_changes"> Needs Changes</option>
+          <option value="rejected"> Rejected</option>
         </select>
         <textarea
           value={boundaryRemarks}
@@ -128,7 +128,7 @@ const JointCollectorFields = forwardRef<JointCollectorFieldsHandle, any>(
 
       <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
         <p className="text-sm text-red-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

@@ -96,7 +96,7 @@ const SuperintendentFields = forwardRef<SuperintendentFieldsHandle, { applicatio
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-cyan-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-cyan-300 mb-4 flex items-center gap-2">
         <FaFileAlt />
-        📋 Superintendent Verification
+         Superintendent Verification
       </h2>
 
       {/* Document Verification Checklist */}
@@ -129,9 +129,9 @@ const SuperintendentFields = forwardRef<SuperintendentFieldsHandle, { applicatio
             className="w-full px-4 py-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-white focus:outline-none focus:border-cyan-400"
           >
             <option value="">Select Status</option>
-            <option value="verified">✅ Verified - Matches Records</option>
-            <option value="mismatch">⚠️ Mismatch Found</option>
-            <option value="not_found">❌ Record Not Found</option>
+            <option value="verified"> Verified - Matches Records</option>
+            <option value="mismatch"> Mismatch Found</option>
+            <option value="not_found"> Record Not Found</option>
             <option value="pending_verification">⏳ Pending Verification</option>
           </select>
         </div>
@@ -152,7 +152,7 @@ const SuperintendentFields = forwardRef<SuperintendentFieldsHandle, { applicatio
       {/* Save Button */}
       <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-4">
         <p className="text-sm text-cyan-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

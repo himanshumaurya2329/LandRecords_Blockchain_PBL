@@ -99,7 +99,7 @@ const VROFields = forwardRef<VROFieldsHandle, any>(
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-green-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-green-300 mb-4 flex items-center gap-2">
         <FaHome />
-        🏡 VRO - Physical Verification
+         VRO - Physical Verification
       </h2>
 
       {/* Physical Possession Verification */}
@@ -111,9 +111,9 @@ const VROFields = forwardRef<VROFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-green-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Status</option>
-          <option value="yes">✅ Yes - Applicant in Actual Possession</option>
-          <option value="no">❌ No - Possession Disputed</option>
-          <option value="partial">⚠️ Partial Possession</option>
+          <option value="yes"> Yes - Applicant in Actual Possession</option>
+          <option value="no"> No - Possession Disputed</option>
+          <option value="partial"> Partial Possession</option>
         </select>
         <textarea
           value={possessionRemarks}
@@ -167,7 +167,7 @@ const VROFields = forwardRef<VROFieldsHandle, any>(
 
       <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
         <p className="text-sm text-green-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

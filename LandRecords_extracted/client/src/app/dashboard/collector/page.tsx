@@ -68,7 +68,7 @@ export default function CollectorDashboard() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-linear-to-br from-purple-900 to-slate-900">
+            <div className="min-h-screen bg-linear-to-br from-teal-900 to-slate-900">
                 <DashboardHeader
                     title="Loading..."
                     subtitle="Please wait"
@@ -83,7 +83,7 @@ export default function CollectorDashboard() {
     }
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-purple-900 to-slate-900">
+        <div className="min-h-screen bg-linear-to-br from-teal-900 to-slate-900">
             <DashboardHeader
                 title="District Collector Dashboard"
                 subtitle="Approve land registration applications"
