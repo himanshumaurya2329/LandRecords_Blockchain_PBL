@@ -494,3 +494,17 @@ div[class*="bg-indigo-900"][class*="rounded"] {
 }
 /* Do not darken white labels/icons nested inside colored buttons or links. */
 .text-white:not(button):not(a):not(button *):not(a *) { color: var(--text) !important; }
+/* Contrast fixes found during live theme review. */
+.landing-page > div:first-child {
+  background-image: none !important;
+  background-color: var(--surface-subtle) !important;
+  border-color: var(--line) !important;
+}
+.landing-page > div:nth-child(2) { background: var(--page) !important; }
+.action-button:disabled {
+  color: var(--text-soft) !important;
+  background: var(--surface-subtle) !important;
+  border-color: var(--line-strong) !important;
+}
+.user-dashboard-shell button:disabled { color: var(--text-soft) !important; opacity: .82; }
+.text-blue-700, .text-indigo-700 { color: var(--accent) !important; }

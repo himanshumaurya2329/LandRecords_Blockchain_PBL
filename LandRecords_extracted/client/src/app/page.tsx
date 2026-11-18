@@ -5,7 +5,7 @@ import { FaUser, FaShieldAlt, FaMap, FaLandmark, FaMapPin, FaFileAlt, FaBriefcas
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white text-gray-800">
+    <div className="min-h-screen bg-white text-gray-800 landing-page">
       {/* Header Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-indigo-100 pt-12 pb-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
