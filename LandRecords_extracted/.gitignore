@@ -55,3 +55,9 @@ ${config_path}
 Thumbs.db
 .vscode/
 .idea/
+# Local Laya System 1 service
+client/ai-service/.venv/
+client/ai-service/__pycache__/
+
+# Local background services and logs
+client/.local/

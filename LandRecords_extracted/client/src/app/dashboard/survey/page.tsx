@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardHeader from '@/components/DashboardHeader';
+import AiReviewPanel from '@/components/ai/AiReviewPanel';
 import apiFetcher from '@/utils/fetcher';
 import { auth } from '@/utils/auth';
 
@@ -15,6 +16,7 @@ interface Application {
     createdAt: string;
     userName: string;
     userEmail: string;
+    receiptNumber?: string;
 }
 
 export default function SurveyDashboard() {
@@ -259,6 +261,14 @@ export default function SurveyDashboard() {
                                             placeholder="Enter land classification"
                                         />
                                     </div>
+                                </div>
+
+                                <div className="mt-5">
+                                    <AiReviewPanel
+                                        task="survey"
+                                        receiptNumber={selectedApp.receiptNumber || selectedApp.applicationId.replace(/^APP-/, '')}
+                                        fields={{ ownerName: selectedApp.userName, surveyNumber: selectedApp.surveyNumber, area: selectedApp.landArea, location: selectedApp.location, surveyReport: surveyData.surveyReport, boundaryDetails: surveyData.boundaryDetails, landClassification: surveyData.landClassification }}
+                                    />
                                 </div>
 
                                 <div className="flex gap-4 mt-6">

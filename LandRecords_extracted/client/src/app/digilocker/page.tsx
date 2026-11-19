@@ -88,7 +88,7 @@ export default function CitizenDigiLocker() {
             <h1 style={{ margin: 0, fontSize: '22px', fontWeight: 'bold' }}> My DigiLocker</h1>
             <p style={{ margin: '4px 0 0', fontSize: '13px', opacity: 0.8 }}>Your verified government documents</p>
           </div>
-          <a href="/user-dashboard" style={{ background: 'rgba(255,255,255,0.2)', color: 'white', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontSize: '14px' }}>← Dashboard</a>
+          <a href="/user-dashboard" className="digilocker-back-link">← <span>Dashboard</span></a>
         </div>
       </div>
 
@@ -159,7 +159,7 @@ export default function CitizenDigiLocker() {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div className="digilocker-doc-grid">
           {docs.map((doc) => (
             <div key={doc._id} style={{ background: '#1e293b', borderRadius: '16px', padding: '20px', border: '1px solid #22c55e44' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -173,14 +173,12 @@ export default function CitizenDigiLocker() {
               <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '16px' }}>
                  Verified: {new Date(doc.verifiedAt).toLocaleDateString('en-IN')}
               </div>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <a href={doc.ipfsHash ? `/api/documents/view?hash=${doc.ipfsHash}` : `/api/digilocker-vault?id=${doc._id}&action=view`} target="_blank"
-                  style={{ flex: 1, background: '#1e40af', color: 'white', padding: '8px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontSize: '13px' }}>
-                  <FiEye aria-hidden="true" /> View
+              <div className="digilocker-actions">
+                <a href={doc.ipfsHash ? `/api/documents/view?hash=${encodeURIComponent(doc.ipfsHash)}` : `/api/digilocker-vault?id=${encodeURIComponent(doc._id)}&action=view`} target="_blank" rel="noopener noreferrer" className="digilocker-action digilocker-action--view">
+                  <FiEye aria-hidden="true" /> <span>View</span>
                 </a>
-                <a href={`/api/digilocker-vault?id=${doc._id}&action=download`} download={doc.fileName}
-                  style={{ flex: 1, background: '#334155', color: 'white', padding: '8px', borderRadius: '8px', textDecoration: 'none', textAlign: 'center', fontSize: '13px' }}>
-                  <FiDownload aria-hidden="true" /> Download
+                <a href={`/api/digilocker-vault?id=${encodeURIComponent(doc._id)}&action=download`} download={doc.fileName} className="digilocker-action digilocker-action--download">
+                  <FiDownload aria-hidden="true" /> <span>Download</span>
                 </a>
               </div>
             </div>

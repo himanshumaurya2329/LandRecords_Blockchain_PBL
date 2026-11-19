@@ -16,8 +16,7 @@ import MROFields, { type MROFieldsHandle } from '@/components/roleFields/MROFiel
 import ClerkFields, { type ClerkFieldsHandle } from '@/components/roleFields/ClerkFields';
 import ApplicationHistory from '@/components/ApplicationHistory';
 import DigiLockerRequestPanel from '@/components/DigiLockerRequestPanel';
-import OCRAnalysisPanel from '@/components/OCRAnalysisPanel';
-import AITrustScore from '@/components/AITrustScore';
+import AiReviewPanel from '@/components/ai/AiReviewPanel';
 import DIDDisplay from '@/components/DIDDisplay';
 import { getAssignedStatusesForRole } from '@/lib/utils/workflow';
 
@@ -55,6 +54,8 @@ interface Application {
   ownershipType?: string;
   disputeDetails?: { reason: string; raisedBy: string };
   allConsentsGiven?: boolean;
+  humanReviewRequested?: boolean;
+  humanReviewNote?: string;
   actionHistory?: Array<{
     officialId: string;
     officialName: string;
@@ -463,11 +464,6 @@ export default function ApplicationDetailsPage() {
               </div>
             )}
 
-            {/* M8 AI Trust Score (Persona: Collector / Joint Collector) */}
-            <AITrustScore
-              application={application}
-              isVisible={['clerk', 'mro', 'collector', 'jointcollector', 'districtcollector', 'district_collector'].some(r => official?.designation?.toLowerCase().includes(r))}
-            />
 
             {/* M7 Blockchain Integrity Anchor (Persona: Clerk, MRO and higher) */}
             {application.docHash && ['clerk', 'mro', 'collector', 'jointcollector', 'districtcollector', 'district_collector'].some(r => official?.designation?.toLowerCase().includes(r)) && (
@@ -488,9 +484,21 @@ export default function ApplicationDetailsPage() {
               </div>
             )}
 
-            {/* M9 AI/OCR Analysis (Persona: Clerk, Superintendent, Project Officer, and MRO) */}
-            {(['clerk', 'superintendent', 'project_officer', 'mro', 'officer', 'revenue'].some(r => official?.designation?.toLowerCase().includes(r))) && (
-              <OCRAnalysisPanel application={application} />
+            {application.humanReviewRequested && (
+              <div role="status" className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-950">
+                <strong>Human review requested</strong>
+                <p className="mt-1 text-sm">{application.humanReviewNote || 'An applicant or official requested a staff review.'}</p>
+              </div>
+            )}
+
+            {/* Local document screening replaces the former simulated OCR/confidence widgets. */}
+            {application.ipfsHash && ['clerk', 'superintendent', 'surveyor', 'survey officer', 'admin'].some(r => official?.designation?.toLowerCase().includes(r)) && (
+              <AiReviewPanel
+                task="document"
+                documentHash={application.ipfsHash}
+                receiptNumber={application.receiptNumber}
+                fields={{ ownerName: application.ownerName, surveyNumber: application.surveyNumber, area: application.area, city: application.city || '', state: application.state || '' }}
+              />
             )}
 
             {/* DigiLocker Document Request (Visible to Processing Officers) */}
