@@ -79,10 +79,10 @@ const ROLE_COLORS: Record<string, { bg: string; text: string; border: string; ac
   revenueDeptOfficer: {
     bg: 'bg-slate-50',
     text: 'text-slate-800',
-    border: 'border-pink-200',
-    accent: 'text-pink-600',
-    iconBg: 'bg-pink-100',
-    button: 'bg-pink-600 hover:bg-pink-700 text-white'
+    border: 'border-emerald-200',
+    accent: 'text-emerald-600',
+    iconBg: 'bg-emerald-100',
+    button: 'bg-emerald-600 hover:bg-emerald-700 text-white'
   },
   jointCollector: {
     bg: 'bg-slate-50',
@@ -95,18 +95,18 @@ const ROLE_COLORS: Record<string, { bg: string; text: string; border: string; ac
   districtCollector: {
     bg: 'bg-slate-50',
     text: 'text-slate-800',
-    border: 'border-rose-200',
-    accent: 'text-rose-600',
-    iconBg: 'bg-rose-100',
-    button: 'bg-rose-600 hover:bg-rose-700 text-white'
+    border: 'border-red-200',
+    accent: 'text-red-600',
+    iconBg: 'bg-red-100',
+    button: 'bg-red-600 hover:bg-red-700 text-white'
   },
   ministrywelfare: {
     bg: 'bg-slate-50',
     text: 'text-slate-800',
-    border: 'border-violet-200',
-    accent: 'text-violet-600',
-    iconBg: 'bg-violet-100',
-    button: 'bg-violet-600 hover:bg-violet-700 text-white'
+    border: 'border-blue-200',
+    accent: 'text-blue-600',
+    iconBg: 'bg-blue-100',
+    button: 'bg-blue-600 hover:bg-blue-700 text-white'
   },
 };
 

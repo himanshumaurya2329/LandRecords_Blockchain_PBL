@@ -86,7 +86,7 @@ const RevenueInspectorFields = forwardRef<RevenueInspectorFieldsHandle, any>(
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-yellow-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
         <FaMoneyBillWave />
-        💰 Revenue Inspector - Tax Verification
+         Revenue Inspector - Tax Verification
       </h2>
 
       {/* Tax Dues Check */}
@@ -101,9 +101,9 @@ const RevenueInspectorFields = forwardRef<RevenueInspectorFieldsHandle, any>(
               className="w-full px-4 py-3 bg-slate-900/50 border border-yellow-500/20 rounded-lg text-white"
             >
               <option value="">Select Status</option>
-              <option value="cleared">✅ Tax Cleared</option>
+              <option value="cleared"> Tax Cleared</option>
               <option value="pending">⏳ Pending Dues</option>
-              <option value="partial">⚠️ Partially Paid</option>
+              <option value="partial"> Partially Paid</option>
             </select>
           </div>
           <div>
@@ -141,9 +141,9 @@ const RevenueInspectorFields = forwardRef<RevenueInspectorFieldsHandle, any>(
               className="w-full px-4 py-3 bg-slate-900/50 border border-yellow-500/20 rounded-lg text-white"
             >
               <option value="">Select Status</option>
-              <option value="approved">✅ Approved</option>
+              <option value="approved"> Approved</option>
               <option value="pending_payment">⏳ Pending Payment</option>
-              <option value="rejected">❌ Rejected</option>
+              <option value="rejected"> Rejected</option>
             </select>
           </div>
         </div>
@@ -172,7 +172,7 @@ const RevenueInspectorFields = forwardRef<RevenueInspectorFieldsHandle, any>(
 
       <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
         <p className="text-sm text-yellow-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

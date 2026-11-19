@@ -28,15 +28,15 @@ const ROLE_CONFIG: Record<string, {
   superintendent: {
     title: 'Superintendent Dashboard',
     icon: FaUserTie,
-    color: 'purple',
-    gradient: 'from-purple-600 to-pink-600',
+    color: 'teal',
+    gradient: 'from-teal-600 to-emerald-600',
     description: 'Application Review & Verification'
   },
   projectofficer: {
     title: 'Project Officer Dashboard',
     icon: FaBriefcase,
     color: 'indigo',
-    gradient: 'from-indigo-600 to-purple-600',
+    gradient: 'from-indigo-600 to-teal-600',
     description: 'Project Management & Oversight'
   },
   mro: {
@@ -71,21 +71,21 @@ const ROLE_CONFIG: Record<string, {
     title: 'Revenue Department Officer',
     icon: FaCoins,
     color: 'red',
-    gradient: 'from-red-600 to-pink-600',
+    gradient: 'from-red-600 to-emerald-600',
     description: 'Revenue Collection & Tax Management'
   },
   jointcollector: {
     title: 'Joint Collector Dashboard',
     icon: FaCrown,
-    color: 'violet',
-    gradient: 'from-violet-600 to-purple-600',
+    color: 'blue',
+    gradient: 'from-blue-600 to-teal-600',
     description: 'District-Level Oversight'
   },
   districtcollector: {
     title: 'District Collector Dashboard',
     icon: FaCrown,
-    color: 'rose',
-    gradient: 'from-rose-600 to-red-600',
+    color: 'red',
+    gradient: 'from-red-600 to-red-600',
     description: 'District Administration Authority'
   },
   ministrywelfare: {
@@ -415,14 +415,14 @@ export default function OfficialDashboard() {
               }}
             />
             {/* Middle rotating ring (opposite direction) */}
-            <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-purple-400 border-l-purple-400 animate-spin"
+            <div className="absolute inset-2 rounded-full border-4 border-transparent border-b-teal-400 border-l-teal-400 animate-spin"
               style={{
                 animation: 'spin 3s linear infinite reverse'
               }}
             />
             {/* Center dot */}
             <div className="absolute inset-0 rounded-full flex items-center justify-center">
-              <div className="w-3 h-3 bg-linear-to-br from-blue-400 to-purple-400 rounded-full animate-pulse" />
+              <div className="w-3 h-3 bg-linear-to-br from-blue-400 to-teal-400 rounded-full animate-pulse" />
             </div>
           </div>
 
@@ -435,7 +435,7 @@ export default function OfficialDashboard() {
           {/* Progress dots */}
           <div className="flex gap-2">
             <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
-            <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+            <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
           </div>
         </div>
@@ -556,16 +556,16 @@ export default function OfficialDashboard() {
                   : 'bg-white/5 text-blue-200 border-blue-500/30 hover:bg-white/10 hover:border-blue-500/50'
                   }`}
               >
-                📋 Assigned Applications ({assignedApplications.length})
+                 Assigned Applications ({assignedApplications.length})
               </button>
               <button
                 onClick={() => setActiveTab('all')}
                 className={`flex-1 px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 border-2 ${activeTab === 'all'
-                  ? 'bg-linear-to-r from-purple-500 to-pink-500 text-white border-purple-400 shadow-lg shadow-purple-500/50'
-                  : 'bg-white/5 text-purple-200 border-purple-500/30 hover:bg-white/10 hover:border-purple-500/50'
+                  ? 'bg-linear-to-r from-teal-500 to-emerald-500 text-white border-teal-400 shadow-lg shadow-teal-500/50'
+                  : 'bg-white/5 text-teal-200 border-teal-500/30 hover:bg-white/10 hover:border-teal-500/50'
                   }`}
               >
-                🌐 All Applications ({allApplications.length})
+                 All Applications ({allApplications.length})
               </button>
             </div>
 
@@ -794,26 +794,26 @@ export default function OfficialDashboard() {
                 </div>
 
                 {/* Address Section */}
-                <div className="bg-linear-to-br from-purple-500/5 to-pink-500/5 rounded-2xl p-6 border border-purple-500/20">
-                  <h4 className="text-lg font-bold text-purple-300 mb-4 flex items-center gap-2">
+                <div className="bg-linear-to-br from-teal-500/5 to-emerald-500/5 rounded-2xl p-6 border border-teal-500/20">
+                  <h4 className="text-lg font-bold text-teal-300 mb-4 flex items-center gap-2">
                     <FaHome />
                     Address Information
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="md:col-span-3 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                      <label className="text-xs text-purple-300/70 uppercase tracking-wider">Full Address</label>
+                      <label className="text-xs text-teal-300/70 uppercase tracking-wider">Full Address</label>
                       <p className="text-white font-semibold mt-1">{selectedApp.address || 'N/A'}</p>
                     </div>
                     <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                      <label className="text-xs text-purple-300/70 uppercase tracking-wider">City</label>
+                      <label className="text-xs text-teal-300/70 uppercase tracking-wider">City</label>
                       <p className="text-white font-semibold mt-1">{selectedApp.city || 'N/A'}</p>
                     </div>
                     <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                      <label className="text-xs text-purple-300/70 uppercase tracking-wider">State</label>
+                      <label className="text-xs text-teal-300/70 uppercase tracking-wider">State</label>
                       <p className="text-white font-semibold mt-1">{selectedApp.state || 'N/A'}</p>
                     </div>
                     <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                      <label className="text-xs text-purple-300/70 uppercase tracking-wider">Pincode</label>
+                      <label className="text-xs text-teal-300/70 uppercase tracking-wider">Pincode</label>
                       <p className="text-white font-semibold mt-1">{selectedApp.pincode || 'N/A'}</p>
                     </div>
                   </div>
@@ -848,14 +848,14 @@ export default function OfficialDashboard() {
                   </h4>
                   <div className="space-y-4">
                     {/* Land Request Application Form */}
-                    <div className="bg-slate-800/70 p-5 rounded-xl border border-purple-500/30 hover:border-purple-500/50 transition-all group">
+                    <div className="bg-slate-800/70 p-5 rounded-xl border border-teal-500/30 hover:border-teal-500/50 transition-all group">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="p-3 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-all">
-                          <FaFileAlt className="text-purple-400 text-xl" />
+                        <div className="p-3 bg-teal-500/20 rounded-lg group-hover:bg-teal-500/30 transition-all">
+                          <FaFileAlt className="text-teal-400 text-xl" />
                         </div>
                         <div>
                           <span className="text-white font-semibold text-lg">Land Request Application Form</span>
-                          <p className="text-purple-300/70 text-xs">System-generated official form</p>
+                          <p className="text-teal-300/70 text-xs">System-generated official form</p>
                         </div>
                       </div>
                       <div className="flex gap-3">
@@ -863,14 +863,14 @@ export default function OfficialDashboard() {
                           href={`/api/land-requests/generate-form?receipt=${selectedApp.receiptNumber}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 hover:text-white rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 border border-purple-500/20"
+                          className="flex-1 px-4 py-3 bg-teal-500/20 hover:bg-teal-500/40 text-teal-200 hover:text-white rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 border border-teal-500/20"
                         >
                           <FaFileAlt />
                           View Form
                         </a>
                         <button
                           onClick={() => window.print()}
-                          className="flex-1 px-4 py-3 bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 hover:text-white rounded-xl text-sm font-medium transition-all border border-purple-500/20"
+                          className="flex-1 px-4 py-3 bg-teal-500/20 hover:bg-teal-500/40 text-teal-200 hover:text-white rounded-xl text-sm font-medium transition-all border border-teal-500/20"
                         >
                           Print Form
                         </button>
@@ -917,7 +917,7 @@ export default function OfficialDashboard() {
                   <div className="bg-linear-to-br from-cyan-500/5 to-teal-500/5 rounded-2xl p-6 border border-cyan-500/20">
                     <h4 className="text-lg font-bold text-cyan-300 mb-4 flex items-center gap-2">
                       <FaMapMarkedAlt />
-                      📍 Survey Data & Field Evidence
+                       Survey Data & Field Evidence
                     </h4>
 
                     {/* GPS Coordinates */}
@@ -964,7 +964,7 @@ export default function OfficialDashboard() {
 
                     {/* Boundary Map Upload */}
                     <div className="mb-6">
-                      <label className="text-sm font-semibold text-cyan-200 block mb-2">🗺️ Upload Boundary Map (PDF/JPEG/PNG)</label>
+                      <label className="text-sm font-semibold text-cyan-200 block mb-2"> Upload Boundary Map (PDF/JPEG/PNG)</label>
                       <div className="relative">
                         <input
                           type="file"
@@ -973,14 +973,14 @@ export default function OfficialDashboard() {
                           className="w-full px-4 py-3 bg-slate-900/50 border border-cyan-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-cyan-500/20 file:text-cyan-200 hover:file:bg-cyan-500/30"
                         />
                         {boundaryMapFile && (
-                          <p className="mt-2 text-xs text-green-400">✅ {boundaryMapFile.name}</p>
+                          <p className="mt-2 text-xs text-green-400"> {boundaryMapFile.name}</p>
                         )}
                       </div>
                     </div>
 
                     {/* Field Photos Upload */}
                     <div className="mb-6">
-                      <label className="text-sm font-semibold text-cyan-200 block mb-2">📷 Upload Field Photos (2-4 photos)</label>
+                      <label className="text-sm font-semibold text-cyan-200 block mb-2"> Upload Field Photos (2-4 photos)</label>
                       <input
                         type="file"
                         accept="image/*"
@@ -990,7 +990,7 @@ export default function OfficialDashboard() {
                       />
                       {fieldPhotoFiles.length > 0 && (
                         <div className="mt-2 text-xs text-green-400">
-                          ✅ {fieldPhotoFiles.length} photo(s) selected: {fieldPhotoFiles.map(f => f.name).join(', ')}
+                           {fieldPhotoFiles.length} photo(s) selected: {fieldPhotoFiles.map(f => f.name).join(', ')}
                         </div>
                       )}
                     </div>
@@ -1013,7 +1013,7 @@ export default function OfficialDashboard() {
                       disabled={uploadingSurvey}
                       className="w-full px-6 py-4 bg-linear-to-r from-cyan-500/20 to-teal-500/20 hover:from-cyan-500/30 hover:to-teal-500/30 text-cyan-200 hover:text-white rounded-xl font-bold transition-all border border-cyan-500/30 hover:border-cyan-500/50 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {uploadingSurvey ? 'Uploading to IPFS...' : '📤 Upload Survey Data to Blockchain'}
+                      {uploadingSurvey ? 'Uploading to IPFS...' : ' Upload Survey Data to Blockchain'}
                     </button>
                   </div>
                 )}
@@ -1033,7 +1033,7 @@ export default function OfficialDashboard() {
                   </button>
                   <button
                     onClick={() => handleAction(selectedApp._id, 'reject', 'Rejected by ' + official?.designation)}
-                    className="flex-1 px-6 py-4 bg-linear-to-r from-red-500/20 to-rose-500/20 hover:from-red-500/30 hover:to-rose-500/30 text-red-200 hover:text-white rounded-xl font-bold transition-all border border-red-500/30 hover:border-red-500/50 shadow-lg hover:shadow-red-500/20"
+                    className="flex-1 px-6 py-4 bg-linear-to-r from-red-500/20 to-red-500/20 hover:from-red-500/30 hover:to-red-500/30 text-red-200 hover:text-white rounded-xl font-bold transition-all border border-red-500/30 hover:border-red-500/50 shadow-lg hover:shadow-red-500/20"
                   >
                     <FaExclamationTriangle className="inline mr-2 text-lg" />
                     Reject
@@ -1042,7 +1042,7 @@ export default function OfficialDashboard() {
               ) : (
                 <div className="p-4 bg-linear-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-xl">
                   <p className="text-yellow-200 text-sm text-center font-medium">
-                    ℹ️ This application is not currently assigned to you. You can view the details but cannot take action.
+                    ℹ This application is not currently assigned to you. You can view the details but cannot take action.
                   </p>
                 </div>
               )}

@@ -10,7 +10,7 @@ interface OwnershipPieChartProps {
 }
 
 // Fixed color palette for owners
-const COLORS = ['bg-blue-500', 'bg-indigo-500', 'bg-purple-500', 'bg-pink-500', 'bg-rose-500'];
+const COLORS = ['bg-blue-500', 'bg-indigo-500', 'bg-teal-500', 'bg-emerald-500', 'bg-red-500'];
 
 export default function OwnershipPieChart({ owners }: OwnershipPieChartProps) {
   if (!owners || owners.length === 0) return null;

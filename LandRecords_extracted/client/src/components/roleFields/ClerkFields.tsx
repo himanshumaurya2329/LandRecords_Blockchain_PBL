@@ -97,7 +97,7 @@ const ClerkFields = forwardRef<ClerkFieldsHandle, { application: any; onUpdate: 
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-sky-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-sky-300 mb-4 flex items-center gap-2">
         <FaClipboardList />
-        📋 Clerk - Application Intake
+         Clerk - Application Intake
       </h2>
 
       {/* Document Intake Status */}
@@ -109,9 +109,9 @@ const ClerkFields = forwardRef<ClerkFieldsHandle, { application: any; onUpdate: 
           className="w-full px-4 py-3 bg-slate-900/50 border border-sky-500/20 rounded-lg text-white"
         >
           <option value="">Select Intake Status</option>
-          <option value="received">✅ Documents Received</option>
-          <option value="incomplete">⚠️ Incomplete Submission</option>
-          <option value="rejected">❌ Rejected at Intake</option>
+          <option value="received"> Documents Received</option>
+          <option value="incomplete"> Incomplete Submission</option>
+          <option value="rejected"> Rejected at Intake</option>
         </select>
       </div>
 
@@ -155,7 +155,7 @@ const ClerkFields = forwardRef<ClerkFieldsHandle, { application: any; onUpdate: 
 
       <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
         <p className="text-sm text-blue-200">
-          💡 <strong>Data will be saved automatically when you click "Forward"</strong>
+           <strong>Data will be saved automatically when you click "Forward"</strong>
         </p>
       </div>
     </div>

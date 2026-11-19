@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { FiCheckCircle, FiCpu, FiLoader, FiPlay, FiRefreshCw, FiSearch, FiXCircle } from 'react-icons/fi';
 
 interface OCRAnalysisPanelProps {
   application: {
@@ -94,22 +95,22 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
   };
 
   const getConfidenceLabel = (confidence: number) => {
-    if (confidence >= 98) return '✅ HIGH CONFIDENCE — Document Verified';
-    if (confidence >= 85) return '⚠️ MEDIUM CONFIDENCE — Manual Review Needed';
-    return '❌ LOW CONFIDENCE — Document Mismatch';
+    if (confidence >= 98) return 'High confidence — document verified';
+    if (confidence >= 85) return 'Medium confidence — manual review needed';
+    return 'Low confidence — document mismatch';
   };
 
   return (
-    <div className="bg-slate-800/70 p-5 rounded-xl border border-purple-500/30">
+    <div className="bg-slate-800/70 p-5 rounded-xl border border-teal-500/30">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center text-xl">
-            🤖
+          <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-700">
+            <FiCpu aria-hidden="true" />
           </div>
           <div>
             <h3 className="text-white font-bold text-lg">AI / OCR Analysis</h3>
-            <p className="text-purple-300 text-xs">
+            <p className="text-teal-300 text-xs">
               Automated document verification via OCR pipeline
             </p>
           </div>
@@ -120,11 +121,11 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
             disabled={isAnalyzing}
             className={`px-5 py-2.5 rounded-lg font-semibold text-sm transition-all ${
               isAnalyzing
-                ? 'bg-purple-500/10 text-purple-300 cursor-not-allowed'
-                : 'bg-purple-500/20 hover:bg-purple-500/40 text-purple-200 hover:text-white border border-purple-500/30'
+                ? 'bg-teal-500/10 text-teal-300 cursor-not-allowed'
+                : 'bg-teal-500/20 hover:bg-teal-500/40 text-teal-200 hover:text-white border border-teal-500/30'
             }`}
           >
-            {isAnalyzing ? '⏳ Analyzing...' : '▶ Run OCR Analysis'}
+            {isAnalyzing ? <><FiLoader className="animate-spin" aria-hidden="true" /> Analyzing...</> : <><FiPlay aria-hidden="true" /> Run OCR analysis</>}
           </button>
         )}
         {analyzed && (
@@ -132,7 +133,7 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
             onClick={() => { setAnalyzed(false); setResult(null); }}
             className="px-4 py-2 rounded-lg text-xs text-slate-400 hover:text-white border border-slate-600 hover:border-slate-400 transition-all"
           >
-            🔄 Re-run
+            <FiRefreshCw aria-hidden="true" /> Re-run
           </button>
         )}
       </div>
@@ -140,19 +141,19 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
       {/* Analyzing animation */}
       {isAnalyzing && (
         <div className="space-y-3">
-          <div className="flex items-center gap-3 text-purple-300 text-sm">
-            <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+          <div className="flex items-center gap-3 text-teal-300 text-sm">
+            <div className="w-4 h-4 border-2 border-teal-400 border-t-transparent rounded-full animate-spin" />
             <span>Extracting text from document using OCR...</span>
           </div>
           <div className="w-full bg-slate-700 rounded-full h-1.5">
-            <div className="bg-purple-400 h-1.5 rounded-full animate-pulse" style={{ width: '60%' }} />
+            <div className="bg-teal-400 h-1.5 rounded-full animate-pulse" style={{ width: '60%' }} />
           </div>
-          <div className="flex items-center gap-3 text-purple-300/60 text-sm">
-            <div className="w-4 h-4 border-2 border-purple-400/40 border-t-transparent rounded-full animate-spin" />
+          <div className="flex items-center gap-3 text-teal-300/60 text-sm">
+            <div className="w-4 h-4 border-2 border-teal-400/40 border-t-transparent rounded-full animate-spin" />
             <span>Running NLP field extraction...</span>
           </div>
-          <div className="flex items-center gap-3 text-purple-300/30 text-sm">
-            <div className="w-4 h-4 border-2 border-purple-400/20 rounded-full" />
+          <div className="flex items-center gap-3 text-teal-300/30 text-sm">
+            <div className="w-4 h-4 border-2 border-teal-400/20 rounded-full" />
             <span>Comparing with application data...</span>
           </div>
         </div>
@@ -200,7 +201,7 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
               >
                 <div className="flex items-center gap-3">
                   <span className="text-lg">
-                    {field.match ? '✅' : '❌'}
+                    {field.match ? <FiCheckCircle className="text-green-600" aria-hidden="true" /> : <FiXCircle className="text-red-600" aria-hidden="true" />}
                   </span>
                   <div>
                     <p className="text-slate-300 text-xs font-medium uppercase tracking-wider">
@@ -228,7 +229,7 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
               : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-300'
           }`}>
             <p className="font-semibold mb-1">
-              🔍 OCR Analysis Summary
+              <FiSearch className="inline mr-1" aria-hidden="true" /> OCR analysis summary
             </p>
             <p className="text-xs opacity-80">
               {result.fields.filter(f => f.match).length} of {result.fields.length} fields
@@ -245,7 +246,7 @@ export default function OCRAnalysisPanel({ application }: OCRAnalysisPanelProps)
       {/* Default state */}
       {!isAnalyzing && !analyzed && (
         <div className="text-center py-4 text-slate-500 text-sm">
-          <p>🔍 Click "Run OCR Analysis" to verify document authenticity</p>
+          <p className="inline-flex items-center justify-center gap-2"><FiSearch aria-hidden="true" /> Click “Run OCR analysis” to verify document authenticity</p>
           <p className="text-xs mt-1 text-slate-600">
             AI will extract and compare fields from uploaded documents
           </p>

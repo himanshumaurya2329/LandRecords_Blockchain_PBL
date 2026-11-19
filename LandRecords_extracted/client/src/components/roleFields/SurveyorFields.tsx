@@ -147,7 +147,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-orange-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-orange-300 mb-4 flex items-center gap-2">
         <FaMapMarkedAlt />
-        📍 Surveyor - Survey Data & Coordinates
+         Surveyor - Survey Data & Coordinates
       </h2>
 
       {/* GPS Coordinates */}
@@ -156,7 +156,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
         
         {/* Point A */}
         <div className="mb-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-          <label className="text-sm text-orange-300 font-semibold mb-2 block">📍 Point A</label>
+          <label className="text-sm text-orange-300 font-semibold mb-2 block"> Point A</label>
           <div className="grid grid-cols-2 gap-3">
             <input
               type="text"
@@ -177,7 +177,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
 
         {/* Point B */}
         <div className="mb-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-          <label className="text-sm text-orange-300 font-semibold mb-2 block">📍 Point B</label>
+          <label className="text-sm text-orange-300 font-semibold mb-2 block"> Point B</label>
           <div className="grid grid-cols-2 gap-3">
             <input
               type="text"
@@ -198,7 +198,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
 
         {/* Point C */}
         <div className="mb-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-          <label className="text-sm text-orange-300 font-semibold mb-2 block">📍 Point C</label>
+          <label className="text-sm text-orange-300 font-semibold mb-2 block"> Point C</label>
           <div className="grid grid-cols-2 gap-3">
             <input
               type="text"
@@ -219,7 +219,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
 
         {/* Point D */}
         <div className="mb-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-          <label className="text-sm text-orange-300 font-semibold mb-2 block">📍 Point D</label>
+          <label className="text-sm text-orange-300 font-semibold mb-2 block"> Point D</label>
           <div className="grid grid-cols-2 gap-3">
             <input
               type="text"
@@ -240,7 +240,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
 
         {/* Measured Area */}
         <div className="mb-4">
-          <label className="text-sm text-orange-300 font-semibold mb-2 block">📐 Measured Area</label>
+          <label className="text-sm text-orange-300 font-semibold mb-2 block"> Measured Area</label>
           <input
             type="text"
             placeholder="e.g., 1000 sq meters"
@@ -261,7 +261,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
           className="w-full px-4 py-3 bg-slate-900/50 border border-orange-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-orange-500/20 file:text-orange-200"
         />
         {boundaryMapFile && (
-          <p className="mt-2 text-sm text-green-400">✅ {boundaryMapFile.name}</p>
+          <p className="mt-2 text-sm text-green-400"> {boundaryMapFile.name}</p>
         )}
       </div>
 
@@ -276,7 +276,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
           className="w-full px-4 py-3 bg-slate-900/50 border border-orange-500/20 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-orange-500/20 file:text-orange-200"
         />
         {fieldPhotos && fieldPhotos.length > 0 && (
-          <p className="mt-2 text-sm text-green-400">✅ {fieldPhotos.length} photo(s) selected</p>
+          <p className="mt-2 text-sm text-green-400"> {fieldPhotos.length} photo(s) selected</p>
         )}
       </div>
 
@@ -294,7 +294,7 @@ const SurveyorFields = forwardRef<SurveyorFieldsHandle, { application: any; onUp
 
       <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
         <p className="text-sm text-blue-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

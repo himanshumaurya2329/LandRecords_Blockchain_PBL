@@ -86,10 +86,10 @@ export default function ReceiptPage() {
       }
 
       // Show success and redirect
-      alert('✅ Successfully submitted to Clerk!');
+      alert(' Successfully submitted to Clerk!');
       router.push('/user-dashboard');
     } catch (err) {
-      alert('❌ ' + (err instanceof Error ? err.message : 'Submission failed'));
+      alert(' ' + (err instanceof Error ? err.message : 'Submission failed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -251,7 +251,7 @@ export default function ReceiptPage() {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <p className="text-gray-700 font-semibold">Document Upload Status:</p>
-                    <p className="px-4 py-2 bg-gray-900 text-white rounded font-bold text-sm">✓ VERIFIED</p>
+                    <p className="px-4 py-2 bg-gray-900 text-white rounded font-bold text-sm"> VERIFIED</p>
                   </div>
                   <div>
                     <p className="text-xs font-bold text-gray-600 uppercase mb-2">IPFS Hash (Blockchain Reference)</p>
@@ -326,7 +326,7 @@ export default function ReceiptPage() {
 
           {/* Info Box */}
           <div className="bg-white border-l-4 border-gray-900 rounded-lg p-6 shadow-md">
-            <p className="font-bold text-gray-900 mb-2">📋 NEXT STEPS</p>
+            <p className="font-bold text-gray-900 mb-2"> NEXT STEPS</p>
             <p className="text-sm text-gray-700">
               After submission, your application will be forwarded to the Clerk's office for verification and processing. You will receive email updates on the progress of your application. The processing typically takes 5-10 business days.
             </p>

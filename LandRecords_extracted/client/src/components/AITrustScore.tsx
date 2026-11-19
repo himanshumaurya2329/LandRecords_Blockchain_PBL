@@ -42,7 +42,7 @@ export default function AITrustScore({ application, isVisible }: AITrustScorePro
         if (score >= 90) return 'from-emerald-400 to-green-500';
         if (score >= 75) return 'from-blue-400 to-indigo-500';
         if (score >= 50) return 'from-yellow-400 to-orange-500';
-        return 'from-red-400 to-pink-500';
+        return 'from-red-400 to-emerald-500';
     };
 
     const getStatusLabel = (score: number) => {

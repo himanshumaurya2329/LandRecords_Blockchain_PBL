@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { FiActivity, FiCheckCircle, FiClock, FiFileText, FiHome, FiRefreshCw } from 'react-icons/fi';
 
 interface Transaction {
   action: string;
@@ -71,7 +72,7 @@ export default function BlockchainExplorer() {
 
   const getActionColor = (action: string) => {
     if (action === 'created') return '#3b82f6';
-    if (action === 'forwarded') return '#8b5cf6';
+    if (action === 'forwarded') return '#176c5b';
     if (action === 'approved') return '#22c55e';
     if (action === 'rejected') return '#ef4444';
     return '#6b7280';
@@ -86,20 +87,20 @@ export default function BlockchainExplorer() {
   const totalTxns = applications.reduce((sum, app) => sum + (app.Record?.history?.length || 0), 0);
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0f172a', color: '#e2e8f0', fontFamily: 'monospace' }}>
+    <div className="blockchain-explorer-page" style={{ minHeight: '100vh', background: '#0f172a', color: '#e2e8f0', fontFamily: 'monospace' }}>
       <div style={{ background: '#1e293b', borderBottom: '1px solid #334155', padding: '16px 24px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#38bdf8', margin: 0 }}>
-              ⛓️ Blockchain Transaction Explorer
+              <FiActivity aria-hidden="true" /> Blockchain Transaction Explorer
             </h1>
             <p style={{ color: '#94a3b8', margin: '4px 0 0', fontSize: '13px' }}>
               E-Land Records — Hyperledger Fabric Network
             </p>
           </div>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <a href="/" style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontSize: '14px' }}>🏠 Home</a>
-            <button onClick={fetchData} style={{ background: '#0ea5e9', border: 'none', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}>🔄 Refresh</button>
+            <a href="/" style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontSize: '14px' }}><FiHome aria-hidden="true" /> Home</a>
+            <button onClick={fetchData} style={{ background: '#0ea5e9', border: 'none', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}><FiRefreshCw aria-hidden="true" /> Refresh</button>
           </div>
         </div>
       </div>
@@ -107,10 +108,10 @@ export default function BlockchainExplorer() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
           {[
-            { label: 'Total Applications', value: applications.length, icon: '📋', color: '#3b82f6' },
-            { label: 'Total Transactions', value: totalTxns, icon: '🔗', color: '#8b5cf6' },
-            { label: 'Approved', value: applications.filter(a => a.Record?.status === 'approved').length, icon: '✅', color: '#22c55e' },
-            { label: 'Pending', value: applications.filter(a => a.Record?.status !== 'approved' && a.Record?.status !== 'rejected').length, icon: '⏳', color: '#f59e0b' },
+            { label: 'Total Applications', value: applications.length, icon: <FiFileText aria-hidden="true" />, color: '#3b82f6' },
+            { label: 'Total Transactions', value: totalTxns, icon: <FiActivity aria-hidden="true" />, color: '#176c5b' },
+            { label: 'Approved', value: applications.filter(a => a.Record?.status === 'approved').length, icon: <FiCheckCircle aria-hidden="true" />, color: '#22c55e' },
+            { label: 'Pending', value: applications.filter(a => a.Record?.status !== 'approved' && a.Record?.status !== 'rejected').length, icon: <FiClock aria-hidden="true" />, color: '#f59e0b' },
           ].map((stat, i) => (
             <div key={i} style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', border: `1px solid ${stat.color}33` }}>
               <div style={{ fontSize: '24px' }}>{stat.icon}</div>
@@ -120,13 +121,13 @@ export default function BlockchainExplorer() {
           ))}
         </div>
 
-        <input type="text" placeholder="🔍 Search by Receipt No, Owner Name, or Survey Number..."
+        <input type="text" placeholder="Search by receipt number, owner name, or survey number"
           value={search} onChange={e => setSearch(e.target.value)}
           style={{ width: '100%', padding: '12px 16px', borderRadius: '8px', background: '#1e293b', border: '1px solid #334155', color: '#e2e8f0', fontSize: '14px', marginBottom: '24px', boxSizing: 'border-box' }}
         />
 
-        {loading && <div style={{ textAlign: 'center', color: '#38bdf8', padding: '40px' }}>⛓️ Loading blockchain data...</div>}
-        {error && <div style={{ textAlign: 'center', color: '#ef4444', padding: '40px' }}>❌ {error}</div>}
+        {loading && <div style={{ textAlign: 'center', color: '#38bdf8', padding: '40px' }}><FiActivity aria-hidden="true" /> Loading blockchain data...</div>}
+        {error && <div style={{ textAlign: 'center', color: '#ef4444', padding: '40px' }}> {error}</div>}
 
         <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 1fr' : '1fr', gap: '24px' }}>
           <div>
@@ -143,10 +144,10 @@ export default function BlockchainExplorer() {
                   <div>
                     <div style={{ color: '#38bdf8', fontWeight: 'bold', fontSize: '14px' }}>{app.Key}</div>
                     <div style={{ color: '#94a3b8', fontSize: '12px', marginTop: '4px' }}>
-                      👤 {app.Record?.ownerName || 'N/A'} | 📍 Survey: {app.Record?.surveyNumber || 'N/A'}
+                       {app.Record?.ownerName || 'N/A'} |  Survey: {app.Record?.surveyNumber || 'N/A'}
                     </div>
                     <div style={{ color: '#64748b', fontSize: '11px', marginTop: '4px' }}>
-                      🔗 {app.Record?.history?.length || 0} transactions on chain | Click to view
+                       {app.Record?.history?.length || 0} transactions on chain | Click to view
                     </div>
                   </div>
                   <span style={{
@@ -170,12 +171,12 @@ export default function BlockchainExplorer() {
                 <h2 style={{ color: '#94a3b8', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', margin: 0 }}>
                   Transaction History ({selected.Record?.history?.length} txns)
                 </h2>
-                <button onClick={() => setSelected(null)} style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', padding: '4px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}>✕ Close</button>
+                <button onClick={() => setSelected(null)} style={{ background: 'transparent', border: '1px solid #334155', color: '#94a3b8', padding: '4px 10px', borderRadius: '6px', cursor: 'pointer', fontSize: '12px' }}> Close</button>
               </div>
               <div style={{ background: '#1e293b', borderRadius: '12px', padding: '16px', marginBottom: '16px', border: '1px solid #334155' }}>
                 <div style={{ color: '#38bdf8', fontWeight: 'bold' }}>{selected.Key}</div>
                 <div style={{ color: '#94a3b8', fontSize: '12px', marginTop: '4px' }}>
-                  👤 {selected.Record?.ownerName} | 📍 {selected.Record?.surveyNumber}
+                   {selected.Record?.ownerName} |  {selected.Record?.surveyNumber}
                 </div>
                 <div style={{ color: '#64748b', fontSize: '11px', marginTop: '4px' }}>
                   Created: {formatTime(selected.Record?.createdAt)}
@@ -195,17 +196,17 @@ export default function BlockchainExplorer() {
                       <span style={{ color: '#64748b', fontSize: '11px' }}>Step #{i + 1}</span>
                     </div>
                     <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '6px' }}>
-                      🔑 <span style={{ color: '#38bdf8' }}>{txn.transactionId}</span>
+                       <span style={{ color: '#38bdf8' }}>{txn.transactionId}</span>
                     </div>
                     <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '4px' }}>
-                      👤 <strong>{txn.officialName}</strong> ({txn.designation})
+                       <strong>{txn.officialName}</strong> ({txn.designation})
                     </div>
                     <div style={{ fontSize: '12px', color: '#64748b' }}>
-                      🕐 {formatTime(txn.timestamp)}
+                       {formatTime(txn.timestamp)}
                     </div>
                     {txn.remarks && (
                       <div style={{ fontSize: '12px', color: '#94a3b8', background: '#0f172a', padding: '6px 10px', borderRadius: '6px', marginTop: '6px' }}>
-                        💬 {txn.remarks}
+                         {txn.remarks}
                       </div>
                     )}
                   </div>

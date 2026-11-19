@@ -27,6 +27,7 @@ import {
   FiClock,
   FiEye,
   FiDownload,
+  FiCopy,
 } from 'react-icons/fi';
 import {
   MdOutlineLandscape,
@@ -84,6 +85,7 @@ export default function UserDashboard() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeTab, setActiveTab] = useState('create');
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [ownershipType, setOwnershipType] = useState<'single' | 'joint'>('single');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [digiLockerDocs, setDigiLockerDocs] = useState<any[]>([]);
@@ -412,14 +414,13 @@ export default function UserDashboard() {
   };
 
   const getStatusBadge = (status: string) => {
-    // Show "Approved" if completed or approved, "Rejected" if rejected, otherwise "Pending"
     if (status === 'completed' || status === 'approved') {
-      return { bg: 'bg-green-100', text: 'text-green-700', label: 'APPROVED', icon: '✅', border: 'border-green-200' };
-    } else if (status === 'rejected') {
-      return { bg: 'bg-red-100', text: 'text-red-700', label: 'REJECTED', icon: '❌', border: 'border-red-200' };
-    } else {
-      return { bg: 'bg-yellow-100', text: 'text-yellow-700', label: 'PENDING', icon: '⏳', border: 'border-yellow-200' };
+      return { variant: 'approved', label: 'APPROVED' };
     }
+    if (status === 'rejected') {
+      return { variant: 'rejected', label: 'REJECTED' };
+    }
+    return { variant: 'pending', label: 'PENDING' };
   };
 
   const handleViewPatta = async (receiptNumber: string) => {
@@ -537,18 +538,18 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
+    <div className="min-h-screen bg-slate-50 text-slate-800 user-dashboard-content">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
             <p className="text-slate-500">Welcome back, {userData?.firstName || 'User'}</p>
           </div>
-          <a href="/digilocker" className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold text-sm transition-all shadow-md">
-            🔐 My DigiLocker
+          <a href="/digilocker" className="flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold text-sm transition-all shadow-md">
+             My DigiLocker
           </a>
           <a href="/ownership-dashboard" className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm transition-all shadow-md">
-            📊 Joint Ownership
+             Joint Ownership
           </a>
         </div>
 
@@ -593,14 +594,14 @@ export default function UserDashboard() {
           <button
             onClick={() => setActiveTab('inbox')}
             className={`p-6 rounded-2xl transition-all duration-300 text-left border ${activeTab === 'inbox'
-              ? 'bg-white border-purple-500 shadow-lg shadow-purple-100 ring-1 ring-purple-500/20'
-              : 'bg-white border-slate-200 hover:border-purple-300 hover:shadow-md'
+              ? 'bg-white border-teal-500 shadow-lg shadow-teal-100 ring-1 ring-teal-500/20'
+              : 'bg-white border-slate-200 hover:border-teal-300 hover:shadow-md'
               }`}
           >
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${activeTab === 'inbox' ? 'bg-purple-50' : 'bg-slate-50'}`}>
-              <FiInbox className={`text-2xl ${activeTab === 'inbox' ? 'text-purple-600' : 'text-slate-400'}`} />
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${activeTab === 'inbox' ? 'bg-teal-50' : 'bg-slate-50'}`}>
+              <FiInbox className={`text-2xl ${activeTab === 'inbox' ? 'text-teal-600' : 'text-slate-400'}`} />
             </div>
-            <h3 className={`font-bold text-lg mb-1 ${activeTab === 'inbox' ? 'text-purple-900' : 'text-slate-700'}`}>
+            <h3 className={`font-bold text-lg mb-1 ${activeTab === 'inbox' ? 'text-teal-900' : 'text-slate-700'}`}>
               Inbox
             </h3>
             <p className="text-sm text-slate-500">
@@ -630,50 +631,69 @@ export default function UserDashboard() {
         {/* Tab Content */}
         {activeTab === 'create' && (
           <div className="space-y-6">
+            {!showCreateForm ? (
+              <section className="dashboard-welcome-card" aria-labelledby="welcome-title">
+                <div className="dashboard-welcome-copy">
+                  <p className="dashboard-eyebrow">LAND RECORDS · CITIZEN SERVICES</p>
+                  <h2 id="welcome-title">Your land records, in one place.</h2>
+                  <p>Start a registration request, follow its progress, and keep your verified documents close at hand.</p>
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateForm(true)}
+                    className="dashboard-primary-action"
+                  >
+                    <FiFolder aria-hidden="true" />
+                    Start a land application
+                    <FiArrowRight aria-hidden="true" />
+                  </button>
+                </div>
+                <div className="dashboard-welcome-aside" aria-label="Application overview">
+                  <span className="dashboard-aside-kicker">YOUR WORKSPACE</span>
+                  <strong>{requests.length.toString().padStart(2, '0')}</strong>
+                  <span>{requests.length === 1 ? 'submitted request' : 'submitted requests'}</span>
+                  <span className="dashboard-aside-rule" />
+                  <span>Secure · Verified · Trackable</span>
+                </div>
+              </section>
+            ) : (
+              <>
+            <div className="form-return-row">
+              <div>
+                <p className="dashboard-eyebrow">NEW REGISTRATION</p>
+                <h2 className="form-page-title">Start a land application</h2>
+              </div>
+              <button type="button" className="form-return-button" onClick={() => setShowCreateForm(false)}>
+                Back to dashboard
+              </button>
+            </div>
             {/* Ownership Type Toggle */}
             <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-200/50">
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center border border-indigo-100">
-                  <span className="text-indigo-600 text-lg">🏛️</span>
+                  <span className="text-indigo-600 text-lg"></span>
                 </div>
                 <div>
                   <h4 className="text-lg font-bold text-slate-800">Ownership Type</h4>
                   <p className="text-xs text-slate-500">Select how you want to register this property</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => setOwnershipType('single')}
-                  className={`p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
-                    ownershipType === 'single'
-                      ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500/20'
-                      : 'border-slate-200 bg-white hover:border-blue-300'
-                  }`}
+              <div className="ownership-select-wrap">
+                <label htmlFor="ownership-type" className="ownership-select-label">Ownership arrangement</label>
+                <select
+                  id="ownership-type"
+                  value={ownershipType}
+                  onChange={(event) => setOwnershipType(event.target.value as 'single' | 'joint')}
+                  className="ownership-select"
                 >
-                  <span className="text-3xl">👤</span>
-                  <span className={`font-bold text-sm ${ownershipType === 'single' ? 'text-blue-900' : 'text-slate-600'}`}>Single Ownership</span>
-                  <span className="text-xs text-slate-400 text-center">Property owned by one person</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setOwnershipType('joint')}
-                  className={`p-5 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
-                    ownershipType === 'joint'
-                      ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500/20'
-                      : 'border-slate-200 bg-white hover:border-indigo-300'
-                  }`}
-                >
-                  <span className="text-3xl">👥</span>
-                  <span className={`font-bold text-sm ${ownershipType === 'joint' ? 'text-indigo-900' : 'text-slate-600'}`}>Joint Ownership</span>
-                  <span className="text-xs text-slate-400 text-center">Property shared between co-owners</span>
-                </button>
+                  <option value="single">Single ownership — one registered owner</option>
+                  <option value="joint">Joint ownership — multiple co-owners</option>
+                </select>
               </div>
               {/* Joint Ownership Active Notice */}
               {ownershipType === 'joint' && (
                 <div className="mt-4 p-4 rounded-xl bg-indigo-50 border border-indigo-200 flex flex-col md:flex-row md:items-center justify-between gap-3 text-sm text-indigo-900 shadow-xs">
                   <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">👥</span>
+                    <span className="text-2xl"></span>
                     <div>
                       <p className="font-bold">Joint Ownership Mode Active</p>
                       <p className="text-xs text-indigo-700">Enter co-owners and share percentages in the form below. All co-owners will verify consent via the Consent Portal.</p>
@@ -696,11 +716,11 @@ export default function UserDashboard() {
               <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-200/50">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center border border-purple-100">
-                      <FiFileText className="text-lg text-purple-600" />
+                    <div className="w-10 h-10 bg-teal-50 rounded-lg flex items-center justify-center border border-teal-100">
+                      <FiFileText className="text-lg text-teal-600" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800">🔐 DigiLocker Documents</h3>
+                      <h3 className="text-lg font-bold text-slate-800"> DigiLocker Documents</h3>
                       <p className="text-xs text-slate-500">Select your verified document</p>
                     </div>
                   </div>
@@ -708,14 +728,14 @@ export default function UserDashboard() {
 
                 <div className="space-y-4">
                   {loadingDocs && (
-                    <div className="text-center py-4 text-purple-600 text-sm">Loading DigiLocker documents...</div>
+                    <div className="text-center py-4 text-teal-600 text-sm">Loading DigiLocker documents...</div>
                   )}
 
                   {!loadingDocs && digiLockerDocs.length === 0 && (
                     <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
-                      <p className="text-sm text-yellow-800 font-medium">⚠️ No DigiLocker documents found</p>
+                      <p className="text-sm text-yellow-800 font-medium"> No DigiLocker documents found</p>
                       <p className="text-xs text-yellow-600 mt-1">Contact government authority to upload your documents</p>
-                      <a href="/digilocker" className="text-xs text-purple-600 underline mt-2 block">View DigiLocker →</a>
+                      <a href="/digilocker" className="text-xs text-teal-600 underline mt-2 block">View DigiLocker →</a>
                     </div>
                   )}
 
@@ -724,20 +744,20 @@ export default function UserDashboard() {
                       key={doc._id}
                       onClick={() => setSelectedDigiDoc(doc)}
                       style={{ cursor: 'pointer' }}
-                      className={`rounded-xl p-4 border-2 transition-all ${selectedDigiDoc?._id === doc._id ? 'border-purple-500 bg-purple-50' : 'border-slate-200 bg-white hover:border-purple-300'}`}
+                      className={`rounded-xl p-4 border-2 transition-all ${selectedDigiDoc?._id === doc._id ? 'border-teal-500 bg-teal-50' : 'border-slate-200 bg-white hover:border-teal-300'}`}
                     >
                       <div className="flex justify-between items-center">
                         <div>
                           <p className="font-bold text-slate-800 text-sm">
-                            {doc.documentType === 'aadhaar_card' ? '🪪 Aadhaar Card' : '📜 Land Deed'}
+                            {doc.documentType === 'aadhaar_card' ? ' Aadhaar Card' : ' Land Deed'}
                           </p>
                           <p className="text-xs text-slate-500 mt-1">{doc.fileName}</p>
-                          <p className="text-xs text-slate-400 mt-0.5 break-all">{doc.ipfsHash ? 'IPFS: ' + doc.ipfsHash.slice(0, 20) + '...' : '📁 Stored in vault'}</p>
+                          <p className="text-xs text-slate-400 mt-0.5 break-all">{doc.ipfsHash ? 'IPFS: ' + doc.ipfsHash.slice(0, 20) + '...' : ' Stored in vault'}</p>
                         </div>
                         <div className="flex flex-col items-end gap-2">
-                          <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold">✅ VERIFIED</span>
+                          <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold"> VERIFIED</span>
                           {selectedDigiDoc?._id === doc._id && (
-                            <span className="bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full font-bold">✓ Selected</span>
+                            <span className="bg-teal-100 text-teal-700 text-xs px-2 py-1 rounded-full font-bold"> Selected</span>
                           )}
                         </div>
                       </div>
@@ -754,18 +774,18 @@ export default function UserDashboard() {
                   )}
 
                   {selectedDigiDoc && (
-                    <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
-                      <p className="text-sm font-bold text-purple-800">🔐 DigiLocker Document Selected</p>
-                      <p className="text-xs text-purple-600 mt-1">{selectedDigiDoc.fileName}</p>
-                      <p className="text-xs text-purple-500 mt-0.5 break-all">{selectedDigiDoc.ipfsHash ? 'Hash: ' + selectedDigiDoc.ipfsHash : 'Document ready - IPFS on approval'}</p>
+                    <div className="bg-teal-50 border border-teal-200 rounded-xl p-4">
+                      <p className="text-sm font-bold text-teal-800"> DigiLocker Document Selected</p>
+                      <p className="text-xs text-teal-600 mt-1">{selectedDigiDoc.fileName}</p>
+                      <p className="text-xs text-teal-500 mt-0.5 break-all">{selectedDigiDoc.ipfsHash ? 'Hash: ' + selectedDigiDoc.ipfsHash : 'Document ready - IPFS on approval'}</p>
                     </div>
                   )}
 
                   {!selectedDigiDoc && (
-                    <div className="border-2 border-dashed border-purple-200 rounded-xl h-32 flex items-center justify-center bg-purple-50">
+                    <div className="border-2 border-dashed border-teal-200 rounded-xl h-32 flex items-center justify-center bg-teal-50">
                       <div className="text-center">
-                        <p className="text-purple-400 font-medium text-sm">Select a document above</p>
-                        <p className="text-xs text-purple-300 mt-1">DigiLocker verified documents only</p>
+                        <p className="text-teal-400 font-medium text-sm">Select a document above</p>
+                        <p className="text-xs text-teal-300 mt-1">DigiLocker verified documents only</p>
                       </div>
                     </div>
                   )}
@@ -778,8 +798,8 @@ export default function UserDashboard() {
                 {/* Nature Details */}
                 <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xl shadow-slate-200/50">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center border border-purple-100">
-                      <MdDocumentScanner className="text-lg text-purple-600" />
+                    <div className="w-10 h-10 bg-teal-50 rounded-lg flex items-center justify-center border border-teal-100">
+                      <MdDocumentScanner className="text-lg text-teal-600" />
                     </div>
                     <div>
                       <h4 className="text-lg font-bold text-slate-800">Nature of Request</h4>
@@ -788,8 +808,8 @@ export default function UserDashboard() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <label className={`cursor-pointer p-4 rounded-xl transition-all duration-300 border ${nature === 'electronic'
-                      ? 'bg-purple-50 border-purple-500 ring-1 ring-purple-500/20'
-                      : 'bg-white border-slate-200 hover:border-purple-300'
+                      ? 'bg-teal-50 border-teal-500 ring-1 ring-teal-500/20'
+                      : 'bg-white border-slate-200 hover:border-teal-300'
                       }`}>
                       <input
                         type="radio"
@@ -800,13 +820,13 @@ export default function UserDashboard() {
                         className="hidden"
                       />
                       <div className="flex flex-col items-center gap-2">
-                        <MdDocumentScanner className={`text-3xl ${nature === 'electronic' ? 'text-purple-600' : 'text-slate-400'}`} />
-                        <span className={`font-bold text-sm ${nature === 'electronic' ? 'text-purple-900' : 'text-slate-600'}`}>Electronic</span>
+                        <MdDocumentScanner className={`text-3xl ${nature === 'electronic' ? 'text-teal-600' : 'text-slate-400'}`} />
+                        <span className={`font-bold text-sm ${nature === 'electronic' ? 'text-teal-900' : 'text-slate-600'}`}>Electronic</span>
                       </div>
                     </label>
                     <label className={`cursor-pointer p-4 rounded-xl transition-all duration-300 border ${nature === 'physical'
-                      ? 'bg-purple-50 border-purple-500 ring-1 ring-purple-500/20'
-                      : 'bg-white border-slate-200 hover:border-purple-300'
+                      ? 'bg-teal-50 border-teal-500 ring-1 ring-teal-500/20'
+                      : 'bg-white border-slate-200 hover:border-teal-300'
                       }`}>
                       <input
                         type="radio"
@@ -817,8 +837,8 @@ export default function UserDashboard() {
                         className="hidden"
                       />
                       <div className="flex flex-col items-center gap-2">
-                        <FiFileText className={`text-3xl ${nature === 'physical' ? 'text-purple-600' : 'text-slate-400'}`} />
-                        <span className={`font-bold text-sm ${nature === 'physical' ? 'text-purple-900' : 'text-slate-600'}`}>Physical</span>
+                        <FiFileText className={`text-3xl ${nature === 'physical' ? 'text-teal-600' : 'text-slate-400'}`} />
+                        <span className={`font-bold text-sm ${nature === 'physical' ? 'text-teal-900' : 'text-slate-600'}`}>Physical</span>
                       </div>
                     </label>
                   </div>
@@ -910,7 +930,7 @@ export default function UserDashboard() {
                     <div className="flex items-center justify-between border-b border-indigo-100 pb-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center border border-indigo-100">
-                          <span className="text-xl">👥</span>
+                          <span className="text-xl"></span>
                         </div>
                         <div>
                           <h4 className="text-lg font-bold text-slate-800">Co-Owners & Share Allocation</h4>
@@ -923,14 +943,14 @@ export default function UserDashboard() {
                           : 'bg-amber-50 text-amber-700 border-amber-200 animate-pulse'
                       }`}>
                         Total: {coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0)}%
-                        {Math.abs(coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0) - 100) < 0.01 ? ' ✅' : ' ⚠️ (Must be 100%)'}
+                        {Math.abs(coOwners.reduce((s, o) => s + (Number(o.sharePercent) || 0), 0) - 100) < 0.01 ? ' ' : '  (Must be 100%)'}
                       </div>
                     </div>
 
                     {/* Visual Progress Bar */}
                     <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
                       {coOwners.map((owner, idx) => {
-                        const colors = ['bg-indigo-500', 'bg-purple-500', 'bg-cyan-500', 'bg-emerald-500', 'bg-amber-500'];
+                        const colors = ['bg-indigo-500', 'bg-teal-500', 'bg-cyan-500', 'bg-emerald-500', 'bg-amber-500'];
                         return (
                           <div
                             key={idx}
@@ -959,7 +979,7 @@ export default function UserDashboard() {
                                 onClick={() => setCoOwners(coOwners.filter((_, i) => i !== idx))}
                                 className="text-xs text-red-500 hover:text-red-700 font-semibold"
                               >
-                                ✕ Remove
+                                 Remove
                               </button>
                             )}
                           </div>
@@ -1036,7 +1056,7 @@ export default function UserDashboard() {
 
                     {errors.coOwners && (
                       <p className="text-xs text-red-600 font-bold bg-red-50 p-2.5 rounded-lg border border-red-200">
-                        ⚠️ {errors.coOwners}
+                         {errors.coOwners}
                       </p>
                     )}
                   </div>
@@ -1116,6 +1136,8 @@ export default function UserDashboard() {
               </form>
             </div>
           </div>
+              </>
+            )}
           </div>
         )}
 
@@ -1190,7 +1212,7 @@ export default function UserDashboard() {
                           <tr key={req.receiptNumber || idx} className={`hover:bg-slate-50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-bold text-slate-700 font-mono bg-slate-100 px-2 py-1 rounded border border-slate-200">{req.receiptNumber}</span>
+                                <span className="record-id text-sm font-bold font-mono px-2 py-1">{req.receiptNumber}</span>
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -1200,7 +1222,7 @@ export default function UserDashboard() {
                                   className="text-[11px] px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded font-semibold transition flex items-center gap-1"
                                   title="Copy Application ID"
                                 >
-                                  📋 Copy
+                                  <FiCopy aria-hidden="true" /> Copy
                                 </button>
                               </div>
                             </td>
@@ -1224,18 +1246,18 @@ export default function UserDashboard() {
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex flex-col items-start gap-1">
-                                <span className={`px-3 py-1.5 rounded-full text-xs font-bold ${statusBadge.bg} ${statusBadge.text} inline-flex items-center gap-1.5 border ${statusBadge.border}`}>
-                                  <span>{statusBadge.icon}</span>
+                                <span className={`status-badge status-badge--${statusBadge.variant}`}>
+                                  {statusBadge.label === 'APPROVED' ? <FiCheckCircle aria-hidden="true" /> : statusBadge.label === 'REJECTED' ? <FiAlertCircle aria-hidden="true" /> : <FiClock aria-hidden="true" />}
                                   {statusBadge.label}
                                 </span>
                                 {(req as any).ownershipType === 'joint' && (
-                                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 border border-indigo-200">
-                                    👥 Joint Ownership
+                                  <span className="status-badge status-badge--ownership">
+                                     Joint Ownership
                                   </span>
                                 )}
                                 {(req as any).isDisputed && (
-                                  <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
-                                    ⚠️ Disputed
+                                  <span className="status-badge status-badge--disputed">
+                                     Disputed
                                   </span>
                                 )}
                               </div>
@@ -1248,10 +1270,7 @@ export default function UserDashboard() {
                                 <button
                                   onClick={() => handleViewPatta(req.receiptNumber)}
                                   disabled={!isApproved}
-                                  className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-300 inline-flex items-center gap-1.5 ${isApproved
-                                    ? 'bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 shadow-sm'
-                                    : 'bg-slate-50 text-slate-400 cursor-not-allowed border border-slate-200'
-                                    }`}
+                                  className={`action-button ${isApproved ? '' : 'action-button--disabled'}`}
                                   title={isApproved ? 'View Patta Certificate' : 'Patta available only after approval'}
                                 >
                                   <FiEye className="text-sm" />
@@ -1260,7 +1279,7 @@ export default function UserDashboard() {
                                 {isApproved && (
                                   <button
                                     onClick={() => handleDownloadPatta(req.receiptNumber)}
-                                    className="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-300 inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-md border border-transparent"
+                                    className="action-button action-button--primary"
                                     title="Download Patta Certificate"
                                   >
                                     <FiDownload className="text-sm" />
@@ -1270,10 +1289,10 @@ export default function UserDashboard() {
                                 {/* Shares Dashboard shortcut */}
                                 <a
                                   href={`/ownership-dashboard?appId=${req.receiptNumber}`}
-                                  className="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-300 inline-flex items-center gap-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200"
+                                  className="action-button"
                                   title="View Ownership Distribution & Transfer Shares"
                                 >
-                                  📊 Shares
+                                   Shares
                                 </a>
                                 {/* Consent Portal shortcut for pending joint apps */}
                                 {(req as any).ownershipType === 'joint' && !isApproved && !(req as any).allConsentsGiven && (
@@ -1282,7 +1301,7 @@ export default function UserDashboard() {
                                     className="px-3 py-1.5 rounded-lg font-bold text-xs transition-all duration-300 inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm border border-transparent"
                                     title="Go to Consent Portal"
                                   >
-                                    🤝 Consent
+                                     Consent
                                   </a>
                                 )}
                               </div>
@@ -1296,16 +1315,16 @@ export default function UserDashboard() {
                 <div className="px-6 py-4 bg-slate-50 border-t border-slate-200">
                   <div className="flex justify-center gap-6 text-sm">
                     <span className="text-slate-600">
-                      📊 Total: <span className="font-bold text-slate-900">{requests.length}</span>
+                       Total: <span className="font-bold text-slate-900">{requests.length}</span>
                     </span>
                     <span className="text-emerald-700">
-                      ✅ Approved: <span className="font-bold">{requests.filter(r => r.status === 'completed').length}</span>
+                       Approved: <span className="font-bold">{requests.filter(r => r.status === 'completed').length}</span>
                     </span>
                     <span className="text-amber-600">
                       ⏳ Pending: <span className="font-bold">{requests.filter(r => r.status !== 'completed' && r.status !== 'rejected').length}</span>
                     </span>
                     <span className="text-red-600">
-                      ❌ Rejected: <span className="font-bold">{requests.filter(r => r.status === 'rejected').length}</span>
+                       Rejected: <span className="font-bold">{requests.filter(r => r.status === 'rejected').length}</span>
                     </span>
                   </div>
                 </div>
@@ -1317,11 +1336,11 @@ export default function UserDashboard() {
         {/* Inbox Tab */}
         {activeTab === 'inbox' && (
           <div>
-            <div className="mb-8 pb-6 border-b border-purple-100">
+            <div className="mb-8 pb-6 border-b border-teal-100">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center border border-purple-100">
-                    <FiInbox className="text-2xl text-purple-600" />
+                  <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center border border-teal-100">
+                    <FiInbox className="text-2xl text-teal-600" />
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-slate-800">Inbox</h1>
@@ -1331,7 +1350,7 @@ export default function UserDashboard() {
                 <button
                   onClick={fetchNotifications}
                   disabled={loadingNotifications}
-                  className="px-5 py-2.5 bg-white border border-purple-200 hover:border-purple-300 hover:bg-purple-50 text-purple-700 rounded-lg font-bold flex items-center gap-2 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed md:text-sm"
+                  className="px-5 py-2.5 bg-white border border-teal-200 hover:border-teal-300 hover:bg-teal-50 text-teal-700 rounded-lg font-bold flex items-center gap-2 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed md:text-sm"
                 >
                   <FiRefreshCw className={loadingNotifications ? 'animate-spin' : ''} />
                   Refresh
@@ -1341,14 +1360,14 @@ export default function UserDashboard() {
 
             {loadingNotifications ? (
               <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-16 text-center">
-                <FiLoader className="text-4xl text-purple-500 animate-spin mx-auto mb-4" />
+                <FiLoader className="text-4xl text-teal-500 animate-spin mx-auto mb-4" />
                 <p className="text-lg text-slate-700 font-bold mb-1">Loading Notifications</p>
                 <p className="text-slate-400 text-sm">Please wait while we fetch your messages...</p>
               </div>
             ) : (notifications.length === 0 && requests.filter((req: any) => req.ownershipType === 'joint' && !req.allConsentsGiven && req.isCoOwnerView).length === 0) ? (
               <div className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 p-16 text-center">
-                <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-purple-100">
-                  <FiInbox className="text-4xl text-purple-400" />
+                <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-teal-100">
+                  <FiInbox className="text-4xl text-teal-400" />
                 </div>
                 <p className="text-xl text-slate-800 font-bold mb-2">No Messages Yet</p>
                 <p className="text-slate-500 text-sm max-w-md mx-auto mb-8">You have no new notifications.</p>
@@ -1368,7 +1387,7 @@ export default function UserDashboard() {
                           <div className="flex items-start gap-3">
                             <span className="p-2 bg-indigo-100 text-indigo-700 rounded-full mt-0.5"><FiInfo className="text-lg" /></span>
                             <div>
-                              <p className="font-bold text-indigo-900 text-base">🤝 Consent Required — Joint Ownership</p>
+                              <p className="font-bold text-indigo-900 text-base"> Consent Required — Joint Ownership</p>
                               <p className="text-sm text-indigo-700 mt-0.5">
                                 You are listed as a co-owner on application{' '}
                                 <span className="font-mono font-bold bg-indigo-100 px-1 rounded">{req.receiptNumber}</span>.

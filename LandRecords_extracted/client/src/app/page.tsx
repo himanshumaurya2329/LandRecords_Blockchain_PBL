@@ -5,7 +5,7 @@ import { FaUser, FaShieldAlt, FaMap, FaLandmark, FaMapPin, FaFileAlt, FaBriefcas
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white text-gray-800">
+    <div className="min-h-screen bg-white text-gray-800 landing-page">
       {/* Header Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-indigo-100 pt-12 pb-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
@@ -59,7 +59,7 @@ export default function Home() {
               <div className="flex gap-6 text-sm font-medium text-slate-600">
                 <span className="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full"><FaCheckCircle className="text-green-500" /> View Records</span>
                 <span className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full"><FaCheckCircle className="text-blue-500" /> Track Status</span>
-                <span className="flex items-center gap-2 px-3 py-1 bg-purple-50 text-purple-700 rounded-full"><FaCheckCircle className="text-purple-500" /> Download Docs</span>
+                <span className="flex items-center gap-2 px-3 py-1 bg-teal-50 text-teal-700 rounded-full"><FaCheckCircle className="text-teal-500" /> Download Docs</span>
               </div>
             </div>
 
@@ -151,8 +151,8 @@ export default function Home() {
                   <h4 className="font-bold text-slate-700">Workflow</h4>
                   <p className="text-xs text-slate-500 mt-1">Efficient Processing</p>
                 </div>
-                <div className="bg-purple-50 p-6 rounded-2xl border border-purple-100 text-center hover:-translate-y-1 transition-transform">
-                  <FaLandmark className="text-3xl text-purple-500 mx-auto mb-3" />
+                <div className="bg-teal-50 p-6 rounded-2xl border border-teal-100 text-center hover:-translate-y-1 transition-transform">
+                  <FaLandmark className="text-3xl text-teal-500 mx-auto mb-3" />
                   <h4 className="font-bold text-slate-700">Governance</h4>
                   <p className="text-xs text-slate-500 mt-1">Transparent Records</p>
                 </div>

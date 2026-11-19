@@ -76,7 +76,7 @@ const ProjectOfficerFields = forwardRef<ProjectOfficerFieldsHandle, { applicatio
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-blue-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-blue-300 mb-4 flex items-center gap-2">
         <FaClipboardCheck />
-        📝 Project Officer Review
+         Project Officer Review
       </h2>
 
       {/* Review Summary */}
@@ -136,7 +136,7 @@ const ProjectOfficerFields = forwardRef<ProjectOfficerFieldsHandle, { applicatio
 
       <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
         <p className="text-sm text-blue-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>

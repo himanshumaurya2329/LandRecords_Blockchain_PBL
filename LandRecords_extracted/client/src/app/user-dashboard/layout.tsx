@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 import {
   FiLogOut,
   FiEdit3,
@@ -67,7 +68,7 @@ export default function UserDashboardLayout({
 
   const tabs = [
     { id: 'create', label: 'Create Request', icon: MdCreateNewFolder, color: 'from-blue-500 to-blue-600' },
-    { id: 'inbox', label: 'Inbox', icon: FiInbox, color: 'from-purple-500 to-purple-600' },
+    { id: 'inbox', label: 'Inbox', icon: FiInbox, color: 'from-teal-500 to-teal-600' },
     { id: 'status', label: 'Status', icon: FiTrendingUp, color: 'from-green-500 to-green-600' },
     { id: 'details', label: 'Profile', icon: FiUser, color: 'from-orange-500 to-orange-600' },
   ];
@@ -75,7 +76,7 @@ export default function UserDashboardLayout({
   // Show loading screen while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900 user-dashboard-shell flex items-center justify-center">
         <div className="text-center">
           <div className="w-20 h-20 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin mx-auto mb-6 shadow-lg shadow-blue-500/50"></div>
           <p className="text-blue-200 font-bold text-xl mb-2">Loading Your Dashboard</p>
@@ -86,9 +87,9 @@ export default function UserDashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-900 via-blue-900 to-slate-900">
+    <div className="min-h-screen user-dashboard-shell">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-2xl bg-slate-900/95 border-b-2 border-blue-500/30 shadow-2xl shadow-blue-500/20">
+      <header className="sticky top-0 z-50 backdrop-blur-xl user-dashboard-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex justify-between items-center">
             <Link href="/" className="flex items-center space-x-4 group">
@@ -101,7 +102,7 @@ export default function UserDashboardLayout({
               </div>
             </Link>
 
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-3">
               <div className="text-right hidden md:block border-r-2 border-blue-500/30 pr-6">
                 <p className="text-sm font-bold text-white">{userName}</p>
                 <p className="text-xs text-blue-300">{userEmail}</p>
@@ -109,9 +110,10 @@ export default function UserDashboardLayout({
               <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/50 text-lg font-bold text-white ring-2 ring-blue-400/50">
                 {userName.charAt(0).toUpperCase()}
               </div>
+              <ThemeToggle />
               <button
                 onClick={handleLogout}
-                className="px-5 py-2 bg-linear-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl hover:shadow-xl hover:shadow-red-500/50 hover:scale-105 transition-all duration-300 text-sm font-bold shadow-lg transform flex items-center gap-2 border-2 border-red-400/50"
+                className="logout-button"
               >
                 <FiLogOut className="text-lg" />
                 <span className="hidden sm:inline">Logout</span>
@@ -141,7 +143,7 @@ export default function UserDashboardLayout({
               const colorMap: Record<string, { from: string; to: string; border: string; shadow: string; text: string; }> = {
                 'create': { from: 'from-blue-500/20', to: 'to-cyan-500/20', border: 'border-blue-500', shadow: 'shadow-blue-500/30', text: 'text-blue-400' },
                 'status': { from: 'from-green-500/20', to: 'to-emerald-500/20', border: 'border-green-500', shadow: 'shadow-green-500/30', text: 'text-green-400' },
-                'inbox': { from: 'from-purple-500/20', to: 'to-pink-500/20', border: 'border-purple-500', shadow: 'shadow-purple-500/30', text: 'text-purple-400' },
+                'inbox': { from: 'from-teal-500/20', to: 'to-emerald-500/20', border: 'border-teal-500', shadow: 'shadow-teal-500/30', text: 'text-teal-400' },
                 'details': { from: 'from-orange-500/20', to: 'to-red-500/20', border: 'border-orange-500', shadow: 'shadow-orange-500/30', text: 'text-orange-400' },
               };
               const colors = colorMap[tab.id];
@@ -190,7 +192,7 @@ export default function UserDashboardLayout({
         </button>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-slate-900/30">
+        <main className="flex-1 overflow-auto user-dashboard-main">
           <div className="max-w-7xl mx-auto p-4">
             {/* Tab Content Cards */}
             {activeTab === 'create' && (
@@ -201,8 +203,8 @@ export default function UserDashboardLayout({
                       <MdCreateNewFolder className="text-3xl text-white" />
                     </div>
                     <div>
-                      <h1 className="text-3xl font-bold text-white">Create New Request</h1>
-                      <p className="text-blue-300 text-sm mt-1">Fill in your land details and upload required documents</p>
+                      <h1 className="text-3xl font-bold text-white">Your dashboard</h1>
+                      <p className="text-blue-300 text-sm mt-1">Your land services and applications, together in one place</p>
                     </div>
                   </div>
                 </div>
@@ -212,23 +214,23 @@ export default function UserDashboardLayout({
 
             {activeTab === 'inbox' && (
               <div>
-                <div className="mb-8 pb-6 border-b-2 border-purple-500/30">
+                <div className="mb-8 pb-6 border-b-2 border-teal-500/30">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-14 h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
+                    <div className="w-14 h-14 bg-linear-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/50">
                       <FiInbox className="text-3xl text-white" />
                     </div>
                     <div>
                       <h1 className="text-3xl font-bold text-white">Inbox</h1>
-                      <p className="text-purple-300 text-sm mt-1">Messages and notifications</p>
+                      <p className="text-teal-300 text-sm mt-1">Messages and notifications</p>
                     </div>
                   </div>
                 </div>
-                <div className="bg-linear-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg rounded-2xl border-2 border-purple-500/30 shadow-2xl p-16 text-center hover:border-purple-500/50 transition-all duration-300">
-                  <div className="w-24 h-24 bg-linear-to-br from-purple-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-purple-500/30">
-                    <FiInbox className="text-5xl text-purple-400" />
+                <div className="bg-linear-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg rounded-2xl border-2 border-teal-500/30 shadow-2xl p-16 text-center hover:border-teal-500/50 transition-all duration-300">
+                  <div className="w-24 h-24 bg-linear-to-br from-teal-500/20 to-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-teal-500/30">
+                    <FiInbox className="text-5xl text-teal-400" />
                   </div>
                   <p className="text-white font-bold text-2xl mb-3">Inbox Coming Soon</p>
-                  <p className="text-purple-300 text-sm max-w-md mx-auto">View your submitted applications, official communications, and important updates all in one place</p>
+                  <p className="text-teal-300 text-sm max-w-md mx-auto">View your submitted applications, official communications, and important updates all in one place</p>
                 </div>
               </div>
             )}

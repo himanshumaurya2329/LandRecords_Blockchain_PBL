@@ -75,7 +75,7 @@ const MROFields = forwardRef<MROFieldsHandle, any>(
     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-emerald-500/20 p-6 mb-6">
       <h2 className="text-xl font-bold text-emerald-300 mb-4 flex items-center gap-2">
         <FaShieldAlt />
-        🛡️ Mandal Revenue Officer (MRO)
+         Mandal Revenue Officer (MRO)
       </h2>
 
       {/* Land Approval Status */}
@@ -87,9 +87,9 @@ const MROFields = forwardRef<MROFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-emerald-500/20 rounded-lg text-white mb-3"
         >
           <option value="">Select Approval Status</option>
-          <option value="approved">✅ Approved for Land Allocation</option>
-          <option value="conditional">⚠️ Conditionally Approved</option>
-          <option value="rejected">❌ Not Approved</option>
+          <option value="approved"> Approved for Land Allocation</option>
+          <option value="conditional"> Conditionally Approved</option>
+          <option value="rejected"> Not Approved</option>
           <option value="pending_review">⏳ Pending Review</option>
         </select>
         <textarea
@@ -110,15 +110,15 @@ const MROFields = forwardRef<MROFieldsHandle, any>(
           className="w-full px-4 py-3 bg-slate-900/50 border border-emerald-500/20 rounded-lg text-white"
         >
           <option value="">Select Verification Status</option>
-          <option value="verified">✅ Records Verified</option>
-          <option value="discrepancy">⚠️ Discrepancy Found</option>
-          <option value="incomplete">📋 Incomplete Records</option>
+          <option value="verified"> Records Verified</option>
+          <option value="discrepancy"> Discrepancy Found</option>
+          <option value="incomplete"> Incomplete Records</option>
         </select>
       </div>
 
       <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
         <p className="text-sm text-emerald-200">
-          💡 <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
+           <strong>Data will be saved automatically when you click "Approve & Forward"</strong>
         </p>
       </div>
     </div>
