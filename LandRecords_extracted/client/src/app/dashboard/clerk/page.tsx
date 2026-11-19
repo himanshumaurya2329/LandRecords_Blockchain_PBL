@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardHeader from '@/components/DashboardHeader';
+import AiReviewPanel from '@/components/ai/AiReviewPanel';
 import apiFetcher from '@/utils/fetcher';
 import { auth } from '@/utils/auth';
 
@@ -15,6 +16,14 @@ interface Application {
     createdAt: string;
     userName: string;
     userEmail: string;
+    receiptNumber?: string;
+    ownerName?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    nature?: string;
+    humanReviewRequested?: boolean;
+    humanReviewNote?: string;
 }
 
 export default function ClerkDashboard() {
@@ -144,6 +153,7 @@ export default function ClerkDashboard() {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                             {app.location}
+                                            {app.humanReviewRequested && <span className="mt-1 block w-fit rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-900">Human review requested</span>}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                             {new Date(app.createdAt).toLocaleDateString()}
@@ -200,6 +210,15 @@ export default function ClerkDashboard() {
                                         <label className="block text-sm font-medium text-gray-700">Location</label>
                                         <p className="mt-1 text-sm text-gray-900">{selectedApp.location}</p>
                                     </div>
+                                </div>
+
+                                {selectedApp.humanReviewRequested && <div role="status" className="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950"><strong>Human review requested</strong><p className="mt-1">{selectedApp.humanReviewNote || 'A previous reviewer requested a second look.'}</p></div>}
+                                <div className="mb-5">
+                                    <AiReviewPanel
+                                        task="clerk"
+                                        receiptNumber={selectedApp.receiptNumber || selectedApp.applicationId.replace(/^APP-/, '')}
+                                        fields={{ ownerName: selectedApp.ownerName || selectedApp.userName, surveyNumber: selectedApp.surveyNumber, area: selectedApp.landArea, address: selectedApp.address || selectedApp.location, city: selectedApp.city || '', state: selectedApp.state || '', nature: selectedApp.nature || '', flags: '' }}
+                                    />
                                 </div>
 
                                 <div className="flex gap-4">

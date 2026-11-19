@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import DIDDisplay from '@/components/DIDDisplay';
+import AiReviewPanel from '@/components/ai/AiReviewPanel';
 import { useRouter } from 'next/navigation';
 import {
   FiUpload,
@@ -88,6 +89,7 @@ export default function UserDashboard() {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [ownershipType, setOwnershipType] = useState<'single' | 'joint'>('single');
   const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [humanReviewRequested, setHumanReviewRequested] = useState(false);
   const [digiLockerDocs, setDigiLockerDocs] = useState<any[]>([]);
   const [selectedDigiDoc, setSelectedDigiDoc] = useState<any>(null);
   const [loadingDocs, setLoadingDocs] = useState(false);
@@ -378,6 +380,7 @@ export default function UserDashboard() {
           nature,
           ipfsHash,
           ownershipType,
+          humanReviewRequested,
           owners: ownershipType === 'joint' ? coOwners : undefined,
         }),
       });
@@ -791,6 +794,14 @@ export default function UserDashboard() {
                   )}
                 </div>
               </div>
+              {selectedDigiDoc && (
+                <AiReviewPanel
+                  task="document"
+                  documentHash={selectedDigiDoc.ipfsHash}
+                  fields={{ ownerName: formData.ownerName, surveyNumber: formData.surveyNumber, area: formData.area, city: formData.city, state: formData.state }}
+                  onHumanReviewIntent={setHumanReviewRequested}
+                />
+              )}
             </div>
             {/* Right Side: Form - 5 columns */}
             <div className="lg:col-span-4">

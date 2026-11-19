@@ -35,6 +35,11 @@ export interface ILandRequest extends Document {
   // Workflow
   status: 'submitted' | 'with_clerk' | 'with_superintendent' | 'with_projectofficer' | 'with_vro' | 'with_surveyor' | 'with_revenueinspector' | 'with_mro' | 'with_revenuedeptofficer' | 'with_jointcollector' | 'with_districtcollector' | 'with_ministrywelfare' | 'approved' | 'completed' | 'rejected';
   currentlyWith?: string; // Official ID
+  humanReviewRequested?: boolean;
+  humanReviewNote?: string;
+  humanReviewBy?: string;
+  humanReviewAt?: Date;
+  lastAiAssessment?: { model: string; task: string; assessment: string; confidence?: number | null };
 
   // Patta Certificate Fields
   pattaHash?: string; // IPFS hash of generated Patta
@@ -189,6 +194,16 @@ const landRequestSchema = new Schema<ILandRequest>(
       default: 'submitted',
     },
     currentlyWith: String,
+    humanReviewRequested: { type: Boolean, default: false, index: true },
+    humanReviewNote: String,
+    humanReviewBy: String,
+    humanReviewAt: Date,
+    lastAiAssessment: {
+      model: String,
+      task: String,
+      assessment: String,
+      confidence: Number,
+    },
     // Patta Certificate Fields
     pattaHash: String,
     pattaNumber: String,

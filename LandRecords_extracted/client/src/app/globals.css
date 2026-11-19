@@ -508,3 +508,86 @@ div[class*="bg-indigo-900"][class*="rounded"] {
 }
 .user-dashboard-shell button:disabled { color: var(--text-soft) !important; opacity: .82; }
 .text-blue-700, .text-indigo-700 { color: var(--accent) !important; }
+
+
+/* DigiLocker document actions: stable icon/label alignment and theme-aware contrast. */
+.digilocker-page .digilocker-doc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.digilocker-page .digilocker-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.digilocker-page .digilocker-action {
+  box-sizing: border-box;
+  display: inline-flex;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  color: var(--text) !important;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none !important;
+  white-space: nowrap;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+.digilocker-page .digilocker-action svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  margin: 0;
+}
+.digilocker-page .digilocker-action--view {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+  color: #fff !important;
+}
+.digilocker-page .digilocker-action--view:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff !important;
+}
+.digilocker-page .digilocker-action--download {
+  background: var(--surface-subtle);
+  color: var(--text) !important;
+}
+.digilocker-page .digilocker-action--download:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-strong);
+  color: var(--accent-strong) !important;
+}
+.digilocker-page .digilocker-action:focus-visible,
+.digilocker-page .digilocker-back-link:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.digilocker-page .digilocker-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 9px;
+  color: #fff !important;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.digilocker-page .digilocker-back-link:hover { background: rgba(255, 255, 255, .12); }
+@media (max-width: 640px) {
+  .digilocker-page .digilocker-doc-grid { grid-template-columns: minmax(0, 1fr); }
+  .digilocker-page .digilocker-actions { gap: 8px; }
+}

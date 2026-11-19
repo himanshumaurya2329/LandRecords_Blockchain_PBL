@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
       nature,
       ipfsHash,
       ownershipType = 'single',
+      humanReviewRequested = false,
       owners,
     } = body;
 
@@ -149,6 +150,10 @@ export async function POST(req: NextRequest) {
       allConsentsGiven: ownershipType !== 'joint',
       isDisputed: false,
       status: 'submitted',
+      humanReviewRequested: humanReviewRequested === true,
+      humanReviewNote: humanReviewRequested === true ? 'Applicant requested manual review during document screening.' : undefined,
+      humanReviewBy: humanReviewRequested === true ? 'Applicant' : undefined,
+      humanReviewAt: humanReviewRequested === true ? new Date() : undefined,
     });
 
     await landRequest.save();

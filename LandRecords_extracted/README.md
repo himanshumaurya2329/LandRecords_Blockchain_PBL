@@ -1,267 +1,62 @@
-# Land Registration System - Blockchain Integration
+# Land Records Blockchain
 
-This project implements a complete Hyperledger Fabric blockchain solution for land registration with a 3-organization network architecture.
+A Windows-first land-records demo built with Next.js, MongoDB, Node.js and Hyperledger Fabric. The installer sets up the project and the local Laya review model. You only need to run two scripts.
 
-## 🚀 Quick Start
+## Quick start
 
-### Automated Setup (Recommended)
-```bash
-# Complete network setup in one command
-./setup-network.sh
+Requirements: Windows 10/11, internet access, and permission to install software. The installer can install Node.js, Python, Git, and Docker Desktop with `winget` if they are missing. Docker Desktop must be able to run Linux containers.
 
-# Test the setup
-./test-network.sh
+Open PowerShell in this folder and run:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-### Manual Setup
-See [NETWORK_SETUP.md](NETWORK_SETUP.md) for detailed manual setup instructions.
+The first install downloads Node packages, Fabric tools, Python packages, and the Laya checkpoint (about 843 MB). It can take a while. If Docker Desktop asks for a restart, restart Windows, open PowerShell here again, and rerun `powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`.
 
-## 🏢 Network Architecture
+When install finishes, start the whole project with:
 
-### Organizations
-- **Org1 (Registration)**: Handles initial land application registration and user management
-- **Org2 (Revenue)**: Manages revenue department verification, survey reports, and land valuation
-- **Org3 (Collectorate)**: Provides final approval authority and oversees the complete registration process
-
-### Setup Scripts
-- `setOrg1.sh` - Environment setup for Registration Department
-- `setOrg2.sh` - Environment setup for Revenue Department
-- `setOrg3.sh` - Environment setup for Collectorate Department
-- `setup-network.sh` - Complete automated network setup
-- `test-network.sh` - Network verification and testing
-
-### Components
-
-#### 1. Frontend (Next.js)
-- User registration and authentication
-- Official dashboards with role-based access
-- Land application submission and tracking
-- Document upload and viewing
-- Location: `client/`
-
-#### 2. Backend API (Express.js)
-- REST API server for blockchain integration
-- JWT authentication with role-based access control
-- Land application management
-- User enrollment and certificate management
-- Location: `fabric-api/`
-
-#### 3. Chaincode (Node.js)
-- Smart contracts for land registration workflow
-- Multi-step approval process
-- Immutable audit trail
-- Location: `chaincode/land-registration/`
-
-#### 4. Network Configuration
-- Docker-based Fabric network
-- 3-organization setup with CAs, peers, and orderer
-- Automated deployment scripts
-- Location: `fabric-samples/test-network/`
-
-## Quick Start
-
-### Prerequisites
-- Docker and Docker Compose
-- Node.js 16+
-- npm or yarn
-
-### 1. Start the Blockchain Network
-```bash
-cd fabric-samples/test-network
-./start-network.sh
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\start-local.ps1
 ```
 
-### 2. Deploy Chaincode
-```bash
-./deploy-chaincode.sh
+Open **http://localhost:3000** yourself. The script does not open a browser. Stop the project with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\stop-local.ps1
 ```
 
-### 3. Start the API Server
-```bash
-cd ../../fabric-api
-npm install
-npm start
-```
+The stop script keeps Docker volumes and MongoDB data.
 
-### 4. Start the Frontend
-```bash
-cd ../client
-npm install
-npm run dev
-```
+## What the scripts do
 
-## Workflow
+- `install.ps1` checks/installs system tools, installs all three Node projects, creates the local Laya Python environment, downloads the pinned model, and creates local environment files only when they are missing.
+- On a brand-new machine, it initializes the Fabric network once. If it finds existing Fabric containers, network, or peer/orderer volumes, it keeps them and skips the reset/setup step.
+- `start-local.ps1` starts Fabric, local MongoDB when configured, the Fabric API, Laya, and the Next.js app. Services run in the background; logs are in `client/.local/logs/`.
+- `stop-local.ps1` stops those services without deleting ledger or database data.
 
-1. **User Registration**: Citizens register through the web interface
-2. **Application Submission**: Users submit land registration applications with documents
-3. **Revenue Verification**: Revenue officials verify documents and conduct surveys
-4. **Collector Approval**: Collector officials provide final approval
-5. **Registration Complete**: Land registration is recorded on blockchain
+Existing `client/.env.local` and `fabric-api/.env` files are never overwritten. On first setup, the client gets a local MongoDB default and Fabric API gets its project template. MongoDB runs in Docker. Pinata and SMTP are optional for local development; add credentials to `client/.env.local` when you want real IPFS storage or email delivery.
 
-## API Endpoints
+## Local addresses
 
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
+| Service | Address |
+| --- | --- |
+| Web app | http://localhost:3000 |
+| Fabric API health | http://localhost:3001/health |
+| Laya health | http://127.0.0.1:8765/health |
+| MongoDB | mongodb://127.0.0.1:27017/elandrecords |
 
-### Land Applications
-- `POST /api/land/create` - Create new application
-- `GET /api/land/:id` - Get application details
-- `GET /api/land` - Get all applications (role-based)
-- `PUT /api/land/:id/verify` - Revenue verification
-- `PUT /api/land/:id/survey` - Survey report update
-- `PUT /api/land/:id/approve` - Collector approval
+## Laya review
 
-## Chaincode Functions
+The app uses the pinned `convaiinnovations/laya-typed-decisions` System 1 checkpoint through `laya==0.4.37`. Inference runs locally on CPU and is offline after the model download. It supports advisory document screening, clerk triage, and survey-report consistency checks. It never approves/rejects an application or changes the Fabric workflow.
 
-- `createApplication(applicationData)` - Create land application
-- `verifyByRevenue(applicationId, verificationData)` - Revenue verification
-- `surveyReportUpdate(applicationId, surveyData)` - Survey update
-- `approveByCollector(applicationId, approvalData)` - Final approval
-- `getApplication(applicationId)` - Get application
-- `getAllLandRequest()` - Get all applications
-- `getHistory(applicationId)` - Get application history
-- `queryByStatus(status)` - Query by status
+PDF screening accepts searchable PDFs up to 10 MB and 8 pages. Scanned/image-only PDFs are sent to human review; this setup does not include a separate OCR engine. The UI displays the model result and raw score with an uncalibrated-score warning. Staff can escalate a case without changing its current workflow stage.
 
-## User Roles
+## If something does not start
 
-- **User**: Can submit and track applications
-- **Clerk**: Can view and update applications
-- **Superintendent**: Can verify applications
-- **Revenue Inspector**: Can conduct surveys
-- **MRO**: Can approve revenue-related actions
-- **District Collector**: Can provide final approval
+- **Docker error:** open Docker Desktop, wait until it says it is running, then rerun `powershell -NoProfile -ExecutionPolicy Bypass -File .\start-local.ps1`.
+- **Database error:** check that the `landrecords-mongodb` container is running, or verify `MONGODB_URI` in `client/.env.local`.
+- **API/web/model error:** read the matching `.log` file in `client/.local/logs/`.
+- **Install interrupted:** rerun `powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`; it keeps existing environment files and reuses downloaded packages/model files.
 
-## Security Features
-
-- **TLS Encryption**: All network communications encrypted
-- **Certificate-based Authentication**: X.509 certificates for identity
-- **Role-based Access Control**: Fine-grained permissions
-- **Immutable Audit Trail**: All actions recorded on blockchain
-- **Multi-organization Consensus**: Requires approval from multiple parties
-
-## Development
-
-### Project Structure
-```
-esb/
-├── client/                 # Next.js frontend
-├── fabric-api/            # Express.js API server
-├── chaincode/             # Smart contracts
-│   └── land-registration/
-└── fabric-samples/        # Network configuration
-    └── test-network/
-```
-
-### Environment Setup
-
-1. **Clone and setup:**
-   ```bash
-   git clone <repository>
-   cd esb
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   # Frontend
-   cd client && npm install
-
-   # API Server
-   cd ../fabric-api && npm install
-
-   # Chaincode
-   cd ../chaincode/land-registration && npm install
-   ```
-
-3. **Start development environment:**
-   ```bash
-   # Terminal 1: Blockchain network
-   cd fabric-samples/test-network
-   ./start-network.sh
-
-   # Terminal 2: API server
-   cd ../../fabric-api
-   npm run dev
-
-   # Terminal 3: Frontend
-   cd ../client
-   npm run dev
-   ```
-
-## Testing
-
-### Unit Tests
-```bash
-# API tests
-cd fabric-api
-npm test
-
-# Chaincode tests
-cd ../chaincode/land-registration
-npm test
-```
-
-### Integration Tests
-```bash
-# End-to-end workflow tests
-cd fabric-api
-npm run test:e2e
-```
-
-## Deployment
-
-### Production Setup
-1. Configure production Docker registry
-2. Update connection profiles with production endpoints
-3. Deploy network to Kubernetes or cloud
-4. Configure load balancers and monitoring
-5. Set up backup and disaster recovery
-
-### Monitoring
-- Container health checks
-- Blockchain network monitoring
-- API performance metrics
-- Audit log analysis
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Network won't start**: Check Docker resources and ports
-2. **Chaincode deployment fails**: Verify network is running
-3. **API connection errors**: Check connection profiles
-4. **Certificate issues**: Regenerate crypto material
-
-### Logs
-```bash
-# Network logs
-cd fabric-samples/test-network
-docker-compose -f docker/docker-compose-full.yaml logs -f
-
-# API logs
-cd ../../fabric-api
-npm run logs
-
-# Frontend logs
-cd ../client
-npm run build  # Check for build errors
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Make changes with tests
-4. Submit pull request
-
-## License
-
-This project is licensed under the Apache 2.0 License.
-
-## Support
-
-For support and questions:
-- Check the troubleshooting section
-- Review the README files in each component
-- Open an issue in the repository
+For project internals, see `PROJECT_GUIDE.md`. Do not commit `.env.local`, `.env`, model files, logs, or local databases.
